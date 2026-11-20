@@ -30,7 +30,11 @@ function contentIntegrity() {
   };
 }
 
+// GitHub Pages serves a project site under /<repo>/. The deploy workflow sets
+// SITE_URL and BASE_PATH; locally both default to a root-served site.
 export default defineConfig({
+  site: process.env.SITE_URL || undefined,
+  base: process.env.BASE_PATH || '/',
   output: 'static',
   trailingSlash: 'ignore',
   integrations: [contentIntegrity()],

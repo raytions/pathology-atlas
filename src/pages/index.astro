@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import Base from '../layouts/Base.astro';
 import TissueMark from '../components/TissueMark.astro';
 import Relevance from '../components/Relevance.astro';
@@ -12,21 +13,21 @@ const featuredMethods = featuredTask ? catalog.methodsForTask(featuredTask.id) :
 
 const entries = [
   {
-    href: '/organs/',
+    href: withBase('/organs/'),
     n: '01',
     title: 'Organs & Diseases',
     body: 'Start from anatomy. Topic pages pull together diseases, tasks, datasets and methods.',
     count: `${catalog.organs.length} organs · ${catalog.tasks.filter((t) => t.data.scope === 'specific').length} clinical tasks`,
   },
   {
-    href: '/datasets/',
+    href: withBase('/datasets/'),
     n: '02',
     title: 'Datasets',
     body: 'Scale by unit, annotation granularity, splits, access route and terms, each with its source.',
     count: `${catalog.datasets.length} verified datasets`,
   },
   {
-    href: '/methods/',
+    href: withBase('/methods/'),
     n: '03',
     title: 'Methods & Models',
     body: 'Code and weight access listed separately; dataset links labelled by how they were used.',

@@ -19,6 +19,20 @@ npm run build      # validate + static build into dist/  (fails on any content e
 npm run preview    # serve dist/
 ```
 
+## Deploy (GitHub Pages)
+
+`.github/workflows/deploy.yml` runs on every push to `main`: `npm ci`, validate, check, build
+with `BASE_PATH=/<repo>` and `SITE_URL=https://<owner>.github.io`, then publishes `dist/` to the
+`gh-pages` branch. In the repository settings, Pages should serve from the `gh-pages` branch
+(root). Live site: https://raytions.github.io/pathology-atlas/
+
+In-site links go through `withBase()` (`src/lib/paths.ts`), so the same code works at `/`
+locally and under `/pathology-atlas/` on Pages. To preview the Pages build locally:
+
+```bash
+BASE_PATH=/pathology-atlas npm run build && BASE_PATH=/pathology-atlas npm run preview
+```
+
 ## Content model
 
 ```

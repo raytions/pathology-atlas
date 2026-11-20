@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import '../styles/global.css';
 
 interface Props {
@@ -9,10 +10,10 @@ const { title, description = 'A curated atlas of computational pathology dataset
 const fullTitle = title === 'Pathology Atlas' ? title : `${title} · Pathology Atlas`;
 const path = Astro.url.pathname;
 const nav = [
-  { href: '/organs/', label: 'Organs & Diseases' },
-  { href: '/datasets/', label: 'Datasets' },
-  { href: '/methods/', label: 'Methods & Models' },
-  { href: '/about/', label: 'About' },
+  { href: withBase('/organs/'), label: 'Organs & Diseases' },
+  { href: withBase('/datasets/'), label: 'Datasets' },
+  { href: withBase('/methods/'), label: 'Methods & Models' },
+  { href: withBase('/about/'), label: 'About' },
 ];
 const isCurrent = (href: string) => path.startsWith(href);
 ---
@@ -24,7 +25,7 @@ const isCurrent = (href: string) => path.startsWith(href);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#f6f3ec" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <title>{fullTitle}</title>
   </head>
   <body class="flex min-h-screen flex-col">
@@ -35,7 +36,7 @@ const isCurrent = (href: string) => path.startsWith(href);
     >
     <header class="border-b border-rule">
       <div class="wrap flex flex-col gap-3 py-4 md:flex-row md:items-center md:justify-between">
-        <a href="/" class="group inline-flex items-center gap-3 text-ink no-underline" aria-label="Pathology Atlas, home">
+        <a href={withBase('/')} class="group inline-flex items-center gap-3 text-ink no-underline" aria-label="Pathology Atlas, home">
           <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
             <circle cx="15" cy="15" r="13.5" fill="none" stroke="currentColor" stroke-width="1" />
             <circle cx="15" cy="15" r="6.5" fill="none" stroke="var(--color-eosin)" stroke-width="1" />
@@ -84,7 +85,7 @@ const isCurrent = (href: string) => path.startsWith(href);
           site until reviewed.
         </p>
         <p class="md:text-right">
-          <a href="/about/#editorial-policy">Editorial policy</a><br />
+          <a href={withBase('/about/#editorial-policy')}>Editorial policy</a><br />
           No images of patient tissue are reproduced on this site.
         </p>
       </div>

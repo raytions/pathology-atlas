@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/paths';
 import Base from '../../layouts/Base.astro';
 import Field from '../../components/Field.astro';
 import Sources from '../../components/Sources.astro';
@@ -27,7 +28,7 @@ const organ = d.organs[0];
   <article class="wrap pt-10">
     <nav aria-label="Breadcrumb" class="text-sm text-ink-2">
       <ol class="flex flex-wrap items-center gap-x-2">
-        <li><a href="/organs/">Organs</a></li>
+        <li><a href={withBase('/organs/')}>Organs</a></li>
         {organ && (<><li aria-hidden="true">/</li><li><a href={url.organ(organ)}>{catalog.title(organ)}</a></li></>)}
         <li aria-hidden="true">/</li>
         <li aria-current="page" class="text-ink">{d.title}</li>
@@ -51,7 +52,7 @@ const organ = d.organs[0];
     <section aria-labelledby="ds-h" class="rule-t mt-12 pt-6">
       <div class="flex flex-wrap items-baseline justify-between gap-3">
         <h2 id="ds-h" class="text-2xl md:text-3xl">Datasets</h2>
-        {datasets.length > 0 && <a href={`/datasets/?task=${task.id}`} class="text-sm">Open as a filtered list →</a>}
+        {datasets.length > 0 && <a href={withBase(`/datasets/?task=${task.id}`)} class="text-sm">Open as a filtered list →</a>}
       </div>
       {
         datasets.length ? (
@@ -67,7 +68,7 @@ const organ = d.organs[0];
     </section>
 
     <RelatedMethods groups={methods} catalog={catalog} contextTitle={d.title} />
-    <p class="mt-4 text-sm"><a href={`/methods/?task=${task.id}`}>Open methods filtered by this task →</a></p>
+    <p class="mt-4 text-sm"><a href={withBase(`/methods/?task=${task.id}`)}>Open methods filtered by this task →</a></p>
 
     {
       d.background_reading.length > 0 && (
