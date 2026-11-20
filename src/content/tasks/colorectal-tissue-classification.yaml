@@ -1,0 +1,19 @@
+id: colorectal-tissue-classification
+title: Colorectal tissue classification
+scope: specific
+organs: [colorectum]
+diseases: [colorectal-cancer]
+broader: [roi-classification]
+prediction_target: One of nine tissue classes per patch (adipose, background, debris, lymphocytes, mucus, smooth muscle, normal colon mucosa, cancer-associated stroma, colorectal adenocarcinoma epithelium).
+summary: >-
+  Assigning a tissue type to each small H&E patch from colorectal cancer specimens. It is a
+  region-level task often used as a quick probe of image encoders, and as a building block for
+  measuring tissue composition across a slide.
+review_status: draft
+sources:
+  - key: zenodo-crc
+    title: "Kather J. N., Halama N., Marx A. 100,000 histological images of human colorectal cancer and healthy tissue. Zenodo, v0.1 (2018)"
+    url: https://doi.org/10.5281/zenodo.1214456
+    kind: data-portal
+    accessed: 2026-11-20
+    note: Defines the nine tissue classes.
