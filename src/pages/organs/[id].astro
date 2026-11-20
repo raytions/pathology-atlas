@@ -1,0 +1,101 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Sources from '../../components/Sources.astro';
+import DatasetCard from '../../components/DatasetCard.astro';
+import RelatedMethods from '../../components/RelatedMethods.astro';
+import TissueMark from '../../components/TissueMark.astro';
+import { loadCatalog, url, type Organ } from '../../lib/catalog';
+
+export async function getStaticPaths() {
+  const catalog = await loadCatalog();
+  return catalog.organs.map((o) => ({ params: { id: o.id }, props: { id: o.id } }));
+}
+
+const catalog = await loadCatalog();
+const organ = catalog.organ(Astro.props.id) as Organ;
+const { Content } = await render(organ);
+const d = organ.data;
+const diseases = catalog.diseasesForOrgan(organ.id);
+const tasks = catalog.tasksForOrgan(organ.id);
+const datasets = catalog.datasetsForOrgan(organ.id);
+const methods = catalog.methodsForOrgan(organ.id);
+const benchmarkCount = (taskId: string) => catalog.methodsForTask(taskId).benchmark.length;
+const familyCount = (taskId: string) => catalog.methodsForTask(taskId)['same-task'].length;
+---
+
+<Base title={d.title} description={d.summary}>
+  <article class="wrap pt-10">
+    <nav aria-label="Breadcrumb" class="text-sm text-ink-2">
+      <ol class="flex flex-wrap items-center gap-x-2">
+        <li><a href="/organs/">Organs &amp; Diseases</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="text-ink">{d.title}</li>
+      </ol>
+    </nav>
+
+    <header class="mt-8 grid items-start gap-10 md:grid-cols-[1fr_16rem]">
+      <div>
+        <p class="eyebrow">Organ topic</p>
+        <h1 class="mt-2 text-5xl md:text-7xl">{d.title}</h1>
+        {d.tagline && <p class="mt-4 max-w-2xl font-serif text-xl leading-relaxed text-ink-2">{d.tagline}</p>}
+      </div>
+      <TissueMark variant={organ.id === 'prostate' ? 'glands' : 'node'} class="hidden w-full text-ink md:block" />
+    </header>
+
+    <div class="mt-10 grid gap-10 lg:grid-cols-[1fr_20rem]">
+      <section aria-label="Editorial introduction" class="prose-atlas text-[1.05rem] leading-relaxed">
+        <Content />
+      </section>
+      <aside class="self-start border-l border-rule pl-6 text-sm" aria-labelledby="index-h">
+        <h2 id="index-h" class="eyebrow">On this page</h2>
+        <dl class="mt-3 space-y-3">
+          <div><dt class="field-label">Diseases</dt><dd class="font-serif text-2xl">{diseases.length}</dd></div>
+          <div><dt class="field-label">Clinical tasks</dt><dd class="font-serif text-2xl">{tasks.length}</dd></div>
+          <div><dt class="field-label">Datasets</dt><dd class="font-serif text-2xl">{datasets.length}</dd></div>
+          <div><dt class="field-label">Methods with a benchmark link</dt><dd class="font-serif text-2xl">{methods.benchmark.length}</dd></div>
+        </dl>
+        <p class="mt-4 text-xs text-ink-3">The introduction is written by editors. Everything below is assembled from structured entries.</p>
+      </aside>
+    </div>
+
+    <section aria-labelledby="tasks-h" class="rule-t mt-12 pt-6">
+      <h2 id="tasks-h" class="text-2xl md:text-3xl">Diseases &amp; tasks</h2>
+      <div class="mt-5 grid gap-6 md:grid-cols-2">
+        {
+          diseases.map((x) => (
+            <div class="border border-rule bg-card p-5">
+              <p class="eyebrow">Disease</p>
+              <h3 class="mt-1 text-2xl"><a href={url.disease(x.id)} class="text-ink">{x.data.title}</a></h3>
+              <p class="mt-2 text-sm text-ink-2">{x.data.summary}</p>
+              <ul class="mt-4 divide-y divide-rule border-t border-rule">
+                {catalog.tasksForDisease(x.id).map((t) => (
+                  <li class="flex flex-wrap items-baseline justify-between gap-2 py-3">
+                    <a href={url.task(t.id)} class="font-serif text-lg">{t.data.title} →</a>
+                    <span class="text-xs text-ink-3">
+                      {catalog.datasetsForTask(t.id).length} datasets · {benchmarkCount(t.id)} benchmark · {familyCount(t.id)} same family
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section aria-labelledby="ds-h" class="rule-t mt-12 pt-6">
+      <div class="flex flex-wrap items-baseline justify-between gap-3">
+        <h2 id="ds-h" class="text-2xl md:text-3xl">Datasets</h2>
+        <a href={`/datasets/?organ=${organ.id}`} class="text-sm">Open as a filtered list →</a>
+      </div>
+      <ul class="mt-5 grid gap-4 md:grid-cols-2">
+        {datasets.map((x) => <DatasetCard dataset={x} catalog={catalog} />)}
+      </ul>
+    </section>
+
+    <RelatedMethods groups={methods} catalog={catalog} contextTitle={`${d.title.toLowerCase()} tasks`} />
+
+    <Sources sources={d.sources} lastVerified={d.last_verified} />
+  </article>
+</Base>

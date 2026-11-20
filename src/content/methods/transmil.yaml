@@ -1,0 +1,49 @@
+id: transmil
+title: TransMIL
+short_name: TransMIL
+summary: >-
+  Transformer-based correlated MIL. Instead of treating patches as independent samples, it uses
+  self-attention to model correlations between them, aiming to capture both morphological and
+  spatial information before predicting a slide label.
+category: mil-aggregator
+tasks: [wsi-classification]
+organs: []
+input_granularity: [patch-features]
+output_granularity: [slide-label]
+year: 2021
+venue:
+  value: NeurIPS 2021
+  source: transmil-repo
+primary_paper: transmil-preprint
+code:
+  url: https://github.com/szc19990412/TransMIL
+  conditions: No licence file in the repository (GitHub reports none), so reuse terms are unclear.
+  source: transmil-repo
+weights:
+  availability: none-found
+  conditions: The README gives training and test commands but links no pretrained checkpoints.
+  source: transmil-repo
+datasets:
+  - dataset: camelyon16
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: transmil-preprint
+    note: The abstract reports slide-level tumour classification AUC on CAMELYON16.
+limitations:
+  - value: The README's abstract block describes a different paper (a mixed-supervision Gleason grading model on SICAPv2). Use the NeurIPS / arXiv paper as the reference for what TransMIL is.
+    source: transmil-repo
+  - value: Pinned to old dependencies (Python 3.7, PyTorch 1.x, pytorch-lightning 1.5).
+    source: transmil-repo
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: transmil-preprint
+    title: "Shao et al. TransMIL: Transformer based Correlated Multiple Instance Learning for Whole Slide Image Classification. arXiv 2106.00908 (2021)"
+    url: https://arxiv.org/abs/2106.00908
+    kind: preprint
+    accessed: 2026-11-20
+  - key: transmil-repo
+    title: szc19990412/TransMIL (GitHub)
+    url: https://github.com/szc19990412/TransMIL
+    kind: repository
+    accessed: 2026-11-20

@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import FilterPanel from '../../components/FilterPanel.astro';
+import DatasetCard from '../../components/DatasetCard.astro';
+import { loadCatalog } from '../../lib/catalog';
+import { ACCESS_METHOD, ANNOTATION_GRANULARITY } from '../../lib/vocab';
+
+const catalog = await loadCatalog();
+const { datasets } = catalog;
+
+const used = <T extends string>(pick: (d: (typeof datasets)[number]) => T[]) => [...new Set(datasets.flatMap(pick))];
+
+const facets = [
+  {
+    name: 'organ',
+    label: 'Organ',
+    options: used((d) => d.data.organs).map((v) => ({ value: v, label: catalog.title(v) })),
+  },
+  {
+    name: 'task',
+    label: 'Task',
+    options: used((d) => d.data.tasks).map((v) => ({ value: v, label: catalog.title(v) })),
+  },
+  {
+    name: 'annotation',
+    label: 'Annotation',
+    options: used((d) => d.data.annotation_granularity).map((v) => ({ value: v, label: ANNOTATION_GRANULARITY[v] })),
+  },
+  {
+    name: 'access',
+    label: 'Access',
+    options: used((d) => (d.data.access ? [d.data.access.method] : [])).map((v) => ({ value: v, label: ACCESS_METHOD[v] })),
+  },
+];
+
+const attrsFor = (d: (typeof datasets)[number]) => ({
+  'data-filter-item': '',
+  'data-search': [
+    d.data.title,
+    ...d.data.aliases,
+    d.data.summary,
+    d.data.specimen ?? '',
+    ...d.data.organs.map((o) => catalog.title(o)),
+    ...d.data.tasks.map((t) => catalog.title(t)),
+    ...d.data.diseases.map((x) => catalog.title(x)),
+  ]
+    .join(' ')
+    .toLowerCase(),
+  'data-organ': d.data.organs.join(' '),
+  'data-task': d.data.tasks.join(' '),
+  'data-annotation': d.data.annotation_granularity.join(' '),
+  'data-access': d.data.access?.method ?? '',
+});
+---
+
+<Base title="Datasets" description="Verified computational pathology datasets with scale, annotation granularity, access route and terms.">
+  <div class="wrap pt-12">
+    <p class="eyebrow">Catalogue</p>
+    <h1 class="mt-2 text-4xl md:text-5xl">Datasets</h1>
+    <p class="mt-4 max-w-2xl text-ink-2">
+      Every number links to the paper or portal it came from. Access route and redistribution terms are recorded separately,
+      because "free to download" is not the same as "free to share".
+    </p>
+    <div class="mt-8">
+      <FilterPanel facets={facets} noun="datasets" total={datasets.length} />
+    </div>
+    <ul class="mt-6 grid gap-4 md:grid-cols-2" aria-label="Datasets">
+      {datasets.map((d) => <DatasetCard dataset={d} catalog={catalog} headingLevel="h2" attrs={attrsFor(d)} />)}
+    </ul>
+  </div>
+</Base>

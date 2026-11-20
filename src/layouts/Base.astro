@@ -1,0 +1,93 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'A curated atlas of computational pathology datasets, methods and models, organised by organ, disease and task.' } = Astro.props;
+const fullTitle = title === 'Pathology Atlas' ? title : `${title} · Pathology Atlas`;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/organs/', label: 'Organs & Diseases' },
+  { href: '/datasets/', label: 'Datasets' },
+  { href: '/methods/', label: 'Methods & Models' },
+  { href: '/about/', label: 'About' },
+];
+const isCurrent = (href: string) => path.startsWith(href);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f6f3ec" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{fullTitle}</title>
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <a
+      href="#main"
+      class="sr-only z-50 bg-ink px-4 py-2 text-paper focus:not-sr-only focus:fixed focus:left-3 focus:top-3"
+      >Skip to content</a
+    >
+    <header class="border-b border-rule">
+      <div class="wrap flex flex-col gap-3 py-4 md:flex-row md:items-center md:justify-between">
+        <a href="/" class="group inline-flex items-center gap-3 text-ink no-underline" aria-label="Pathology Atlas, home">
+          <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+            <circle cx="15" cy="15" r="13.5" fill="none" stroke="currentColor" stroke-width="1" />
+            <circle cx="15" cy="15" r="6.5" fill="none" stroke="var(--color-eosin)" stroke-width="1" />
+            <circle cx="10" cy="10" r="2" fill="var(--color-hema)" />
+            <circle cx="20.5" cy="11.5" r="1.6" fill="var(--color-hema)" />
+            <circle cx="12.5" cy="21" r="1.8" fill="var(--color-hema)" />
+            <circle cx="21" cy="19.5" r="1.2" fill="var(--color-hema)" />
+          </svg>
+          <span class="font-serif text-xl tracking-tight group-hover:text-eosin">Pathology Atlas</span>
+        </a>
+        <nav aria-label="Primary">
+          <ul class="-mx-2 flex flex-wrap gap-x-1 gap-y-1 text-[0.95rem]">
+            {
+              nav.map((n) => (
+                <li>
+                  <a
+                    href={n.href}
+                    aria-current={isCurrent(n.href) ? 'page' : undefined}
+                    class:list={[
+                      'block rounded-sm px-2 py-1.5 no-underline',
+                      isCurrent(n.href) ? 'text-ink underline decoration-eosin decoration-2 underline-offset-[6px]' : 'text-ink-2 hover:text-hema',
+                    ]}
+                  >
+                    {n.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="flex-1" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="mt-20 border-t border-rule">
+      <div class="wrap grid gap-6 py-8 text-sm text-ink-2 md:grid-cols-3">
+        <p class="max-w-sm">
+          <span class="font-serif text-base text-ink">Pathology Atlas</span><br />
+          A small, source-checked index for computational pathology research. Summaries are original; facts link to their sources.
+        </p>
+        <p>
+          Unconfirmed fields read <span class="not-verified">Not verified</span>. Pending entries stay out of the public
+          site until reviewed.
+        </p>
+        <p class="md:text-right">
+          <a href="/about/#editorial-policy">Editorial policy</a><br />
+          No images of patient tissue are reproduced on this site.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

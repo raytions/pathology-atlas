@@ -1,0 +1,79 @@
+id: panda
+title: PANDA
+aliases: [Prostate cANcer graDe Assessment, PANDA challenge]
+summary: >-
+  The largest public set of prostate biopsy WSIs with grade labels, released for a 2020 Kaggle
+  competition. Each biopsy has an ISUP grade group and Gleason score; many training slides also
+  carry partial masks whose label scheme differs by contributing centre.
+organs: [prostate]
+diseases: [prostate-adenocarcinoma]
+tasks: [gleason-grading]
+specimen: Prostate needle biopsies from Radboud University Medical Center (NL) and Karolinska Institutet (SE).
+stains: [he]
+data_units: [wsi]
+annotation_granularity: [slide-label, region-mask]
+scale:
+  slides:
+    value: 10616
+    source: panda-paper
+    note: Public development set; one digitised biopsy per WSI.
+  patients:
+    value: 2113
+    source: panda-paper
+    note: Patients in the development set.
+  centers:
+    value: 2
+    source: panda-paper
+    note: Development data came from Radboud and Karolinska.
+  storage:
+    value: 411.9 GB, 21,135 files (multi-level TIFF + CSV)
+    source: kaggle-data
+version:
+  value: Kaggle competition release (2020). Only the development set is public.
+  source: panda-paper
+  note: Tuning (393), internal validation (545) and external validation (741 US + 330 EU) biopsies are not part of the public download.
+splits:
+  value: No official train/validation split of the public data. Competition scoring used hidden tuning and internal-validation sets.
+  source: panda-paper
+evaluation_protocol:
+  value: ISUP grade group per biopsy, scored with quadratically weighted Cohen's kappa against the reference standard.
+  source: panda-paper
+access:
+  method: platform-account
+  details: Download from Kaggle after signing in and accepting the competition rules.
+  source: kaggle-data
+terms:
+  license: CC BY-SA-NC 4.0 (as stated by the organisers)
+  redistribution: Non-commercial research use with attribution (cite the PANDA paper); share-alike. The Kaggle page itself lists the data as "Subject to Competition Rules".
+  source: panda-paper
+  note: Read the Kaggle competition rules as well; the two statements are recorded separately.
+official_url: https://panda.grand-challenge.org/data/
+primary_paper: panda-paper
+limitations:
+  - value: Mask values mean different things per provider (Radboud labels glands by Gleason pattern; Karolinska labels benign vs cancerous regions). Not every training slide has a mask, and masks may contain errors.
+    source: kaggle-data
+  - value: Some training slides contain pen marks; test slides do not.
+    source: kaggle-data
+  - value: Training labels came from a single read; multiple pathologists graded only the test sets.
+    source: kaggle-data
+  - value: Focuses on acinar adenocarcinoma at the biopsy level, not patient-level diagnosis across multiple cores.
+    source: panda-paper
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: panda-paper
+    title: "Bulten et al. Artificial intelligence for diagnosis and Gleason grading of prostate cancer: the PANDA challenge. Nat Med 28, 154-163 (2022)"
+    url: https://www.nature.com/articles/s41591-021-01620-2
+    kind: paper
+    accessed: 2026-11-20
+  - key: kaggle-data
+    title: "Kaggle: Prostate cANcer graDe Assessment (PANDA) Challenge, Data tab"
+    url: https://www.kaggle.com/competitions/prostate-cancer-grade-assessment/data
+    kind: data-portal
+    accessed: 2026-11-20
+  - key: panda-site
+    title: "PANDA challenge site: Panda Dataset page"
+    url: https://panda.grand-challenge.org/data/
+    kind: challenge-page
+    accessed: 2026-11-20
+    note: Points to Kaggle for the data and restates the CC BY-SA-NC 4.0 licence.

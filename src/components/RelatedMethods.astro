@@ -1,0 +1,88 @@
+---
+/**
+ * Methods grouped by what the link actually means. Benchmark rows always show the
+ * recorded use (evaluation / fine-tuning / pretraining), the task and the evidence.
+ */
+import Relevance from './Relevance.astro';
+import { RELEVANCE, DATASET_USE, METHOD_CATEGORY } from '../lib/vocab';
+import { url, type Catalog, type Method, type DatasetRelation, type Relevance as R } from '../lib/catalog';
+
+interface Props {
+  groups: Record<R, { method: Method; relations: DatasetRelation[] }[]>;
+  catalog: Catalog;
+  /** e.g. "Gleason grading" or "PANDA"; used in the explanatory copy. */
+  contextTitle: string;
+  headingId?: string;
+  showEmpty?: boolean;
+}
+const { groups, catalog, contextTitle, headingId = 'methods-h', showEmpty = true } = Astro.props;
+const order: R[] = ['benchmark', 'same-task', 'background'];
+const sourceUrl = (m: Method, key: string) => m.data.sources.find((s) => s.key === key);
+const anyMethods = order.some((k) => groups[k].length);
+---
+
+<section aria-labelledby={headingId} class="rule-t mt-12 pt-6">
+  <h2 id={headingId} class="text-2xl md:text-3xl">Related methods &amp; models</h2>
+  <p class="mt-2 max-w-3xl text-sm text-ink-2">
+    Grouped by the kind of link. Only <strong class="font-semibold text-hema">Benchmark</strong> means a cited source reports the method on
+    data for {contextTitle}; the other groups are not results.
+  </p>
+
+  {!anyMethods && <p class="mt-6 not-verified">No related methods are catalogued yet.</p>}
+
+  {
+    order.map((kind) =>
+      groups[kind].length || (showEmpty && kind !== 'background') ? (
+        <div class="mt-8">
+          <div class="flex flex-wrap items-center gap-3">
+            <Relevance kind={kind} size="md" />
+            <h3 class="font-sans text-base font-semibold">{RELEVANCE[kind].label}</h3>
+          </div>
+          <p class="mt-1 max-w-3xl text-sm text-ink-3">{RELEVANCE[kind].help}</p>
+          {groups[kind].length === 0 ? (
+            <p class="mt-3 text-sm not-verified">None recorded.</p>
+          ) : (
+            <ul class="mt-3 divide-y divide-rule border-y border-rule">
+              {groups[kind].map(({ method: m, relations }) => (
+                <li class="grid gap-2 py-4 md:grid-cols-[14rem_1fr] md:gap-6">
+                  <div>
+                    <a href={url.method(m.id)} class="font-serif text-xl">
+                      {m.data.short_name ?? m.data.title}
+                    </a>
+                    <p class="text-xs text-ink-3">{METHOD_CATEGORY[m.data.category]}</p>
+                  </div>
+                  <div class="text-sm">
+                    {relations.length > 0 ? (
+                      <ul class="space-y-2">
+                        {relations.map((r) => {
+                          const s = sourceUrl(m, r.evidence);
+                          return (
+                            <li>
+                              <span class="tag mr-1">{DATASET_USE[r.use]}</span>
+                              <a href={url.dataset(r.dataset)}>{catalog.title(r.dataset)}</a>
+                              {r.task && <span class="text-ink-2"> · {catalog.title(r.task)}</span>}
+                              {r.note && <span class="mt-1 block text-ink-2">{r.note}</span>}
+                              {s && (
+                                <span class="mt-0.5 block text-xs text-ink-3">
+                                  Evidence: <a href={s.url} rel="noopener">{s.title}</a>
+                                </span>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : (
+                      <p class="text-ink-2">
+                        Built for {m.data.tasks.map((t) => catalog.title(t).toLowerCase()).join(', ')}. {m.data.summary.split('. ')[0]}.
+                      </p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : null,
+    )
+  }
+</section>

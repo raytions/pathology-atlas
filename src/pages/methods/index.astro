@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import FilterPanel from '../../components/FilterPanel.astro';
+import MethodCard from '../../components/MethodCard.astro';
+import { loadCatalog } from '../../lib/catalog';
+import { METHOD_CATEGORY, RELEVANCE, WEIGHTS_AVAILABILITY } from '../../lib/vocab';
+
+const catalog = await loadCatalog();
+const { methods, tasks } = catalog;
+
+/** For each method: which tasks it relates to, and how (never implied as validated). */
+const relsFor = (m: (typeof methods)[number]) => {
+  const out: Record<string, { kind: string; text: string }> = {};
+  for (const t of tasks) {
+    const r = catalog.methodRelevanceForTask(m, t.id);
+    if (!r) continue;
+    const label = RELEVANCE[r.relevance].label;
+    const detail =
+      r.relevance === 'benchmark'
+        ? `: ${[...new Set(r.relations.map((x) => catalog.title(x.dataset)))].join(', ')}`
+        : r.relevance === 'same-task'
+          ? `. No result on a ${t.data.title} dataset is recorded here.`
+          : '';
+    out[t.id] = { kind: r.relevance, text: `${label}${detail}` };
+  }
+  return out;
+};
+
+const taskOptions = tasks
+  .filter((t) => methods.some((m) => catalog.methodRelevanceForTask(m, t.id)))
+  .sort((a, b) => (a.data.scope === b.data.scope ? 0 : a.data.scope === 'specific' ? -1 : 1))
+  .map((t) => ({ value: t.id, label: t.data.scope === 'general' ? `${t.data.title} (family)` : t.data.title }));
+
+const facets = [
+  { name: 'task', label: 'Task', options: taskOptions },
+  {
+    name: 'category',
+    label: 'Category',
+    options: [...new Set(methods.map((m) => m.data.category))].map((v) => ({ value: v, label: METHOD_CATEGORY[v] })),
+  },
+  {
+    name: 'dataset',
+    label: 'Reported on',
+    options: catalog.datasets
+      .filter((d) => methods.some((m) => catalog.relations(m).some((r) => r.dataset === d.id && r.use !== 'background')))
+      .map((d) => ({ value: d.id, label: d.data.title })),
+  },
+  {
+    name: 'weights',
+    label: 'Weights',
+    options: [...new Set(methods.flatMap((m) => (m.data.weights ? [m.data.weights.availability] : [])))].map((v) => ({
+      value: v,
+      label: WEIGHTS_AVAILABILITY[v],
+    })),
+  },
+];
+
+const attrsFor = (m: (typeof methods)[number]) => {
+  const rels = relsFor(m);
+  return {
+    'data-filter-item': '',
+    'data-search': [m.data.title, m.data.short_name ?? '', m.data.summary, METHOD_CATEGORY[m.data.category], ...m.data.tasks.map((t) => catalog.title(t))]
+      .join(' ')
+      .toLowerCase(),
+    'data-task': Object.keys(rels).join(' '),
+    'data-category': m.data.category,
+    'data-dataset': [...new Set(catalog.relations(m).filter((r) => r.use !== 'background').map((r) => r.dataset))].join(' '),
+    'data-weights': m.data.weights?.availability ?? '',
+    'data-rel': JSON.stringify(rels),
+  };
+};
+---
+
+<Base title="Methods & Models" description="Computational pathology methods and models with code and weight access, and explicitly labelled dataset relations.">
+  <div class="wrap pt-12">
+    <p class="eyebrow">Catalogue</p>
+    <h1 class="mt-2 text-4xl md:text-5xl">Methods &amp; Models</h1>
+    <p class="mt-4 max-w-2xl text-ink-2">
+      Filtering by task includes methods built for the same task family. Each card then says whether a source reports it on a
+      benchmark for that task, or whether it is only applicable. Applicable is not validated.
+    </p>
+    <div class="mt-8">
+      <FilterPanel facets={facets} noun="methods" total={methods.length} />
+    </div>
+    <ul class="mt-6 grid gap-4 md:grid-cols-2" aria-label="Methods and models">
+      {methods.map((m) => <MethodCard method={m} catalog={catalog} headingLevel="h2" attrs={attrsFor(m)} />)}
+    </ul>
+  </div>
+</Base>

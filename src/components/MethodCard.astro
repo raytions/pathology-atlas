@@ -1,0 +1,58 @@
+---
+import type { Catalog, Method } from '../lib/catalog';
+import { url } from '../lib/catalog';
+import { INPUT_GRANULARITY, METHOD_CATEGORY, OUTPUT_GRANULARITY, WEIGHTS_AVAILABILITY } from '../lib/vocab';
+
+interface Props {
+  method: Method;
+  catalog: Catalog;
+  headingLevel?: 'h2' | 'h3';
+  attrs?: Record<string, string>;
+}
+const { method: m, catalog, headingLevel = 'h3', attrs = {} } = Astro.props;
+const d = m.data;
+const H = headingLevel;
+const reportedOn = [...new Set(catalog.relations(m).filter((r) => r.use !== 'background').map((r) => r.dataset))];
+---
+
+<li class="group relative flex flex-col border border-rule bg-card p-5 transition-colors focus-within:border-hema hover:border-rule-strong" {...attrs}>
+  <div class="flex items-start justify-between gap-3">
+    <H class="text-2xl leading-tight">
+      <a href={url.method(m.id)} class="text-ink no-underline after:absolute after:inset-0 hover:text-hema focus-visible:outline-none">
+        {d.short_name ?? d.title}
+      </a>
+    </H>
+    <span class="eyebrow mt-1 shrink-0 text-right">{METHOD_CATEGORY[d.category]}</span>
+  </div>
+  {d.short_name && d.short_name !== d.title && <p class="text-sm text-ink-3">{d.title}</p>}
+  <p class="mt-2 line-clamp-3 text-[0.93rem] text-ink-2">{d.summary}</p>
+  <p class="rel-note mt-3 hidden text-sm" data-rel-note></p>
+
+  <dl class="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+    <div>
+      <dt class="field-label">Task family</dt>
+      <dd>{d.tasks.map((t) => catalog.title(t)).join(', ')}</dd>
+    </div>
+    <div>
+      <dt class="field-label">Input → output</dt>
+      <dd>
+        {d.input_granularity.map((i) => INPUT_GRANULARITY[i].replace(/ \(.*\)/, '')).join(', ')} → {
+          d.output_granularity.map((o) => OUTPUT_GRANULARITY[o]).join(', ')
+        }
+      </dd>
+    </div>
+    <div>
+      <dt class="field-label">Code</dt>
+      <dd>{d.code ? (d.code.license ?? 'No licence stated') : <span class="not-verified">Not verified</span>}</dd>
+    </div>
+    <div>
+      <dt class="field-label">Weights</dt>
+      <dd>{d.weights ? WEIGHTS_AVAILABILITY[d.weights.availability] : <span class="not-verified">Not verified</span>}</dd>
+    </div>
+  </dl>
+
+  <p class="mt-auto pt-4 text-xs text-ink-2">
+    <span class="field-label mr-1">Reported on</span>
+    {reportedOn.length ? reportedOn.map((id) => catalog.title(id)).join(', ') : <span class="not-verified">No catalogued benchmark</span>}
+  </p>
+</li>

@@ -1,0 +1,45 @@
+id: abmil
+title: Attention-based deep MIL (ABMIL)
+short_name: ABMIL
+summary: >-
+  Frames multiple-instance learning as learning a bag-label distribution and replaces max or mean
+  pooling with a learned attention pooling, so each instance gets an interpretable weight. It is
+  the aggregator many later slide-level models build on or compare against.
+category: mil-aggregator
+tasks: [wsi-classification]
+organs: []
+input_granularity: [patch-features]
+output_granularity: [slide-label, attention-map]
+year: 2018
+venue:
+  value: ICML 2018
+  source: abmil-preprint
+primary_paper: abmil-preprint
+code:
+  url: https://github.com/AMLab-Amsterdam/AttentionDeepMIL
+  license: MIT
+  conditions: The reference code covers the MNIST-bags experiment; the histopathology experiments used a similar model described in the paper.
+  source: abmil-repo
+weights:
+  availability: none-found
+  conditions: No pretrained checkpoints are linked from the repository.
+  source: abmil-repo
+datasets: []
+limitations:
+  - value: The paper's histopathology experiments use small breast and colon image collections, not WSI benchmarks catalogued here, so no benchmark relation is recorded.
+    source: abmil-repo
+  - value: Reference code targets PyTorch 0.3.1 and Python 2.7.
+    source: abmil-repo
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: abmil-preprint
+    title: "Ilse, Tomczak & Welling. Attention-based Deep Multiple Instance Learning. arXiv 1802.04712 (ICML 2018)"
+    url: https://arxiv.org/abs/1802.04712
+    kind: preprint
+    accessed: 2026-11-20
+  - key: abmil-repo
+    title: AMLab-Amsterdam/AttentionDeepMIL (GitHub)
+    url: https://github.com/AMLab-Amsterdam/AttentionDeepMIL
+    kind: repository
+    accessed: 2026-11-20

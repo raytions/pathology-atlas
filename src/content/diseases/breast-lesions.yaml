@@ -1,0 +1,16 @@
+id: breast-lesions
+title: Breast lesions (benign, atypical, malignant)
+organs: [breast]
+synonyms: [Breast carcinoma subtypes, Breast lesion spectrum]
+summary: >-
+  The diagnostic spectrum of breast tissue lesions, from normal and benign changes through
+  atypical (pre-cancerous) lesions to in-situ and invasive carcinoma. Subtyping across this
+  spectrum is harder than a benign-versus-malignant split.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: bracs-preprint
+    title: "Brancati et al. BRACS (arXiv 2111.04740)"
+    url: https://arxiv.org/abs/2111.04740
+    kind: preprint
+    accessed: 2026-11-20

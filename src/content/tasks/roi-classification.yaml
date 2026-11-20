@@ -1,0 +1,16 @@
+id: roi-classification
+title: ROI / patch classification
+scope: general
+broader: []
+prediction_target: One label per region of interest or tile.
+summary: >-
+  Classifying fixed regions cut from slides rather than whole slides. Common as a linear-probe
+  benchmark for pretrained encoders, and as the region-level track of datasets such as BRACS.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: uni-paper
+    title: "Chen et al. Towards a general-purpose foundation model for computational pathology. Nat Med (2024)"
+    url: https://www.nature.com/articles/s41591-024-02857-3
+    kind: paper
+    accessed: 2026-11-20

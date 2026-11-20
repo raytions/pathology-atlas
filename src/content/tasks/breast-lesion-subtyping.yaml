@@ -1,0 +1,18 @@
+id: breast-lesion-subtyping
+title: Breast lesion subtyping
+scope: specific
+organs: [breast]
+diseases: [breast-lesions]
+broader: [wsi-classification, roi-classification]
+prediction_target: Lesion type (benign / atypical / malignant) or one of seven finer subtypes.
+summary: >-
+  Classifying breast tissue into lesion categories at slide or region level. Coarse and
+  fine-grained label sets are both in use, so check which one a reported number refers to.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: bracs-preprint
+    title: "Brancati et al. BRACS (arXiv 2111.04740)"
+    url: https://arxiv.org/abs/2111.04740
+    kind: preprint
+    accessed: 2026-11-20

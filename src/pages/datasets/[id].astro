@@ -1,0 +1,148 @@
+---
+import Base from '../../layouts/Base.astro';
+import Field from '../../components/Field.astro';
+import Cite from '../../components/Cite.astro';
+import Sources from '../../components/Sources.astro';
+import RelatedMethods from '../../components/RelatedMethods.astro';
+import DatasetCard from '../../components/DatasetCard.astro';
+import { loadCatalog, url, fmt, type Dataset } from '../../lib/catalog';
+import { ACCESS_METHOD, ANNOTATION_GRANULARITY, DATA_UNITS, REVIEW_STATUS, STAINS } from '../../lib/vocab';
+
+export async function getStaticPaths() {
+  const catalog = await loadCatalog();
+  return catalog.datasets.map((d) => ({ params: { id: d.id }, props: { id: d.id } }));
+}
+
+const catalog = await loadCatalog();
+const ds = catalog.dataset(Astro.props.id) as Dataset;
+const d = ds.data;
+const primary = d.primary_paper ? d.sources.find((s) => s.key === d.primary_paper) : undefined;
+const methods = catalog.methodsForDataset(ds);
+const siblings = catalog.datasets.filter((o) => o.id !== ds.id && o.data.tasks.some((t) => d.tasks.includes(t)));
+const firstOrgan = d.organs[0];
+const firstTask = d.tasks[0];
+const scaleRows = [
+  ['Patients', d.scale.patients],
+  ['Slides (WSIs)', d.scale.slides],
+  ['ROIs', d.scale.rois],
+  ['Patches', d.scale.patches],
+  ['Centres', d.scale.centers],
+] as const;
+---
+
+<Base title={d.title} description={d.summary}>
+  <article class="wrap pt-10">
+    <nav aria-label="Breadcrumb" class="text-sm text-ink-2">
+      <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <li><a href="/organs/">Organs</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href={url.organ(firstOrgan)}>{catalog.title(firstOrgan)}</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href={url.task(firstTask)}>{catalog.title(firstTask)}</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="text-ink">{d.title}</li>
+      </ol>
+    </nav>
+
+    <header class="mt-8 grid gap-8 md:grid-cols-[1fr_18rem]">
+      <div>
+        <p class="eyebrow">Dataset</p>
+        <h1 class="mt-2 text-5xl md:text-6xl">{d.title}</h1>
+        {d.aliases.length > 0 && <p class="mt-2 text-ink-3">{d.aliases.join(' · ')}</p>}
+        <p class="mt-5 max-w-2xl font-serif text-xl leading-relaxed text-ink-2">{d.summary}</p>
+      </div>
+      <aside class="self-start border border-rule bg-card p-5 text-sm" aria-label="Official entry and status">
+        <p class="field-label">Official entry</p>
+        {d.official_url ? <a href={d.official_url} rel="noopener" class="mt-1 block break-words">{new URL(d.official_url).host}{new URL(d.official_url).pathname.replace(/\/$/, '')}</a> : <p class="not-verified">Not verified</p>}
+        <p class="field-label mt-4">Primary paper</p>
+        {primary ? <a href={primary.url} rel="noopener" class="mt-1 block">{primary.title}</a> : <p class="not-verified">Not verified</p>}
+        <p class="field-label mt-4">Review status</p>
+        <p class="mt-1">{REVIEW_STATUS[d.review_status]} · {d.last_verified ? `last verified ${d.last_verified}` : 'not verified'}</p>
+      </aside>
+    </header>
+
+    <div class="mt-12 grid gap-x-12 gap-y-10 lg:grid-cols-2">
+      <section aria-labelledby="glance-h">
+        <h2 id="glance-h" class="text-2xl">At a glance</h2>
+        <dl class="mt-2 divide-y divide-rule border-y border-rule">
+          <Field label="Organ">{d.organs.map((o, i) => <>{i > 0 && ', '}<a href={url.organ(o)}>{catalog.title(o)}</a></>)}</Field>
+          <Field label="Disease">{d.diseases.length ? d.diseases.map((x, i) => <>{i > 0 && ', '}<a href={url.disease(x)}>{catalog.title(x)}</a></>) : <span class="not-verified">Not verified</span>}</Field>
+          <Field label="Task">{d.tasks.map((t, i) => <>{i > 0 && ', '}<a href={url.task(t)}>{catalog.title(t)}</a></>)}</Field>
+          <Field label="Specimen" value={d.specimen} />
+          <Field label="Stain" value={d.stains.map((s) => STAINS[s]).join(', ')} />
+          <Field label="Data unit" value={d.data_units.map((u) => DATA_UNITS[u]).join(', ')} />
+          <Field label="Annotation" value={d.annotation_granularity.map((a) => ANNOTATION_GRANULARITY[a]).join(', ')} />
+        </dl>
+      </section>
+
+      <section aria-labelledby="scale-h">
+        <h2 id="scale-h" class="text-2xl">Scale</h2>
+        <dl class="mt-2 divide-y divide-rule border-y border-rule">
+          {scaleRows.map(([label, c]) => <Field label={label} value={c ? fmt(c.value) : undefined} source={c?.source} note={c?.note} />)}
+          <Field label="Storage" value={d.scale.storage?.value} source={d.scale.storage?.source} note={d.scale.storage?.note} />
+        </dl>
+      </section>
+
+      <section aria-labelledby="protocol-h">
+        <h2 id="protocol-h" class="text-2xl">Version &amp; evaluation</h2>
+        <dl class="mt-2 divide-y divide-rule border-y border-rule">
+          <Field label="Version" value={d.version?.value} source={d.version?.source} note={d.version?.note} />
+          <Field label="Official splits" value={d.splits?.value} source={d.splits?.source} note={d.splits?.note} />
+          <Field label="Evaluation protocol" value={d.evaluation_protocol?.value} source={d.evaluation_protocol?.source} note={d.evaluation_protocol?.note} />
+        </dl>
+      </section>
+
+      <section aria-labelledby="access-h">
+        <h2 id="access-h" class="text-2xl">Access &amp; terms</h2>
+        <p class="mt-1 text-sm text-ink-3">How you get the data and what you may do with it are recorded separately.</p>
+        <dl class="mt-2 divide-y divide-rule border-y border-rule">
+          <Field label="How to obtain">
+            {d.access ? (
+              <>
+                <span class="font-semibold">{ACCESS_METHOD[d.access.method]}</span>. {d.access.details}<Cite source={d.access.source} />
+              </>
+            ) : (
+              <span class="not-verified">Not verified</span>
+            )}
+          </Field>
+          <Field label="Licence / terms" value={d.terms?.license} source={d.terms?.source} note={d.terms?.note} />
+          <Field label="Redistribution" value={d.terms?.redistribution} source={d.terms?.redistribution ? d.terms?.source : undefined} />
+        </dl>
+      </section>
+    </div>
+
+    <section aria-labelledby="limits-h" class="rule-t mt-12 pt-6">
+      <h2 id="limits-h" class="text-2xl md:text-3xl">Known limitations</h2>
+      {
+        d.limitations.length ? (
+          <ul class="mt-4 max-w-3xl list-disc space-y-2 pl-5 marker:text-eosin">
+            {d.limitations.map((l) => (
+              <li>
+                {l.value}
+                <Cite source={l.source} />
+                {l.note && <span class="block text-sm text-ink-2">{l.note}</span>}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="mt-3 not-verified">Not verified</p>
+        )
+      }
+    </section>
+
+    <RelatedMethods groups={methods} catalog={catalog} contextTitle={d.title} />
+
+    {
+      siblings.length > 0 && (
+        <section aria-labelledby="siblings-h" class="rule-t mt-12 pt-6">
+          <h2 id="siblings-h" class="text-2xl md:text-3xl">Datasets for the same task</h2>
+          <ul class="mt-5 grid gap-4 md:grid-cols-2">
+            {siblings.map((s) => <DatasetCard dataset={s} catalog={catalog} />)}
+          </ul>
+        </section>
+      )
+    }
+
+    <Sources sources={d.sources} lastVerified={d.last_verified} />
+  </article>
+</Base>

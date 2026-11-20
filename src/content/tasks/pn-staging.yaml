@@ -1,0 +1,19 @@
+id: pn-staging
+title: Patient-level pN staging
+scope: specific
+organs: [breast]
+diseases: [breast-cancer-nodal-metastasis]
+broader: [wsi-classification]
+prediction_target: pN stage per patient, aggregated from slide-level metastasis categories.
+summary: >-
+  Combining slide-level findings (none, isolated tumour cells, micro- or macro-metastasis) across
+  several lymph nodes into a patient-level pathological N stage. CAMELYON17 introduced it as a
+  benchmark task.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: camelyon-gigascience
+    title: "Litjens et al. The CAMELYON dataset. GigaScience (2018)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6007545/
+    kind: paper
+    accessed: 2026-11-20

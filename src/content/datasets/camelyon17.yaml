@@ -1,0 +1,65 @@
+id: camelyon17
+title: CAMELYON17
+aliases: [Cancer Metastases in Lymph Nodes Challenge 2017]
+summary: >-
+  A five-centre extension of CAMELYON16 that moves from single slides to patients: slides are
+  grouped into artificial patients and scored by pN stage. Useful for testing robustness across
+  centres and scanners.
+organs: [breast]
+diseases: [breast-cancer-nodal-metastasis]
+tasks: [lymph-node-metastasis-detection, pn-staging]
+specimen: Lymph node sections from breast cancer patients at five Dutch centres (CWZ, LabPON, RST, RUMC, UMCU).
+stains: [he]
+data_units: [wsi]
+annotation_granularity: [slide-label, patient-label, lesion-contour]
+scale:
+  slides:
+    value: 1000
+    source: camelyon-gigascience
+  patients:
+    value: 200
+    source: camelyon-gigascience
+    note: Artificial patients assembled by the organisers (5 slides each, all from one centre), not real patient groupings.
+  centers:
+    value: 5
+    source: camelyon-gigascience
+  storage:
+    value: About 2.95 TB for the combined CAMELYON16 + CAMELYON17 release (1,399 WSIs).
+    source: camelyon-gigascience
+version:
+  value: CAMELYON17 portion of the combined CAMELYON release (GigaScience 2018).
+  source: camelyon-gigascience
+splits:
+  value: 500 training slides / 100 training patients with labels; 500 test slides / 100 test patients released without the reference standard.
+  source: camelyon-gigascience
+evaluation_protocol:
+  value: Patient-level pN stage, scored with a weighted Cohen's kappa.
+  source: camelyon-gigascience
+access:
+  method: open-download
+  details: Same public S3 bucket as CAMELYON16 on the Registry of Open Data on AWS.
+  source: aws-registry
+terms:
+  license: CC0
+  redistribution: Public-domain dedication; no restriction on redistribution stated.
+  source: camelyon-gigascience
+official_url: https://registry.opendata.aws/camelyon/
+primary_paper: camelyon-gigascience
+limitations:
+  - value: Detailed metastasis contours exist for only 50 of the 1,000 slides (10 per centre); the rest have slide-level labels.
+    source: camelyon-gigascience
+  - value: Test-set labels were withheld for challenge evaluation, so local test numbers are not comparable to leaderboard results.
+    source: camelyon-gigascience
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: camelyon-gigascience
+    title: "Litjens et al. 1399 H&E-stained sentinel lymph node sections of breast cancer patients: the CAMELYON dataset. GigaScience 7(6), giy065 (2018)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6007545/
+    kind: paper
+    accessed: 2026-11-20
+  - key: aws-registry
+    title: "Registry of Open Data on AWS: CAMELYON dataset"
+    url: https://registry.opendata.aws/camelyon/
+    kind: data-portal
+    accessed: 2026-11-20

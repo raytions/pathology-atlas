@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/Base.astro';
+import Field from '../../components/Field.astro';
+import Sources from '../../components/Sources.astro';
+import DatasetCard from '../../components/DatasetCard.astro';
+import { loadCatalog, url, type Disease } from '../../lib/catalog';
+
+export async function getStaticPaths() {
+  const catalog = await loadCatalog();
+  return catalog.diseases.map((d) => ({ params: { id: d.id }, props: { id: d.id } }));
+}
+
+const catalog = await loadCatalog();
+const disease = catalog.disease(Astro.props.id) as Disease;
+const d = disease.data;
+const tasks = catalog.tasksForDisease(disease.id);
+const datasets = catalog.datasetsForDisease(disease.id);
+---
+
+<Base title={d.title} description={d.summary}>
+  <article class="wrap pt-10">
+    <nav aria-label="Breadcrumb" class="text-sm text-ink-2">
+      <ol class="flex flex-wrap items-center gap-x-2">
+        <li><a href="/organs/">Organs &amp; Diseases</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href={url.organ(d.organs[0])}>{catalog.title(d.organs[0])}</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="text-ink">{d.title}</li>
+      </ol>
+    </nav>
+    <header class="mt-8 max-w-3xl">
+      <p class="eyebrow">Disease</p>
+      <h1 class="mt-2 text-5xl">{d.title}</h1>
+      <p class="mt-5 font-serif text-xl leading-relaxed text-ink-2">{d.summary}</p>
+    </header>
+    <dl class="mt-8 max-w-3xl divide-y divide-rule border-y border-rule">
+      <Field label="Organ">{d.organs.map((o, i) => <>{i > 0 && ', '}<a href={url.organ(o)}>{catalog.title(o)}</a></>)}</Field>
+      <Field label="Also called" value={d.synonyms.join('; ') || undefined} />
+      <Field label="Tasks">{tasks.length ? tasks.map((t, i) => <>{i > 0 && ', '}<a href={url.task(t.id)}>{t.data.title}</a></>) : <span class="not-verified">None catalogued</span>}</Field>
+    </dl>
+    <section aria-labelledby="ds-h" class="rule-t mt-12 pt-6">
+      <h2 id="ds-h" class="text-2xl md:text-3xl">Datasets</h2>
+      <ul class="mt-5 grid gap-4 md:grid-cols-2">
+        {datasets.map((x) => <DatasetCard dataset={x} catalog={catalog} />)}
+      </ul>
+    </section>
+    <Sources sources={d.sources} lastVerified={d.last_verified} />
+  </article>
+</Base>

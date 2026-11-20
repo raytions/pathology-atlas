@@ -1,0 +1,17 @@
+id: wsi-classification
+title: Weakly supervised slide classification
+scope: general
+broader: []
+prediction_target: One label per whole-slide image (or per patient), learned from slide-level labels.
+summary: >-
+  The task family behind most slide-level benchmarks: a gigapixel slide is tiled into patches,
+  patch features are aggregated, and only the slide label supervises training. Grading,
+  metastasis detection and subtyping are all instances of it.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: clam-paper
+    title: "Lu et al. Data-efficient and weakly supervised computational pathology on whole-slide images. Nat Biomed Eng (2021)"
+    url: https://www.nature.com/articles/s41551-020-00682-w
+    kind: paper
+    accessed: 2026-11-20

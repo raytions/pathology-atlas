@@ -1,0 +1,67 @@
+id: camelyon16
+title: CAMELYON16
+aliases: [Cancer Metastases in Lymph Nodes Challenge 2016]
+summary: >-
+  Sentinel lymph node WSIs from two Dutch hospitals with exhaustive metastasis contours, built
+  for the first WSI challenge in computational pathology. Small, well annotated and still the
+  default sanity check for slide-level metastasis detection.
+organs: [breast]
+diseases: [breast-cancer-nodal-metastasis]
+tasks: [lymph-node-metastasis-detection]
+specimen: Sentinel lymph node sections from breast cancer surgery patients (RUMC and UMCU, Netherlands).
+stains: [he]
+data_units: [wsi]
+annotation_granularity: [slide-label, lesion-contour]
+scale:
+  slides:
+    value: 399
+    source: c16-jama
+  patients:
+    value: 399
+    source: c16-jama
+    note: One sentinel lymph node slide per patient.
+  centers:
+    value: 2
+    source: c16-jama
+version:
+  value: CAMELYON16 portion of the combined CAMELYON release (GigaScience 2018).
+  source: camelyon-gigascience
+splits:
+  value: Official split of 270 training slides (110 with metastases, 160 without) and 129 test slides (49 with, 80 without).
+  source: c16-jama
+evaluation_protocol:
+  value: Two challenge tasks, lesion-level detection (FROC) and slide-level classification (AUC).
+  source: c16-jama
+access:
+  method: open-download
+  details: Hosted in the public "camelyon-dataset" S3 bucket on the Registry of Open Data on AWS, together with CAMELYON17.
+  source: aws-registry
+terms:
+  license: CC0
+  redistribution: Public-domain dedication; no restriction on redistribution stated.
+  source: camelyon-gigascience
+official_url: https://registry.opendata.aws/camelyon/
+primary_paper: c16-jama
+limitations:
+  - value: Only two centres; slides containing only isolated tumour cells were excluded.
+    source: camelyon-gigascience
+  - value: The organisers flag 15 slides that may contain unlabelled metastatic areas (listed in a text file in the release).
+    source: camelyon-gigascience
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: c16-jama
+    title: "Ehteshami Bejnordi et al. Diagnostic assessment of deep learning algorithms for detection of lymph node metastases in women with breast cancer. JAMA 318, 2199-2210 (2017)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC5820737/
+    kind: paper
+    accessed: 2026-11-20
+  - key: camelyon-gigascience
+    title: "Litjens et al. 1399 H&E-stained sentinel lymph node sections of breast cancer patients: the CAMELYON dataset. GigaScience 7(6), giy065 (2018)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6007545/
+    kind: paper
+    accessed: 2026-11-20
+  - key: aws-registry
+    title: "Registry of Open Data on AWS: CAMELYON dataset"
+    url: https://registry.opendata.aws/camelyon/
+    kind: data-portal
+    accessed: 2026-11-20
