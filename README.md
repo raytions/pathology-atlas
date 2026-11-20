@@ -17,6 +17,7 @@ npm run validate   # editorial integrity checks only
 npm run check      # astro check: TypeScript + templates
 npm run build      # validate + static build into dist/  (fails on any content error)
 npm test           # relation regression tests (+ a check of dist/index.html when built)
+npm run discover   # model discovery -> docs/inbox/<today>.md (candidates only, see docs/inbox/README.md)
 npm run preview    # serve dist/
 ```
 
