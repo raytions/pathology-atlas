@@ -1,0 +1,23 @@
+# Pending entry: kept in the repo, excluded from public pages and search.
+id: gleason-pattern-classification
+title: Gleason pattern classification
+scope: specific
+organs: [prostate]
+diseases: [prostate-adenocarcinoma]
+broader: [roi-classification]
+prediction_target: Gleason pattern of a tissue patch (non-cancerous, 3, 4 or 5), usually the majority or primary pattern in the patch.
+summary: >-
+  Labelling small prostate tissue patches by their Gleason pattern rather than grading a whole
+  biopsy. It is a region-level task with its own label set and metrics, so results on it are not
+  results on biopsy-level Gleason grading.
+review_status: draft
+reviewer_notes: >-
+  Kept separate from gleason-grading (biopsy-level ISUP grade group / Gleason score). Check the
+  wording of the prediction target against more than one dataset before promotion.
+sources:
+  - key: sicap-preprint
+    title: "Silva-Rodríguez J. et al. Going Deeper through the Gleason Scoring Scale (arXiv 2105.10490 v1)"
+    url: https://arxiv.org/abs/2105.10490
+    kind: preprint
+    accessed: 2026-11-20
+    note: Defines patch-level Gleason grading with labels NC, GG3, GG4 and GG5.
