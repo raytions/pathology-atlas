@@ -1,0 +1,57 @@
+id: phikon-v2
+title: Phikon-v2
+short_name: Phikon-v2
+summary: >-
+  A ViT-L/16 encoder trained with DINOv2 on PANCAN-XL, about 456 million tiles from roughly 60,000
+  publicly available H&E slides (TCGA, CPTAC, GTEx and others), and benchmarked on slide-level
+  biomarker and diagnosis tasks with external validation cohorts.
+category: foundation-model
+tasks: [representation-learning, wsi-classification]
+organs: []
+input_granularity: [patch]
+output_granularity: [patch-embedding]
+year: 2024
+primary_paper: phikon2-preprint
+weights:
+  availability: public
+  url: https://huggingface.co/owkin/phikon-v2
+  license: Owkin non-commercial licence
+  conditions: Downloadable from Hugging Face without an access request at the time of checking; the licence is listed as "other" and named an Owkin non-commercial licence on the card.
+  source: phikon2-model-card
+datasets:
+  - dataset: camelyon16
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: phikon2-preprint
+    note: >-
+      Slide-level metastasis detection (METASTASIS task), median bootstrap AUC in Table 2 of arXiv v1.
+      The paper says it uses the official split but reports 269 train / 130 test slides, while the
+      challenge paper gives 270 / 129.
+  - dataset: panda
+    use: evaluation
+    task: gleason-grading
+    evidence: phikon2-preprint
+    note: >-
+      Six-class ISUP grading (ISUP task), Table 2 of arXiv v1. Uses the authors' own stratified split
+      (9,553 train / 1,062 test slides), not a challenge split, so numbers are not comparable with
+      PANDA leaderboard results.
+limitations:
+  - value: Some TCGA downstream training cohorts overlap the pretraining data; the authors report metrics only on external validation cohorts to limit leakage.
+    source: phikon2-preprint
+review_status: verified
+last_verified: 2026-11-20
+reviewer_notes: >-
+  The model card describes PANCAN-XL both as "only" CPTAC, TCGA and GTEx and as "TCGA, CPTAC, GTEx,
+  TCIA and others"; the summary says "and others". No official code repository for v2 was checked,
+  so code access is left unrecorded.
+sources:
+  - key: phikon2-preprint
+    title: "Filiot A. et al. Phikon-v2, A large and public feature extractor for biomarker prediction (arXiv 2409.09173 v1)"
+    url: https://arxiv.org/abs/2409.09173
+    kind: preprint
+    accessed: 2026-11-20
+  - key: phikon2-model-card
+    title: owkin/phikon-v2 model card (Hugging Face)
+    url: https://huggingface.co/owkin/phikon-v2
+    kind: model-card
+    accessed: 2026-11-20

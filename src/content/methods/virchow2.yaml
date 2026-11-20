@@ -1,0 +1,48 @@
+id: virchow2
+title: Virchow2
+short_name: Virchow2
+summary: >-
+  A successor to Virchow trained on about 3.1 million MSKCC whole-slide images with tiles sampled
+  at several magnifications (5x to 40x). Same ViT-H/14 size as Virchow but a separate model with
+  different data, weights and licence.
+category: foundation-model
+tasks: [representation-learning, roi-classification]
+organs: []
+input_granularity: [patch]
+output_granularity: [patch-embedding]
+year: 2024
+primary_paper: virchow2-preprint
+code:
+  license: CC-BY-NC-ND 4.0
+  conditions: The model card states that the model and associated code are released under CC-BY-NC-ND 4.0 for non-commercial academic research only. No separate code repository is linked from the card.
+  source: virchow2-model-card
+weights:
+  availability: gated
+  url: https://huggingface.co/paige-ai/Virchow2
+  license: CC-BY-NC-ND 4.0
+  conditions: Request access on Hugging Face and accept the terms, which forbid clinical, diagnostic, RUO / IUO and commercial use.
+  source: virchow2-model-card
+datasets:
+  - dataset: camelyon17
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: virchow2-preprint
+    note: >-
+      Tile-level benchmark on Camelyon17-WILDS (96 x 96 tiles at 10x upsampled to 224, derived from
+      CAMELYON17), weighted F1 in Table 1 of arXiv v3. Not the original slide / pN-stage benchmark.
+limitations:
+  - value: Described in a preprint only; pretraining data is an internal MSKCC collection.
+    source: virchow2-model-card
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: virchow2-preprint
+    title: "Zimmermann E. et al. Virchow2: Scaling Self-Supervised Mixed Magnification Models in Pathology (arXiv 2408.00738 v3)"
+    url: https://arxiv.org/abs/2408.00738
+    kind: preprint
+    accessed: 2026-11-20
+  - key: virchow2-model-card
+    title: paige-ai/Virchow2 model card (Hugging Face)
+    url: https://huggingface.co/paige-ai/Virchow2
+    kind: model-card
+    accessed: 2026-11-20
