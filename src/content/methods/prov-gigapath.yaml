@@ -1,0 +1,58 @@
+id: prov-gigapath
+title: Prov-GigaPath
+short_name: Prov-GigaPath
+summary: >-
+  A whole-slide foundation model from Providence and Microsoft: a tile encoder pretrained on about
+  1.3 billion 256 x 256 tiles from 171,189 slides of the Providence health network, plus a
+  LongNet-based slide encoder that turns tile embeddings and their coordinates into slide-level
+  representations.
+category: foundation-model
+tasks: [representation-learning, wsi-classification]
+organs: []
+input_granularity: [patch, patch-features]
+output_granularity: [patch-embedding]
+year: 2024
+venue:
+  value: Nature
+  source: gigapath-paper
+primary_paper: gigapath-paper
+code:
+  url: https://github.com/prov-gigapath/prov-gigapath
+  license: Apache 2.0
+  conditions: Repository licence badge and GitHub licence detection both report Apache 2.0.
+  source: gigapath-repo
+weights:
+  availability: gated
+  url: https://huggingface.co/prov-gigapath/prov-gigapath
+  license: Apache 2.0
+  conditions: Accept the conditions on Hugging Face before download. The card states research use only, not clinical or other deployed use.
+  source: gigapath-model-card
+datasets: []
+limitations:
+  - value: Pretraining data (Prov-Path) is from a single US health network and is not public.
+    source: gigapath-paper
+  - value: The model card scopes the models to research; clinical and other deployed uses are out of scope.
+    source: gigapath-model-card
+review_status: needs-review
+reviewer_notes: >-
+  No evaluation on a catalogued dataset is recorded. PANDA appears in the repository only as a
+  fine-tuning example with pre-extracted embeddings, which is not a reported result; the article
+  text checked does not mention a catalogued dataset. The slide encoder outputs slide embeddings,
+  which OUTPUT_GRANULARITY cannot express, so only the tile encoder's patch embedding is listed.
+  The repository also lists a GigaPath-Flash variant (arXiv 2026) that is not covered here.
+sources:
+  - key: gigapath-paper
+    title: "Xu H. et al. A whole-slide foundation model for digital pathology from real-world data. Nature (2024)"
+    url: https://www.nature.com/articles/s41586-024-07441-w
+    kind: paper
+    accessed: 2026-11-20
+  - key: gigapath-model-card
+    title: prov-gigapath/prov-gigapath model card (Hugging Face)
+    url: https://huggingface.co/prov-gigapath/prov-gigapath
+    kind: model-card
+    accessed: 2026-11-20
+  - key: gigapath-repo
+    title: prov-gigapath/prov-gigapath (GitHub)
+    url: https://github.com/prov-gigapath/prov-gigapath
+    kind: repository
+    accessed: 2026-11-20

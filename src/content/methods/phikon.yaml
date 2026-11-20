@@ -1,0 +1,52 @@
+id: phikon
+title: Phikon
+short_name: Phikon
+summary: >-
+  A ViT-Base tile encoder from Owkin, trained with iBOT masked-image modelling on about 40 million
+  pan-cancer TCGA tiles. Its successor by name, Phikon-v2, is a ViT-L trained with DINOv2 on a
+  different public dataset, so the two are catalogued as separate models.
+category: foundation-model
+tasks: [representation-learning]
+organs: []
+input_granularity: [patch]
+output_granularity: [patch-embedding]
+year: 2023
+primary_paper: phikon-preprint
+code:
+  url: https://github.com/owkin/HistoSSLscaling
+  conditions: Official code for the Phikon paper. GitHub's licence detector does not classify the repository licence (NOASSERTION); terms not otherwise checked.
+  source: phikon-repo
+weights:
+  availability: public
+  url: https://huggingface.co/owkin/phikon
+  license: Owkin non-commercial licence
+  conditions: Downloadable from Hugging Face without an access request at the time of checking.
+  source: phikon-model-card
+datasets: []
+limitations:
+  - value: Trained on TCGA tiles, so evaluations on TCGA cohorts can overlap with pretraining data.
+    source: phikon-model-card
+review_status: needs-review
+reviewer_notes: >-
+  Version relation: phikon-v2 is the later model in the same family (different architecture,
+  method and data); kept as a separate entry. The model card spells the data source "TGCA". No dataset relation is recorded: the medRxiv full text was blocked from our
+  fetcher, and the repository only provides a CAMELYON16 notebook and released CAMELYON16 features,
+  which are not reported results. Discovery lists cite Phikon as arXiv 2309.16864; that ID is an
+  unrelated mathematics paper. The medRxiv record was confirmed through Crossref metadata only.
+sources:
+  - key: phikon-preprint
+    title: "Filiot A. et al. Scaling Self-Supervised Learning for Histopathology with Masked Image Modeling. medRxiv (2023)"
+    url: https://doi.org/10.1101/2023.07.21.23292757
+    kind: preprint
+    accessed: 2026-11-20
+    note: Metadata (title, first author, posting date 2023-07-26) via Crossref; full text not readable here.
+  - key: phikon-model-card
+    title: owkin/phikon model card (Hugging Face)
+    url: https://huggingface.co/owkin/phikon
+    kind: model-card
+    accessed: 2026-11-20
+  - key: phikon-repo
+    title: owkin/HistoSSLscaling (GitHub)
+    url: https://github.com/owkin/HistoSSLscaling
+    kind: repository
+    accessed: 2026-11-20
