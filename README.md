@@ -64,6 +64,19 @@ src/content/
 Controlled vocabularies (stains, data units, annotation granularity, access methods, method
 categories, uses, ...) live in `src/lib/vocab.ts` and feed both the Zod schema and the validator.
 
+Annotation granularity says what one released label is attached to. Pick the value that matches
+the release, not the paper's experiment:
+
+| Value | Use when the release ships |
+| --- | --- |
+| `slide-label` / `patient-label` | one label per slide / per patient |
+| `roi-label` | one label per annotator-chosen region of interest (variable size), e.g. BRACS ROIs |
+| `patch-label` | one class label per fixed-size patch or tile, e.g. 224 x 224 tissue-type tiles |
+| `region-mask` / `pixel-mask` | spatial masks (regions or per-pixel classes) |
+| `lesion-contour` | polygon outlines of lesions |
+
+A dataset can list several (for example patch images with masks and per-patch labels).
+
 ### What the relation labels mean
 
 Each method-dataset relation is one row in the method's `datasets[]` with a `use` and an
