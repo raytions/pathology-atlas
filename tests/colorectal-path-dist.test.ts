@@ -27,11 +27,20 @@ test('colorectum topic -> task -> CRC-VAL-HE-7K -> model evidence rows', { skip:
     assert.ok(linksTo(ds, `/methods/${m}/#${anchor}`), `dataset page links to the ${m} relation record`);
     assert.ok(new RegExp(`data-method="${m}" data-uses="evaluation"`).test(ds), `${m} is listed with an evaluation relation only`);
     const mp = page(`methods/${m}`);
-    assert.ok(mp.includes(`id="${anchor}"`), `${m} page has the relation anchor`);
-    assert.ok(mp.includes(`href="#src-${src}"`) && mp.includes(`id="src-${src}"`), `${m} relation points to a listed source`);
-    assert.ok(table.test(mp), `${m} evidence location is shown`);
+    // Check the CRC relation row itself, not the whole page: other rows cite the same source.
+    const row = mp.match(new RegExp(`<tr id="${anchor}"[\\s\\S]*?</tr>`))?.[0];
+    assert.ok(row, `${m} page has the relation row`);
+    assert.ok(row.includes(`href="#src-${src}"`), `${m} CRC row links its evidence source`);
+    assert.ok(table.test(row), `${m} CRC row shows the evidence location`);
+    assert.ok(mp.includes(`id="src-${src}"`), `${m} evidence source is listed on the page`);
   }
   assert.ok(!/data-method="h-optimus-0" data-uses="evaluation"/.test(ds), 'H-optimus-0 has no CRC relation (conflicting description)');
+});
+
+test('dataset cards show verified patch counts', { skip: !existsSync(join(dist, 'organs')) && 'dist/ not built' }, () => {
+  const organ = page('organs/colorectum');
+  assert.ok(organ.includes('7,180 patches'), 'CRC-VAL-HE-7K card shows its patch count');
+  assert.ok(organ.includes('86 slides · 100,000 patches'), 'NCT-CRC-HE-100K card shows slides and patches');
 });
 
 test('the four models from #8 are public', { skip: !existsSync(join(dist, 'methods')) && 'dist/ not built' }, () => {

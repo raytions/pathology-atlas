@@ -82,7 +82,7 @@ sources:
     accessed: 2026-11-20
   - key: uni-preprint
     title: "Chen R. J. et al. Towards a general-purpose foundation model for computational pathology (arXiv 2308.15474 v1)"
-    url: https://arxiv.org/abs/2308.15474
+    url: https://arxiv.org/abs/2308.15474v1
     kind: preprint
     accessed: 2026-11-20
     note: Preprint of the Nature Medicine paper; used for the CRC-100K protocol, which the journal page text does not include.
