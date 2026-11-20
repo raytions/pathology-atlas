@@ -1,0 +1,20 @@
+# Pending entry: kept in the repo, excluded from public pages and search.
+id: conch
+title: CONCH
+summary: >-
+  Candidate vision-language foundation model for pathology, seen referenced in the CLAM README as
+  an alternative patch encoder. Paper, licence and evaluation datasets not yet checked.
+category: foundation-model
+tasks: [representation-learning]
+input_granularity: [patch]
+output_granularity: [patch-embedding]
+primary_paper: clam-readme
+review_status: needs-review
+reviewer_notes: >-
+  Verify the original paper and the Hugging Face model card before adding licence, weights access
+  or any dataset relations.
+sources:
+  - key: clam-readme
+    title: CLAM README (discovery only)
+    url: https://github.com/mahmoodlab/CLAM
+    kind: repository

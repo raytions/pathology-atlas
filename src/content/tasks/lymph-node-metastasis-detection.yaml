@@ -1,0 +1,19 @@
+id: lymph-node-metastasis-detection
+title: Lymph-node metastasis detection
+scope: specific
+organs: [breast]
+diseases: [breast-cancer-nodal-metastasis]
+broader: [wsi-classification]
+prediction_target: Presence of metastasis per slide; optionally the location of each lesion.
+summary: >-
+  Finding tumour deposits in sentinel lymph node sections. Benchmarks score it either per slide
+  (is there a metastasis?) or per lesion (where is each one?), and the two settings need
+  different annotations.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: c16-jama
+    title: "Ehteshami Bejnordi et al. Diagnostic assessment of deep learning algorithms for detection of lymph node metastases in women with breast cancer. JAMA (2017)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC5820737/
+    kind: paper
+    accessed: 2026-11-20

@@ -1,0 +1,16 @@
+id: representation-learning
+title: Self-supervised representation learning
+scope: general
+broader: []
+prediction_target: A reusable feature vector per patch, used by downstream heads.
+summary: >-
+  Pretraining an image encoder on unlabelled histology so its patch features can feed many
+  downstream tasks. Encoders are judged by how well light-weight heads perform on top of them.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: uni-paper
+    title: "Chen et al. Towards a general-purpose foundation model for computational pathology. Nat Med (2024)"
+    url: https://www.nature.com/articles/s41591-024-02857-3
+    kind: paper
+    accessed: 2026-11-20

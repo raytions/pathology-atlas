@@ -1,0 +1,35 @@
+---
+import { SOURCE_KIND } from '../lib/vocab';
+
+interface Props {
+  sources: { key: string; title: string; url: string; kind: keyof typeof SOURCE_KIND; accessed?: string; note?: string }[];
+  lastVerified?: string;
+}
+const { sources, lastVerified } = Astro.props;
+---
+
+<section aria-labelledby="sources-h" class="rule-t mt-12 pt-6">
+  <div class="flex flex-wrap items-baseline justify-between gap-2">
+    <h2 id="sources-h" class="text-2xl">Verification sources</h2>
+    <p class="text-sm text-ink-2">
+      {lastVerified ? <>Last verified <time datetime={lastVerified}>{lastVerified}</time></> : <span class="not-verified">Not verified</span>}
+    </p>
+  </div>
+  <ol class="mt-4 space-y-3">
+    {
+      sources.map((s) => (
+        <li id={`src-${s.key}`} class="grid gap-1 border-l-2 border-rule pl-4 target:border-eosin target:bg-eosin-soft/40 sm:grid-cols-[9rem_1fr]">
+          <span class="font-mono text-xs text-ink-3">[{s.key}]</span>
+          <span>
+            <a href={s.url} rel="noopener" class="break-words">{s.title}</a>
+            <span class="block text-xs text-ink-3">
+              {SOURCE_KIND[s.kind]}
+              {s.accessed && <> · accessed {s.accessed}</>}
+            </span>
+            {s.note && <span class="block text-sm text-ink-2">{s.note}</span>}
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+</section>

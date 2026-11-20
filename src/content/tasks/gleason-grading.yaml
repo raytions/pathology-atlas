@@ -1,0 +1,25 @@
+id: gleason-grading
+title: Gleason grading
+scope: specific
+organs: [prostate]
+diseases: [prostate-adenocarcinoma]
+broader: [wsi-classification]
+prediction_target: ISUP grade group (0 = benign, 1-5) per biopsy, optionally the Gleason score.
+summary: >-
+  Assigning a Gleason score or ISUP grade group to prostate tissue from its glandular
+  architecture. In public benchmarks the unit is usually one needle biopsy, labelled at slide
+  level, and agreement is measured with quadratically weighted Cohen's kappa.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: panda-paper
+    title: "Bulten et al. The PANDA challenge. Nat Med (2022)"
+    url: https://www.nature.com/articles/s41591-021-01620-2
+    kind: paper
+    accessed: 2026-11-20
+    note: Defines the ISUP grade group target and quadratic kappa as the main metric.
+background_reading:
+  - title: "Epstein et al. The 2014 ISUP consensus conference on Gleason grading of prostatic carcinoma. Am J Surg Pathol 40, 244-252 (2016)"
+    url: https://doi.org/10.1097/PAS.0000000000000530
+    why: Defines the grade-group system that most datasets use as their label. Read it to understand what the classes mean, not as a computational method.
+    source: panda-paper

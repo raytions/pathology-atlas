@@ -1,0 +1,56 @@
+id: clam
+title: CLAM
+short_name: CLAM
+summary: >-
+  Clustering-constrained attention MIL. Learns a slide label from bags of patch features and
+  adds an instance-level clustering loss on the most and least attended patches. The repository
+  is also a widely reused WSI tiling and feature-extraction toolkit.
+category: mil-aggregator
+tasks: [wsi-classification]
+organs: []
+input_granularity: [patch-features]
+output_granularity: [slide-label, attention-map]
+year: 2021
+venue:
+  value: Nature Biomedical Engineering
+  source: clam-paper
+primary_paper: clam-paper
+code:
+  url: https://github.com/mahmoodlab/CLAM
+  license: GPL-3.0
+  conditions: The README states the code is available under GPLv3 for non-commercial academic purposes.
+  source: clam-repo
+weights:
+  availability: public
+  url: https://github.com/mahmoodlab/CLAM#trained-model-checkpoints
+  conditions: Checkpoints for the paper's trained models are linked from the README (Google Drive). No separate weights licence is stated.
+  source: clam-repo
+datasets:
+  - dataset: camelyon16
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: clam-paper
+    note: Lymph-node metastasis detection is one of the paper's three applications; its data-availability statement names CAMELYON16 and CAMELYON17. Models were trained and tested on this data.
+  - dataset: camelyon17
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: clam-paper
+    note: Same lymph-node application; CAMELYON17 is named alongside CAMELYON16. Not a pN-staging result.
+limitations:
+  - value: The other two applications in the paper (renal cell carcinoma and lung cancer subtyping) use TCGA and CPTAC data, which are not catalogued here yet.
+    source: clam-paper
+  - value: Recent versions resize patches to 224 x 224 before feature extraction by default; results can differ from the original paper's setup.
+    source: clam-repo
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: clam-paper
+    title: "Lu et al. Data-efficient and weakly supervised computational pathology on whole-slide images. Nat Biomed Eng 5, 555-570 (2021)"
+    url: https://www.nature.com/articles/s41551-020-00682-w
+    kind: paper
+    accessed: 2026-11-20
+  - key: clam-repo
+    title: mahmoodlab/CLAM (GitHub)
+    url: https://github.com/mahmoodlab/CLAM
+    kind: repository
+    accessed: 2026-11-20

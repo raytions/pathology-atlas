@@ -1,0 +1,39 @@
+---
+/**
+ * One labelled fact. Renders "Not verified" when the value is missing.
+ * Pass `source` (a key from the entry's sources) to link the citation.
+ */
+interface Props {
+  label: string;
+  value?: string | number | null;
+  source?: string;
+  note?: string;
+  class?: string;
+}
+const { label, value, source, note, class: cls } = Astro.props;
+const has = value !== undefined && value !== null && value !== '';
+const slotted = Astro.slots.has('default');
+---
+
+<div class:list={['grid gap-1 py-3 sm:grid-cols-[11rem_1fr] sm:gap-4', cls]}>
+  <dt class="field-label pt-0.5">{label}</dt>
+  <dd class="text-[0.95rem]">
+    {
+      slotted ? (
+        <slot />
+      ) : has ? (
+        <>
+          <span>{value}</span>
+          {source && (
+            <a href={`#src-${source}`} class="ml-1 align-super font-mono text-[0.68rem] no-underline" aria-label={`Source: ${source}`}>
+              [{source}]
+            </a>
+          )}
+          {note && <span class="mt-0.5 block text-sm text-ink-2">{note}</span>}
+        </>
+      ) : (
+        <span class="not-verified">Not verified</span>
+      )
+    }
+  </dd>
+</div>

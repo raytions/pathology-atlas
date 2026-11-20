@@ -1,0 +1,17 @@
+id: prostate-adenocarcinoma
+title: Prostate adenocarcinoma
+organs: [prostate]
+synonyms: [Prostate cancer, Acinar adenocarcinoma of the prostate]
+summary: >-
+  The common form of prostate cancer and the target of Gleason grading. Public computational
+  benchmarks focus on acinar adenocarcinoma in needle biopsies; rarer variants are mostly not
+  assessed separately.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: panda-paper
+    title: "Bulten et al. The PANDA challenge. Nat Med (2022)"
+    url: https://www.nature.com/articles/s41591-021-01620-2
+    kind: paper
+    accessed: 2026-11-20
+    note: The limitations section states the study focused on acinar adenocarcinoma.

@@ -1,0 +1,143 @@
+---
+import Base from '../layouts/Base.astro';
+import TissueMark from '../components/TissueMark.astro';
+import Relevance from '../components/Relevance.astro';
+import { loadCatalog, url, fmt } from '../lib/catalog';
+
+const catalog = await loadCatalog();
+const featured = catalog.organs.find((o) => o.data.featured) ?? catalog.organs[0];
+const featuredTask = catalog.tasksForOrgan(featured.id)[0];
+const featuredDataset = featuredTask ? catalog.datasetsForTask(featuredTask.id)[0] : undefined;
+const featuredMethods = featuredTask ? catalog.methodsForTask(featuredTask.id) : undefined;
+
+const entries = [
+  {
+    href: '/organs/',
+    n: '01',
+    title: 'Organs & Diseases',
+    body: 'Start from anatomy. Topic pages pull together diseases, tasks, datasets and methods.',
+    count: `${catalog.organs.length} organs · ${catalog.tasks.filter((t) => t.data.scope === 'specific').length} clinical tasks`,
+  },
+  {
+    href: '/datasets/',
+    n: '02',
+    title: 'Datasets',
+    body: 'Scale by unit, annotation granularity, splits, access route and terms, each with its source.',
+    count: `${catalog.datasets.length} verified datasets`,
+  },
+  {
+    href: '/methods/',
+    n: '03',
+    title: 'Methods & Models',
+    body: 'Code and weight access listed separately; dataset links labelled by how they were used.',
+    count: `${catalog.methods.length} verified methods`,
+  },
+];
+---
+
+<Base title="Pathology Atlas">
+  <section class="wrap grid items-end gap-10 pt-14 pb-12 md:grid-cols-[1fr_15rem] md:pt-20">
+    <div>
+      <p class="eyebrow">Computational pathology · resource atlas</p>
+      <h1 class="mt-4 max-w-3xl text-5xl leading-[1.05] md:text-7xl">Find data, methods and papers by organ, disease and task.</h1>
+      <p class="mt-6 max-w-2xl text-lg text-ink-2">
+        A small, source-checked catalogue. Every number points to where it came from, and every link between a method and a
+        dataset says what kind of link it is.
+      </p>
+    </div>
+    <TissueMark variant="field" class="hidden w-full md:block" />
+  </section>
+
+  <section aria-labelledby="entry-h" class="wrap">
+    <h2 id="entry-h" class="sr-only">Browse</h2>
+    <ul class="grid border-t border-rule md:grid-cols-3">
+      {
+        entries.map((e) => (
+          <li class="relative border-b border-rule py-7 md:border-b-0 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0">
+            <span class="font-mono text-xs text-eosin">{e.n}</span>
+            <h3 class="mt-2 text-3xl">
+              <a href={e.href} class="text-ink no-underline after:absolute after:inset-0 hover:text-hema">
+                {e.title}
+              </a>
+            </h3>
+            <p class="mt-2 text-ink-2">{e.body}</p>
+            <p class="mt-4 font-mono text-xs text-ink-3">{e.count}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    featured && (
+      <section aria-labelledby="feat-h" class="wrap mt-16">
+        <div class="border border-rule bg-card">
+          <div class="grid gap-8 p-6 md:grid-cols-[1fr_1.2fr] md:p-10">
+            <div>
+              <p class="eyebrow">Featured topic</p>
+              <h2 id="feat-h" class="mt-2 text-4xl md:text-5xl">
+                <a href={url.organ(featured.id)} class="text-ink">{featured.data.title}</a>
+              </h2>
+              <p class="mt-4 text-ink-2">{featured.data.summary}</p>
+              <a href={url.organ(featured.id)} class="btn mt-6">Open the {featured.data.title.toLowerCase()} topic</a>
+            </div>
+
+            {featuredTask && featuredDataset && featuredMethods && (
+              <div>
+                <p class="field-label">A worked path</p>
+                <ol class="mt-3 border-l border-rule-strong">
+                  <li class="relative pb-5 pl-6">
+                    <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-ink" aria-hidden="true" />
+                    <span class="eyebrow">Organ</span>
+                    <a href={url.organ(featured.id)} class="block font-serif text-xl">{featured.data.title}</a>
+                  </li>
+                  <li class="relative pb-5 pl-6">
+                    <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-eosin" aria-hidden="true" />
+                    <span class="eyebrow">Task</span>
+                    <a href={url.task(featuredTask.id)} class="block font-serif text-xl">{featuredTask.data.title}</a>
+                    <span class="text-sm text-ink-2">{featuredTask.data.prediction_target}</span>
+                  </li>
+                  <li class="relative pb-5 pl-6">
+                    <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-hema" aria-hidden="true" />
+                    <span class="eyebrow">Dataset</span>
+                    <a href={url.dataset(featuredDataset.id)} class="block font-serif text-xl">{featuredDataset.data.title}</a>
+                    <span class="text-sm text-ink-2">
+                      {featuredDataset.data.scale.slides && `${fmt(featuredDataset.data.scale.slides.value)} biopsy WSIs`}
+                      {featuredDataset.data.access && ` · ${featuredDataset.data.access.details.split(' after')[0]}`}
+                    </span>
+                  </li>
+                  <li class="relative pl-6">
+                    <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full border border-hema bg-card" aria-hidden="true" />
+                    <span class="eyebrow">Methods</span>
+                    <ul class="mt-1 space-y-1.5">
+                      {featuredMethods.benchmark.map(({ method }) => (
+                        <li class="flex flex-wrap items-center gap-2">
+                          <a href={url.method(method.id)} class="font-serif text-lg">{method.data.short_name ?? method.data.title}</a>
+                          <Relevance kind="benchmark" />
+                        </li>
+                      ))}
+                      {featuredMethods['same-task'].map(({ method }) => (
+                        <li class="flex flex-wrap items-center gap-2">
+                          <a href={url.method(method.id)} class="font-serif text-lg">{method.data.short_name ?? method.data.title}</a>
+                          <Relevance kind="same-task" />
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                </ol>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="wrap mt-16">
+    <div class="grid gap-6 border-t border-rule pt-6 text-sm text-ink-2 md:grid-cols-3">
+      <p><Relevance kind="benchmark" /> <span class="ml-1">A cited source reports the method on that dataset and task.</span></p>
+      <p><Relevance kind="same-task" /> <span class="ml-1">Built for the same task family. Not a result.</span></p>
+      <p><Relevance kind="background" /> <span class="ml-1">Context only, such as grading definitions.</span></p>
+    </div>
+  </section>
+</Base>

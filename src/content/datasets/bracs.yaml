@@ -1,0 +1,63 @@
+id: bracs
+title: BRACS
+aliases: [BReAst Carcinoma Subtyping]
+summary: >-
+  Breast lesion WSIs and extracted regions labelled by consensus of three pathologists across
+  benign, atypical and malignant categories. Ships with patient-level train / validation / test
+  splits at both slide and region level.
+organs: [breast]
+diseases: [breast-lesions]
+tasks: [breast-lesion-subtyping]
+specimen: H&E breast tissue biopsy slides from the National Cancer Institute - IRCCS "Fondazione G. Pascale", Naples, Italy (acquired 2019-2020).
+stains: [he]
+data_units: [wsi, roi]
+annotation_granularity: [slide-label, roi-label]
+scale:
+  slides:
+    value: 547
+    source: bracs-preprint
+  rois:
+    value: 4539
+    source: bracs-preprint
+    note: Extracted from 387 of the WSIs (151 patients).
+  patients:
+    value: 189
+    source: bracs-preprint
+version:
+  value: Release described in arXiv 2111.04740 v1. Earlier subsets used in prior publications are kept in a "previous_versions" archive.
+  source: bracs-preprint
+splits:
+  value: Predefined patient-level splits. WSI level, 395 train / 67 validation / 85 test slides (133 / 25 / 31 patients).
+  source: bracs-preprint
+evaluation_protocol:
+  value: Three lesion types or seven subtypes; the paper does not fix a single metric.
+  source: bracs-preprint
+access:
+  method: registration
+  details: Register on the BRACS website and accept the terms of use, then download from its FTP server.
+  source: bracs-preprint
+terms:
+  license: CC0 (as stated in the dataset paper)
+  redistribution: Not restricted by CC0; registration is still required to download.
+  source: bracs-preprint
+official_url: https://www.bracs.icar.cnr.it/
+primary_paper: bracs-preprint
+limitations:
+  - value: Single institution and a single scanner (Aperio AT2, 0.25 µm/pixel at 40x), so scanner and site shift are not represented.
+    source: bracs-preprint
+  - value: The current terms on the BRACS website could not be read (the site renders with JavaScript); the licence shown here comes from the paper.
+    source: bracs-site
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: bracs-preprint
+    title: "Brancati et al. BRACS: A Dataset for BReAst Carcinoma Subtyping in H&E Histology Images. arXiv 2111.04740 (2021)"
+    url: https://arxiv.org/abs/2111.04740
+    kind: preprint
+    accessed: 2026-11-20
+  - key: bracs-site
+    title: BRACS official website
+    url: https://www.bracs.icar.cnr.it/
+    kind: official-site
+    accessed: 2026-11-20
+    note: Reachable, but page content is rendered client-side and was not readable by our fetcher.

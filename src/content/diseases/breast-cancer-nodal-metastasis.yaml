@@ -1,0 +1,15 @@
+id: breast-cancer-nodal-metastasis
+title: Breast cancer lymph-node metastasis
+organs: [breast]
+synonyms: [Sentinel lymph node metastasis, SLN metastasis]
+summary: >-
+  Spread of breast cancer to the sentinel lymph nodes, categorised by the size of the largest
+  deposit (macro-metastasis, micro-metastasis, isolated tumour cells). It drives the pN stage.
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: camelyon-gigascience
+    title: "Litjens et al. The CAMELYON dataset. GigaScience (2018)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6007545/
+    kind: paper
+    accessed: 2026-11-20

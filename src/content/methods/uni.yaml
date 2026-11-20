@@ -1,0 +1,73 @@
+id: uni
+title: UNI
+short_name: UNI
+summary: >-
+  A ViT-L/16 image encoder pretrained with DINOv2 self-supervision on more than 100 million
+  patches from over 100,000 H&E WSIs. It produces 1024-dimensional patch features that downstream
+  heads (for example attention MIL) turn into slide predictions.
+category: foundation-model
+tasks: [representation-learning, wsi-classification, roi-classification]
+organs: []
+input_granularity: [patch]
+output_granularity: [patch-embedding]
+year: 2024
+venue:
+  value: Nature Medicine
+  source: uni-paper
+primary_paper: uni-paper
+code:
+  url: https://github.com/mahmoodlab/UNI
+  license: CC-BY-NC-ND 4.0
+  conditions: The model card states that the model and associated code are released under CC-BY-NC-ND 4.0 for non-commercial academic research; GitHub's licence detector does not classify the repository licence.
+  source: uni-model-card
+weights:
+  availability: gated
+  url: https://huggingface.co/MahmoodLab/UNI
+  license: CC-BY-NC-ND 4.0
+  conditions: Request access on Hugging Face and accept the terms; the account's primary email must be an institutional address. No redistribution of the weights; commercial use requires approval.
+  source: uni-model-card
+datasets:
+  - dataset: panda
+    use: evaluation
+    task: gleason-grading
+    evidence: uni-paper
+    note: Prostate ISUP grading on PANDA is listed among the paper's slide-level evaluation tasks. Check the paper's methods for its split and metric before comparing numbers.
+  - dataset: camelyon16
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: uni-paper
+    note: Breast metastasis detection on CAMELYON16 is a slide-level evaluation task in the paper.
+  - dataset: bracs
+    use: evaluation
+    task: breast-lesion-subtyping
+    evidence: uni-paper
+    note: Coarse- and fine-grained BRCA subtyping on BRACS appear among the paper's slide-level tasks.
+  - dataset: camelyon17
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: uni-paper
+    note: Evaluated on CAMELYON17-WILDS, a patch-level derivative of CAMELYON17, not on the original slide / pN-stage benchmark.
+limitations:
+  - value: Pretraining data (Mass-100K) comes mostly from private BWH / MGH collections plus public GTEx slides and is not released, so pretraining cannot be reproduced end to end.
+    source: uni-model-card
+    note: The paper's data-availability statement says requests for in-house data are evaluated case by case.
+  - value: A successor, UNI2-h (ViT-h/14), was released in January 2025 under its own model card; this entry describes the original UNI.
+    source: uni-repo
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: uni-paper
+    title: "Chen et al. Towards a general-purpose foundation model for computational pathology. Nat Med (2024)"
+    url: https://www.nature.com/articles/s41591-024-02857-3
+    kind: paper
+    accessed: 2026-11-20
+  - key: uni-model-card
+    title: MahmoodLab/UNI model card (Hugging Face)
+    url: https://huggingface.co/MahmoodLab/UNI
+    kind: model-card
+    accessed: 2026-11-20
+  - key: uni-repo
+    title: mahmoodlab/UNI (GitHub)
+    url: https://github.com/mahmoodlab/UNI
+    kind: repository
+    accessed: 2026-11-20

@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import TissueMark from '../../components/TissueMark.astro';
+import { loadCatalog, url } from '../../lib/catalog';
+
+const catalog = await loadCatalog();
+const families = catalog.tasks.filter((t) => t.data.scope === 'general');
+---
+
+<Base title="Organs & Diseases" description="Browse computational pathology resources by organ, disease and task.">
+  <div class="wrap pt-12">
+    <p class="eyebrow">Index</p>
+    <h1 class="mt-2 text-4xl md:text-5xl">Organs &amp; Diseases</h1>
+    <p class="mt-4 max-w-2xl text-ink-2">
+      The atlas is organised as organ → disease → task. Datasets and methods hang off tasks, so a topic page always reflects the
+      current entries.
+    </p>
+
+    <ul class="mt-10 grid gap-6 md:grid-cols-2">
+      {
+        catalog.organs.map((o) => (
+          <li class="relative flex flex-col border border-rule bg-card p-6 focus-within:border-hema">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="eyebrow">Organ</p>
+                <h2 class="mt-1 text-3xl">
+                  <a href={url.organ(o.id)} class="text-ink no-underline after:absolute after:inset-0 hover:text-hema">
+                    {o.data.title}
+                  </a>
+                </h2>
+              </div>
+              <TissueMark variant={o.id === 'prostate' ? 'glands' : 'node'} class="w-20 shrink-0" />
+            </div>
+            <p class="mt-3 text-ink-2">{o.data.tagline ?? o.data.summary}</p>
+            <dl class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+              <div>
+                <dt class="field-label">Diseases</dt>
+                <dd>{catalog.diseasesForOrgan(o.id).map((d) => d.data.title).join('; ')}</dd>
+              </div>
+              <div>
+                <dt class="field-label">Tasks</dt>
+                <dd>{catalog.tasksForOrgan(o.id).map((t) => t.data.title).join('; ')}</dd>
+              </div>
+            </dl>
+            <p class="mt-auto pt-5 text-xs text-ink-3">
+              {catalog.datasetsForOrgan(o.id).length} datasets · {catalog.methodsForOrgan(o.id).benchmark.length} methods with a benchmark link
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <section aria-labelledby="fam-h" class="rule-t mt-14 pt-6">
+      <h2 id="fam-h" class="text-2xl">Task families</h2>
+      <p class="mt-2 max-w-2xl text-sm text-ink-2">
+        Organ-independent task types. A method built for a family is "applicable" to its clinical tasks, which is different from
+        having been evaluated on them.
+      </p>
+      <ul class="mt-4 divide-y divide-rule border-y border-rule">
+        {
+          families.map((t) => (
+            <li class="grid gap-1 py-4 md:grid-cols-[18rem_1fr] md:gap-6">
+              <a href={url.task(t.id)} class="font-serif text-xl">{t.data.title}</a>
+              <p class="text-sm text-ink-2">{t.data.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</Base>

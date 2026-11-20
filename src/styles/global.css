@@ -1,0 +1,161 @@
+@import 'tailwindcss';
+
+/*
+ * Pathology Atlas palette: archival paper, iron-gall ink, and two stain accents.
+ * hema  = haematoxylin (nuclear blue-violet), eosin = cytoplasm pink.
+ * All text colours below meet WCAG AA (>= 4.5:1) on --color-paper.
+ */
+@theme {
+  --color-paper: #f6f3ec;
+  --color-paper-2: #eee8dc;
+  --color-card: #fbf9f4;
+  --color-ink: #1c1a24;
+  --color-ink-2: #4a4655;
+  --color-ink-3: #625d6d;
+  --color-rule: #d6cdbd;
+  --color-rule-strong: #b9ae99;
+  --color-hema: #47287a;
+  --color-hema-2: #6a4aa3;
+  --color-hema-soft: #ebe4f3;
+  --color-eosin: #a8325f;
+  --color-eosin-soft: #f5dfe7;
+  --color-moss: #3f5d3a;
+  --color-moss-soft: #e3eadc;
+  --color-amber: #7a5410;
+  --color-amber-soft: #f3e7cc;
+
+  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, 'Times New Roman', serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  a {
+    color: var(--color-hema);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    color: var(--color-eosin);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-hema-2);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  ::selection {
+    background: var(--color-eosin-soft);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .wrap {
+      padding-inline: 2rem;
+    }
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .rule-t {
+    border-top: 1px solid var(--color-rule);
+  }
+  .prose-atlas p {
+    margin-block: 0 1rem;
+    max-width: 68ch;
+  }
+  .prose-atlas strong {
+    font-weight: 600;
+  }
+  .prose-atlas em {
+    font-style: italic;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 999px;
+    padding: 0.05rem 0.55rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--color-ink-2);
+    background: var(--color-card);
+    white-space: nowrap;
+  }
+  .field-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+  .not-verified {
+    color: var(--color-ink-3);
+    font-style: italic;
+  }
+  .control {
+    width: 100%;
+    border: 1px solid var(--color-rule-strong);
+    background: var(--color-card);
+    border-radius: 2px;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+    min-height: 2.6rem;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--color-ink);
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    color: var(--color-ink);
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+}

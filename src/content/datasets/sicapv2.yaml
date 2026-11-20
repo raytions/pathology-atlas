@@ -1,0 +1,21 @@
+# Pending entry: kept in the repo, excluded from public pages and search.
+id: sicapv2
+title: SICAPv2
+summary: >-
+  Candidate prostate dataset with Gleason-pattern annotations, discovered through a code
+  repository README. Scale, licence and access have not been checked against the original paper.
+organs: [prostate]
+diseases: [prostate-adenocarcinoma]
+tasks: [gleason-grading]
+stains: [he]
+data_units: [wsi, patch]
+annotation_granularity: [slide-label]
+review_status: draft
+reviewer_notes: >-
+  Found via the TransMIL README, whose abstract text describes SICAPv2 experiments. Locate the
+  original SICAPv2 publication and data portal before filling scale, access and terms.
+sources:
+  - key: transmil-readme
+    title: TransMIL README (discovery only)
+    url: https://github.com/szc19990412/TransMIL
+    kind: repository

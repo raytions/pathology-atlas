@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+import Relevance from '../components/Relevance.astro';
+import { DATASET_USE, REVIEW_STATUS } from '../lib/vocab';
+import { loadCatalog } from '../lib/catalog';
+const catalog = await loadCatalog();
+const counts = {
+  datasets: catalog.datasets.length,
+  methods: catalog.methods.length,
+};
+---
+
+<Base title="About & Editorial Policy" description="What Pathology Atlas is, how entries are verified, and what each relation label means.">
+  <article class="wrap pt-12">
+    <p class="eyebrow">About</p>
+    <h1 class="mt-2 max-w-3xl text-4xl md:text-5xl">A resource atlas, edited like a reference work</h1>
+    <div class="prose-atlas mt-6 text-[1.05rem] leading-relaxed">
+      <p>
+        Pathology Atlas helps computational pathology researchers find usable data, reproducible methods and the papers behind
+        them, starting from an organ, a disease or a task. It is deliberately small: {counts.datasets} datasets and
+        {counts.methods} methods in this release, each checked against primary sources.
+      </p>
+      <p>
+        It is a static site. There is no account, no tracking, no hosted slide viewer and no mirrored data. Links go to the
+        official portals.
+      </p>
+    </div>
+
+    <section id="editorial-policy" aria-labelledby="policy-h" class="rule-t mt-12 pt-6">
+      <h2 id="policy-h" class="text-3xl">Editorial policy</h2>
+
+      <div class="mt-6 grid gap-10 lg:grid-cols-2">
+        <div class="prose-atlas">
+          <h3 class="mb-2 text-xl">Sources come first</h3>
+          <p>
+            Awesome lists and aggregators are used only to discover candidates. Facts are checked against the original paper, the
+            project or challenge site, the official repository, the model card or the data portal. Each scale figure, access route,
+            licence and dataset relation names the source it came from.
+          </p>
+          <h3 class="mb-2 mt-6 text-xl">Original writing</h3>
+          <p>
+            Summaries are written by the editors. We do not paste abstracts or README text, and we do not reproduce figures or
+            pathology images whose licence is unclear. Illustrations on this site are original, abstract drawings.
+          </p>
+          <h3 class="mb-2 mt-6 text-xl">Unknown means unknown</h3>
+          <p>
+            A field we have not confirmed reads <span class="not-verified">Not verified</span>. We do not estimate counts, infer
+            licences or fill gaps from memory. <code class="font-mono text-sm">last_verified</code> is only set on the date an
+            editor actually checked the sources.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-xl">Review status</h3>
+          <dl class="mt-3 divide-y divide-rule border-y border-rule text-sm">
+            <div class="grid gap-1 py-3 sm:grid-cols-[9rem_1fr]">
+              <dt class="font-semibold">{REVIEW_STATUS.verified}</dt>
+              <dd class="text-ink-2">Sources checked; shown on the public site and in list search.</dd>
+            </div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[9rem_1fr]">
+              <dt class="font-semibold">{REVIEW_STATUS['needs-review']}</dt>
+              <dd class="text-ink-2">Drafted from primary sources, awaiting a second check. Kept in the repository only.</dd>
+            </div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[9rem_1fr]">
+              <dt class="font-semibold">{REVIEW_STATUS.draft}</dt>
+              <dd class="text-ink-2">Candidate found during discovery. Kept in the repository only.</dd>
+            </div>
+          </dl>
+
+          <h3 class="mt-8 text-xl">What a relation means</h3>
+          <dl class="mt-3 space-y-4 text-sm">
+            <div>
+              <dt><Relevance kind="benchmark" size="md" /></dt>
+              <dd class="mt-1 text-ink-2">
+                A cited source reports the method with this dataset for this task. The recorded use is one of:
+                {Object.values(DATASET_USE).join(', ').toLowerCase()}.
+              </dd>
+            </div>
+            <div>
+              <dt><Relevance kind="same-task" size="md" /></dt>
+              <dd class="mt-1 text-ink-2">
+                The method targets the same task family (for example weakly supervised slide classification). No result on the
+                dataset is recorded. This is a pointer, not evidence of performance.
+              </dd>
+            </div>
+            <div>
+              <dt><Relevance kind="background" size="md" /></dt>
+              <dd class="mt-1 text-ink-2">Reading that explains the task or its labels, such as a grading consensus paper.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="prose-atlas mt-10">
+        <h3 class="mb-2 text-xl">Corrections and new entries</h3>
+        <p>
+          Entries live as YAML and Markdown files in the repository and are validated at build time for duplicate IDs, invalid
+          values, broken links between entries and facts without a source. New entries start as draft and only become public after
+          review. See the repository README for the workflow.
+        </p>
+      </div>
+    </section>
+  </article>
+</Base>

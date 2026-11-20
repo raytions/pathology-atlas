@@ -1,0 +1,177 @@
+---
+/**
+ * Keyword + facet filter for a server-rendered list.
+ * Items opt in with `data-filter-item`, `data-search` (lowercase haystack) and one
+ * space-separated `data-<facet>` attribute per facet. State lives in the URL query
+ * (?q=...&organ=...), so filtered views survive reloads and can be shared.
+ */
+interface Facet {
+  name: string;
+  label: string;
+  options: { value: string; label: string }[];
+}
+interface Props {
+  facets: Facet[];
+  noun: string; // plural, e.g. "datasets"
+  total: number;
+  placeholder?: string;
+}
+const { facets, noun, total, placeholder = 'Search titles, aliases, summaries' } = Astro.props;
+---
+
+<div data-filter-root data-noun={noun} data-total={total}>
+  <form role="search" aria-label={`Filter ${noun}`} class="border-y border-rule py-5" onsubmit="return false">
+    <div class="grid grid-cols-2 gap-3 md:grid-cols-[minmax(0,2fr)_repeat(var(--facet-count),minmax(0,1fr))] md:gap-4" style={`--facet-count:${facets.length}`}>
+      <div class="col-span-2 flex flex-col gap-1.5 md:col-span-1">
+        <label for="f-q" class="field-label">Keyword</label>
+        <input id="f-q" name="q" type="search" class="control" placeholder={placeholder} autocomplete="off" spellcheck="false" />
+      </div>
+      {
+        facets.map((f) => (
+          <div class="flex min-w-0 flex-col gap-1.5">
+            <label for={`f-${f.name}`} class="field-label">
+              {f.label}
+            </label>
+            <select id={`f-${f.name}`} name={f.name} data-facet class="control">
+              <option value="">All</option>
+              {f.options.map((o) => (
+                <option value={o.value} data-label={o.label}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))
+      }
+    </div>
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+      <p class="text-sm text-ink-2" aria-live="polite" aria-atomic="true">
+        <span data-count>Showing all {total} {noun}</span>
+      </p>
+      <button type="button" class="btn" data-clear hidden>Clear filters</button>
+    </div>
+    <noscript><p class="mt-2 text-sm text-ink-3">Filtering needs JavaScript. All {noun} are listed below.</p></noscript>
+  </form>
+
+  <div data-empty hidden class="my-10 border border-dashed border-rule-strong bg-card p-8 text-center">
+    <p class="font-serif text-2xl">No {noun} match these filters.</p>
+    <p class="mt-2 text-ink-2">Try removing a filter or a keyword. Only verified entries are listed.</p>
+    <button type="button" class="btn mt-5" data-clear>Clear filters</button>
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-filter-root]');
+  if (root) {
+    const form = root.querySelector('form')!;
+    const q = form.querySelector<HTMLInputElement>('input[name="q"]')!;
+    const facets = [...form.querySelectorAll<HTMLSelectElement>('select[data-facet]')];
+    const items = [...document.querySelectorAll<HTMLElement>('[data-filter-item]')];
+    const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const clears = [...root.querySelectorAll<HTMLButtonElement>('[data-clear]')];
+    const noun = root.dataset.noun ?? 'items';
+    const total = items.length;
+
+    const values = (el: HTMLElement, key: string) => (el.dataset[key] ?? '').split(' ').filter(Boolean);
+    const terms = () => q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+
+    const matches = (el: HTMLElement, t: string[], active: [string, string][]) =>
+      t.every((w) => (el.dataset.search ?? '').includes(w)) && active.every(([k, v]) => values(el, k).includes(v));
+
+    function readUrl() {
+      const p = new URLSearchParams(location.search);
+      q.value = p.get('q') ?? '';
+      for (const s of facets) {
+        const v = p.get(s.name);
+        s.value = v && [...s.options].some((o) => o.value === v) ? v : '';
+      }
+    }
+
+    function writeUrl(t: string, active: [string, string][]) {
+      const p = new URLSearchParams();
+      if (t) p.set('q', t);
+      for (const [k, v] of active) p.set(k, v);
+      const qs = p.toString();
+      const next = qs ? `${location.pathname}?${qs}` : location.pathname;
+      if (next !== location.pathname + location.search) history.replaceState(null, '', next);
+    }
+
+    function apply() {
+      const t = terms();
+      const active = facets.filter((s) => s.value).map((s) => [s.name, s.value] as [string, string]);
+      let shown = 0;
+      for (const el of items) {
+        const ok = matches(el, t, active);
+        el.hidden = !ok;
+        if (ok) shown++;
+        // Methods: explain what the relation to the selected task means.
+        const note = el.querySelector<HTMLElement>('[data-rel-note]');
+        if (note) {
+          const task = active.find(([k]) => k === 'task')?.[1];
+          const rels = JSON.parse(el.dataset.rel ?? '{}') as Record<string, { kind: string; text: string }>;
+          const r = task ? rels[task] : undefined;
+          note.hidden = !r;
+          note.classList.toggle('hidden', !r);
+          note.textContent = r ? r.text : '';
+          note.dataset.kind = r?.kind ?? '';
+          // Put benchmark results before "same task family" pointers.
+          el.style.order = r?.kind === 'benchmark' ? '-1' : '';
+        }
+      }
+      // Live option counts given the other active filters.
+      for (const s of facets) {
+        const others = active.filter(([k]) => k !== s.name);
+        for (const o of s.options) {
+          if (!o.value) continue;
+          const n = items.filter((el) => matches(el, t, [...others, [s.name, o.value]])).length;
+          o.textContent = `${o.dataset.label} (${n})`;
+        }
+      }
+      const filtered = t.length > 0 || active.length > 0;
+      count.textContent = filtered ? `Showing ${shown} of ${total} ${noun}` : `Showing all ${total} ${noun}`;
+      empty.hidden = shown > 0;
+      // The top "Clear filters" only appears once something is filtered; the empty-state one is always usable.
+      clears.forEach((b) => {
+        if (!b.closest('[data-empty]')) b.hidden = !filtered;
+      });
+      writeUrl(q.value.trim(), active);
+    }
+
+    let timer: number | undefined;
+    q.addEventListener('input', () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(apply, 120);
+    });
+    facets.forEach((s) => s.addEventListener('change', apply));
+    clears.forEach((b) =>
+      b.addEventListener('click', () => {
+        q.value = '';
+        facets.forEach((s) => (s.value = ''));
+        apply();
+        q.focus();
+      }),
+    );
+    window.addEventListener('popstate', () => {
+      readUrl();
+      apply();
+    });
+    readUrl();
+    apply();
+  }
+</script>
+
+<style>
+  :global([data-rel-note]) {
+    border-left: 2px solid var(--color-rule-strong);
+    padding-left: 0.6rem;
+  }
+  :global([data-rel-note][data-kind='benchmark']) {
+    color: var(--color-hema);
+    border-left-color: var(--color-hema);
+    font-weight: 600;
+  }
+  :global([data-rel-note][data-kind='same-task']) {
+    color: var(--color-ink-2);
+  }
+</style>
