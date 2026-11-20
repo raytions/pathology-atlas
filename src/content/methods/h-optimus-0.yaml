@@ -42,7 +42,8 @@ datasets:
 limitations:
   - value: No peer-reviewed paper; the GitHub release README is the main technical description, and the training data is proprietary.
     source: hoptimus0-readme
-review_status: needs-review
+review_status: verified
+last_verified: 2026-11-20
 reviewer_notes: >-
   Same publisher and naming family as H-optimus-1 and H0-mini (H0-mini is distilled from it); the
   cards do not state an order between H-optimus-0 and H-optimus-1, so no supersedes relation is

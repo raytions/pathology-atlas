@@ -45,7 +45,8 @@ datasets:
 limitations:
   - value: Pretraining tiles come from TCGA, so downstream TCGA-based evaluations can overlap with pretraining; the paper flags possibly over-estimated results for such cases.
     source: h0mini-preprint
-review_status: needs-review
+review_status: verified
+last_verified: 2026-11-20
 reviewer_notes: >-
   related-to h-optimus-0 (teacher; distillation). All three dataset relations come from the eva
   benchmark in Table 1; eva fixes its own protocol and splits. The model card describes code and weights under

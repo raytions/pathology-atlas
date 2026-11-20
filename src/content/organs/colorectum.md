@@ -7,7 +7,8 @@ summary: >-
   Colorectal pathology enters the atlas through tissue-type classification of small H&E patches.
   NCT-CRC-HE-100K and CRC-VAL-HE-7K were released together as a training set and a test set from
   different patients, and many pathology encoders report results on that pair.
-review_status: draft
+review_status: verified
+last_verified: 2026-11-20
 sources:
   - key: zenodo-crc
     title: "Kather J. N., Halama N., Marx A. 100,000 histological images of human colorectal cancer and healthy tissue. Zenodo, v0.1 (2018)"
