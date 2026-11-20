@@ -1,0 +1,52 @@
+id: virchow
+title: Virchow
+short_name: Virchow
+summary: >-
+  A 632M-parameter ViT-H/14 image encoder trained with DINOv2 on about 1.5 million whole-slide
+  images from Memorial Sloan Kettering Cancer Center, used for tile-level probing and as the
+  backbone of a pan-cancer slide-level detector in its paper.
+category: foundation-model
+tasks: [representation-learning, roi-classification, wsi-classification]
+organs: []
+input_granularity: [patch]
+output_granularity: [patch-embedding]
+year: 2024
+venue:
+  value: Nature Medicine
+  source: virchow-paper
+primary_paper: virchow-paper
+code:
+  license: Apache 2.0
+  conditions: The model card states that the model and associated code are released under Apache 2.0, with additional requested (non-binding) usage guidelines. No separate code repository is linked from the card.
+  source: virchow-model-card
+weights:
+  availability: gated
+  url: https://huggingface.co/paige-ai/Virchow
+  license: Apache 2.0
+  conditions: Request access on Hugging Face; the account's primary email must match an institutional email for approval.
+  source: virchow-model-card
+datasets:
+  - dataset: camelyon17
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: virchow-paper
+    note: >-
+      Tile-level linear probing on Camelyon17-WILDS (96 x 96 tiles derived from CAMELYON17), one of the
+      eight tile benchmarks in Fig. 5, with further metrics in Supplementary Table 4.2. Not the
+      original slide / pN-stage benchmark.
+limitations:
+  - value: Pretraining data is an internal MSKCC collection and is not public.
+    source: virchow-model-card
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: virchow-paper
+    title: "Vorontsov E. et al. A foundation model for clinical-grade computational pathology and rare cancers detection. Nat Med (2024)"
+    url: https://www.nature.com/articles/s41591-024-03141-0
+    kind: paper
+    accessed: 2026-11-20
+  - key: virchow-model-card
+    title: paige-ai/Virchow model card (Hugging Face)
+    url: https://huggingface.co/paige-ai/Virchow
+    kind: model-card
+    accessed: 2026-11-20
