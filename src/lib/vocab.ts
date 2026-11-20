@@ -27,10 +27,19 @@ export const DATA_UNITS = {
   tma: 'TMA core',
 } as const;
 
+/**
+ * What one released label is attached to.
+ *  - slide-label / patient-label: one label per slide / per patient
+ *  - roi-label: one label per region of interest (variable-size crop chosen by an annotator)
+ *  - patch-label: one class label per fixed-size patch (tile), e.g. a 224 x 224 tile with a
+ *    tissue-type label; use this, not roi-label, when the released unit is a tile grid
+ *  - region-mask / pixel-mask / lesion-contour: spatial annotations shipped with the data
+ */
 export const ANNOTATION_GRANULARITY = {
   'slide-label': 'Slide label',
   'patient-label': 'Patient label',
   'roi-label': 'ROI label',
+  'patch-label': 'Patch label',
   'region-mask': 'Region mask',
   'lesion-contour': 'Lesion contours',
   'pixel-mask': 'Pixel mask',
