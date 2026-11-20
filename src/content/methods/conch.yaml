@@ -1,19 +1,78 @@
 # Pending entry: kept in the repo, excluded from public pages and search.
 id: conch
 title: CONCH
+short_name: CONCH
 summary: >-
-  Candidate vision-language foundation model for pathology, seen referenced in the CLAM README as
-  an alternative patch encoder. Paper, licence and evaluation datasets not yet checked.
+  A vision-language foundation model trained contrastively on about 1.17 million histopathology
+  image-caption pairs. Its ViT-B/16 image encoder gives patch embeddings for supervised heads, and
+  the paired text encoder allows zero-shot classification and retrieval from text prompts.
 category: foundation-model
-tasks: [representation-learning]
+tasks: [representation-learning, roi-classification, wsi-classification]
+organs: []
 input_granularity: [patch]
 output_granularity: [patch-embedding]
-primary_paper: clam-readme
+year: 2024
+venue:
+  value: Nature Medicine
+  source: conch-paper
+primary_paper: conch-paper
+code:
+  url: https://github.com/mahmoodlab/CONCH
+  license: CC-BY-NC-ND 4.0
+  conditions: The README states that the model and associated code are released under CC-BY-NC-ND 4.0 for non-commercial academic research with attribution. GitHub's licence detector does not classify the repository licence.
+  source: conch-repo
+weights:
+  availability: gated
+  url: https://huggingface.co/MahmoodLab/CONCH
+  license: CC-BY-NC-ND 4.0
+  conditions: Request access on Hugging Face and accept the terms; the account's primary email must be an institutional address. Non-commercial academic use only.
+  source: conch-model-card
+datasets:
+  - dataset: sicapv2
+    use: evaluation
+    task: gleason-pattern-classification
+    evidence: conch-preprint
+    note: >-
+      ROI-level Gleason pattern classification on SICAP. Zero-shot on the official test split
+      (n = 2,122 tiles, quadratic kappa): arXiv v2 Table 5 (prompt ensembling) and Table 12
+      (without). Supervised linear probe on the official 9,959 / 2,122 split: Table 18. The paper
+      describes the data as 512 x 512 tiles from 155 WSIs at 10x and cites the JBHI 2021 SICAP paper;
+      it does not name a Mendeley version.
+limitations:
+  - value: The publicly released weights omit the multimodal (captioning) decoder; the README states that the image and text encoders are intact.
+    source: conch-repo
+  - value: The paper describes CRC100k as tiles from 50 patients; per the Zenodo record that figure belongs to CRC-VAL-HE-7K, the 7,180-tile test set.
+    source: conch-preprint
 review_status: needs-review
 reviewer_notes: >-
-  Verify the original paper and the Hugging Face model card before adding licence, weights access
-  or any dataset relations.
+  Facts were re-checked against the Nature Medicine page (title, date), the arXiv v2 PDF, the
+  Hugging Face model card and the GitHub README on 2026-11-20. Table numbers refer to arXiv v2 and
+  were not mapped to the Nature Medicine Extended Data numbering. Not recorded because the schema
+  cannot express them: text embeddings / zero-shot outputs, and the zero-shot tumour segmentation on
+  31 SICAP test slides (Table 26). Evaluations on CRC100k, WSSS4LUAD, TCGA BRCA / NSCLC / RCC and
+  DHMC LUAD are not recorded because those datasets are not catalogued (CRC100k is blocked by the
+  missing patch-level label in the vocabulary).
 sources:
+  - key: conch-paper
+    title: "Lu M. Y. et al. A visual-language foundation model for computational pathology. Nat Med (2024)"
+    url: https://www.nature.com/articles/s41591-024-02856-4
+    kind: paper
+    accessed: 2026-11-20
+  - key: conch-preprint
+    title: "Lu M. Y. et al. Towards a Visual-Language Foundation Model for Computational Pathology (arXiv 2307.12914 v2)"
+    url: https://arxiv.org/abs/2307.12914
+    kind: preprint
+    accessed: 2026-11-20
+  - key: conch-model-card
+    title: MahmoodLab/CONCH model card (Hugging Face)
+    url: https://huggingface.co/MahmoodLab/CONCH
+    kind: model-card
+    accessed: 2026-11-20
+  - key: conch-repo
+    title: mahmoodlab/CONCH (GitHub)
+    url: https://github.com/mahmoodlab/CONCH
+    kind: repository
+    accessed: 2026-11-20
   - key: clam-readme
     title: CLAM README (discovery only)
     url: https://github.com/mahmoodlab/CLAM
