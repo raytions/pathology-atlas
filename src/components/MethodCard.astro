@@ -1,7 +1,8 @@
 ---
 import type { Catalog, Method } from '../lib/catalog';
 import { url } from '../lib/catalog';
-import { INPUT_GRANULARITY, METHOD_CATEGORY, OUTPUT_GRANULARITY, WEIGHTS_AVAILABILITY } from '../lib/vocab';
+import { INPUT_GRANULARITY, METHOD_CATEGORY, OUTPUT_GRANULARITY, RELATION_KIND, WEIGHTS_AVAILABILITY } from '../lib/vocab';
+import { USE_ORDER } from '../lib/relations';
 
 interface Props {
   method: Method;
@@ -12,7 +13,11 @@ interface Props {
 const { method: m, catalog, headingLevel = 'h3', attrs = {} } = Astro.props;
 const d = m.data;
 const H = headingLevel;
-const reportedOn = [...new Set(catalog.relations(m).filter((r) => r.use !== 'background').map((r) => r.dataset))];
+// One line per recorded use; pretraining is never folded into "evaluated".
+const byUse = USE_ORDER.map((u) => ({
+  use: u,
+  datasets: [...new Set(catalog.relations(m).filter((r) => r.use === u).map((r) => r.dataset))],
+})).filter((x) => x.datasets.length);
 ---
 
 <li class="group relative flex flex-col border border-rule bg-card p-5 transition-colors focus-within:border-hema hover:border-rule-strong" {...attrs}>
@@ -51,8 +56,21 @@ const reportedOn = [...new Set(catalog.relations(m).filter((r) => r.use !== 'bac
     </div>
   </dl>
 
-  <p class="mt-auto pt-4 text-xs text-ink-2">
-    <span class="field-label mr-1">Reported on</span>
-    {reportedOn.length ? reportedOn.map((id) => catalog.title(id)).join(', ') : <span class="not-verified">No catalogued benchmark</span>}
-  </p>
+  <dl class="mt-auto space-y-0.5 pt-4 text-xs text-ink-2">
+    {
+      byUse.length ? (
+        byUse.map((x) => (
+          <div data-use={x.use}>
+            <dt class="field-label mr-1 inline">{RELATION_KIND[x.use].label}</dt>
+            <dd class="inline">{x.datasets.map((id) => catalog.title(id)).join(', ')}</dd>
+          </div>
+        ))
+      ) : (
+        <div>
+          <dt class="field-label mr-1 inline">Dataset relations</dt>
+          <dd class="not-verified inline">None recorded</dd>
+        </div>
+      )
+    }
+  </dl>
 </li>

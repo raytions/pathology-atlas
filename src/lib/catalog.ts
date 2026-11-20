@@ -1,19 +1,27 @@
 /**
  * Read-side helpers. Pages never repeat facts: they look entries up by ID and
- * derive relations (what a method means for a task / dataset / organ) here.
+ * derive relations here (logic lives in ./relations.ts so it can be unit tested).
  * Only `review_status: verified` entries are public.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { RELEVANCE } from './vocab';
 import { withBase } from './paths';
+import {
+  featuredPathMethods,
+  featuredPathProblems,
+  groupMethods,
+  methodLink,
+  taskFamily,
+  type Lookup,
+  type PathConfig,
+} from './relations';
 
 export type Organ = CollectionEntry<'organs'>;
 export type Disease = CollectionEntry<'diseases'>;
 export type Task = CollectionEntry<'tasks'>;
 export type Dataset = CollectionEntry<'datasets'>;
 export type Method = CollectionEntry<'methods'>;
-export type Relevance = keyof typeof RELEVANCE;
 export type DatasetRelation = Method['data']['datasets'][number];
+export type { MethodLink, Grouped } from './relations';
 
 const isPublic = (e: { data: { review_status: string } }) => e.data.review_status === 'verified';
 const byTitle = (a: { data: { title: string } }, b: { data: { title: string } }) =>
@@ -36,15 +44,13 @@ export async function loadCatalog() {
   );
 }
 
-/** Uses that count as "reported with this dataset" (vs. background). */
-const REPORTED_USES = new Set(['evaluation', 'fine-tuning', 'pretraining']);
-
 export class Catalog {
   organs: Organ[];
   diseases: Disease[];
   tasks: Task[];
   datasets: Dataset[];
   methods: Method[];
+  lookup: Lookup;
 
   constructor(organs: Organ[], diseases: Disease[], tasks: Task[], datasets: Dataset[], methods: Method[]) {
     this.organs = organs;
@@ -52,6 +58,7 @@ export class Catalog {
     this.tasks = tasks;
     this.datasets = datasets;
     this.methods = methods;
+    this.lookup = { dataset: (id) => this.dataset(id), task: (id) => this.task(id) };
   }
 
   organ = (id: string) => this.organs.find((e) => e.id === id);
@@ -66,82 +73,48 @@ export class Catalog {
     )?.data.title ?? id;
   }
 
-  /** The task plus every general family it belongs to. */
-  taskFamily(taskId: string): string[] {
-    const t = this.task(taskId);
-    return [taskId, ...(t?.data.broader ?? [])];
-  }
+  taskFamily = (taskId: string) => taskFamily(taskId, this.lookup);
 
   /** Dataset relations of a method, restricted to public datasets. */
   relations(m: Method): DatasetRelation[] {
     return m.data.datasets.filter((r) => this.dataset(r.dataset));
   }
 
-  /**
-   * How a method relates to a task:
-   *  - benchmark: a cited source reports it on a dataset for exactly this task
-   *  - same-task: it targets this task or its family, nothing reported here
-   *  - background: only background relations to datasets of this task
-   */
-  methodRelevanceForTask(m: Method, taskId: string): { relevance: Relevance; relations: DatasetRelation[] } | null {
-    const rels = this.relations(m);
-    const reported = rels.filter((r) => r.task === taskId && REPORTED_USES.has(r.use));
-    if (reported.length) return { relevance: 'benchmark', relations: reported };
-    const family = this.taskFamily(taskId);
-    if (m.data.tasks.some((t) => family.includes(t))) return { relevance: 'same-task', relations: [] };
-    const bg = rels.filter((r) => r.use === 'background' && this.dataset(r.dataset)?.data.tasks.includes(taskId));
-    if (bg.length) return { relevance: 'background', relations: bg };
-    return null;
-  }
+  /** All recorded relations for this task (every use kept) + same-family flag. */
+  methodLinkForTask = (m: Method, taskId: string) => methodLink(m, { taskId }, this.lookup);
+  methodsForTask = (taskId: string) => groupMethods(this.methods, { taskId }, this.lookup);
 
-  methodsForTask(taskId: string) {
-    return this.group(
-      this.methods.map((m) => ({ method: m, ...this.methodRelevanceForTask(m, taskId) })),
+  methodsForDataset = (ds: Dataset) =>
+    groupMethods(this.methods, { datasetIds: [ds.id], familyOf: ds.data.tasks }, this.lookup);
+
+  methodsForOrgan = (organId: string) =>
+    groupMethods(
+      this.methods,
+      {
+        datasetIds: this.datasetsForOrgan(organId).map((d) => d.id),
+        familyOf: this.tasksForOrgan(organId).map((t) => t.id),
+      },
+      this.lookup,
     );
-  }
 
-  /** How a method relates to a dataset page. */
-  methodRelevanceForDataset(m: Method, ds: Dataset): { relevance: Relevance; relations: DatasetRelation[] } | null {
-    const rels = this.relations(m).filter((r) => r.dataset === ds.id);
-    const reported = rels.filter((r) => REPORTED_USES.has(r.use));
-    if (reported.length) return { relevance: 'benchmark', relations: reported };
-    const family = new Set(ds.data.tasks.flatMap((t) => this.taskFamily(t)));
-    if (m.data.tasks.some((t) => family.has(t))) return { relevance: 'same-task', relations: [] };
-    const bg = rels.filter((r) => r.use === 'background');
-    if (bg.length) return { relevance: 'background', relations: bg };
-    return null;
-  }
+  /** Methods with at least one evaluation relation for this task (any dataset). */
+  evaluatedForTask = (taskId: string) =>
+    this.methodsForTask(taskId).direct.filter((d) => d.link.uses.includes('evaluation'));
 
-  methodsForDataset(ds: Dataset) {
-    return this.group(this.methods.map((m) => ({ method: m, ...this.methodRelevanceForDataset(m, ds) })));
-  }
-
-  /** Strongest relevance of a method across all tasks of an organ. */
-  methodsForOrgan(organId: string) {
-    const tasks = this.tasksForOrgan(organId);
-    const order: Relevance[] = ['benchmark', 'same-task', 'background'];
-    return this.group(
-      this.methods.map((m) => {
-        let best: { relevance: Relevance; relations: DatasetRelation[] } | null = null;
-        for (const t of tasks) {
-          const r = this.methodRelevanceForTask(m, t.id);
-          if (!r) continue;
-          if (!best || order.indexOf(r.relevance) < order.indexOf(best.relevance)) best = { ...r };
-          else if (r.relevance === best.relevance) best.relations = best.relations.concat(r.relations);
-        }
-        return { method: m, ...best };
-      }),
-    );
-  }
-
-  private group(items: { method: Method; relevance?: Relevance; relations?: DatasetRelation[] }[]) {
-    const out: Record<Relevance, { method: Method; relations: DatasetRelation[] }[]> = {
-      benchmark: [],
-      'same-task': [],
-      background: [],
+  /** Resolve the explicit home-page path; throws if it is not published and linked. */
+  featuredPath(cfg: PathConfig) {
+    const problems = featuredPathProblems(cfg, {
+      organs: this.organs.map((o) => o.id),
+      task: this.task,
+      dataset: this.dataset,
+    });
+    if (problems.length) throw new Error(`Featured path is invalid: ${problems.join('; ')}`);
+    return {
+      organ: this.organ(cfg.organId)!,
+      task: this.task(cfg.taskId)!,
+      dataset: this.dataset(cfg.datasetId)!,
+      methods: featuredPathMethods(this.methods, cfg, this.lookup),
     };
-    for (const i of items) if (i.relevance) out[i.relevance].push({ method: i.method, relations: i.relations ?? [] });
-    return out;
   }
 
   diseasesForOrgan = (organId: string) => this.diseases.filter((d) => d.data.organs.includes(organId));
@@ -151,22 +124,24 @@ export class Catalog {
   datasetsForTask = (taskId: string) => this.datasets.filter((d) => d.data.tasks.includes(taskId));
   tasksForDisease = (diseaseId: string) => this.tasks.filter((t) => t.data.diseases.includes(diseaseId));
   datasetsForDisease = (diseaseId: string) => this.datasets.filter((d) => d.data.diseases.includes(diseaseId));
+}
 
-  /** Organs a method touches through recorded benchmark relations or explicit organs. */
-  organsForMethod(m: Method): string[] {
-    const s = new Set<string>(m.data.organs);
-    for (const r of this.relations(m)) {
-      if (REPORTED_USES.has(r.use)) this.dataset(r.dataset)?.data.organs.forEach((o) => s.add(o));
-    }
-    return [...s];
-  }
+/** Structured scale as "value unit" parts, in a fixed order. Never invents units. */
+export const SCALE_UNITS = [
+  ['slides', 'slides (WSIs)'],
+  ['patients', 'patients'],
+  ['rois', 'ROIs'],
+  ['patches', 'patches'],
+  ['centers', 'centres'],
+] as const;
 
-  /** Tasks shown for a method: its own tasks plus specific tasks it has reported results on. */
-  specificTasksForMethod(m: Method): string[] {
-    const s = new Set<string>();
-    for (const r of this.relations(m)) if (r.task && REPORTED_USES.has(r.use)) s.add(r.task);
-    return [...s];
-  }
+export function scaleParts(ds: Dataset, keys: readonly (typeof SCALE_UNITS)[number][0][] = ['slides', 'patients', 'rois']) {
+  return SCALE_UNITS.filter(([k]) => keys.includes(k))
+    .map(([k, unit]) => {
+      const c = ds.data.scale[k];
+      return c ? `${fmt(c.value)} ${unit}` : null;
+    })
+    .filter((x): x is string => Boolean(x));
 }
 
 export const url = {
@@ -178,4 +153,6 @@ export const url = {
 };
 
 /** Format "10616" as "10,616". */
-export const fmt = (n: number) => n.toLocaleString('en-US');
+export function fmt(n: number) {
+  return n.toLocaleString('en-US');
+}

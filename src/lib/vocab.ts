@@ -93,27 +93,40 @@ export const TASK_SCOPE = {
   general: 'Task family',
 } as const;
 
+export type DatasetUse = keyof typeof DATASET_USE;
+
 /**
- * Computed relevance of a method to a task / dataset page. Not stored in content:
- * derived by src/lib/catalog.ts from the structured relations.
+ * Display vocabulary for method <-> dataset links. The four uses come straight
+ * from a cited relation; "same-task" is inferred from task lists and is never a result.
  */
-export const RELEVANCE = {
-  benchmark: {
-    label: 'Reported on this benchmark',
-    short: 'Benchmark',
-    help: 'A cited source reports using this method with the dataset for this task (see the use and evidence).',
+export const RELATION_KIND = {
+  evaluation: {
+    label: 'Evaluated on',
+    short: 'Evaluation',
+    help: 'A cited source reports evaluating the method on this dataset for the stated task.',
   },
-  'same-task': {
-    label: 'Applicable to the same task family',
-    short: 'Same task family',
-    help: 'Designed for this kind of task. No result on this dataset is recorded here; do not read it as validated.',
+  'fine-tuning': {
+    label: 'Fine-tuned on',
+    short: 'Fine-tuning',
+    help: 'A cited source reports fine-tuning or training the method on this dataset. Not by itself an evaluation result.',
+  },
+  pretraining: {
+    label: 'Pretrained on',
+    short: 'Pretraining',
+    help: 'The dataset was part of the pretraining data. Says nothing about downstream performance on it.',
   },
   background: {
-    label: 'Background reading',
+    label: 'Background',
     short: 'Background',
-    help: 'Context only: definitions, grading systems or related work. Not a method or benchmark result.',
+    help: 'Context only: definitions, grading systems or related work. Not a method result.',
+  },
+  'same-task': {
+    label: 'Same task family, no recorded relation',
+    short: 'Same task family',
+    help: 'Built for this kind of task. No relation to this dataset is recorded; do not read it as evaluated.',
   },
 } as const;
+export type RelationKind = keyof typeof RELATION_KIND;
 
 export type Vocab = Record<string, string>;
 export const keysOf = <T extends Record<string, unknown>>(o: T) =>

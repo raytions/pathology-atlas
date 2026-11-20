@@ -1,0 +1,34 @@
+---
+/**
+ * One relation label. evaluation / fine-tuning / pretraining / background come from a
+ * cited relation; same-task is inferred and is never a result.
+ */
+import { RELATION_KIND, type RelationKind } from '../lib/vocab';
+
+interface Props {
+  kind: RelationKind;
+  size?: 'sm' | 'md';
+}
+const { kind, size = 'sm' } = Astro.props;
+const styles: Record<RelationKind, string> = {
+  evaluation: 'border-hema bg-hema-soft text-hema',
+  'fine-tuning': 'border-hema bg-card text-hema',
+  pretraining: 'border-eosin bg-eosin-soft text-eosin',
+  background: 'border-rule bg-paper-2 text-ink-3',
+  'same-task': 'border-rule-strong bg-card text-ink-2 border-dashed',
+};
+---
+
+<span
+  class:list={['inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2 font-mono uppercase tracking-wide', styles[kind], size === 'sm' ? 'py-0 text-[0.66rem]' : 'py-0.5 text-xs']}
+  title={RELATION_KIND[kind].help}
+  data-relation={kind}
+>
+  <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true" class="shrink-0">
+    {kind === 'evaluation' && <circle cx="4" cy="4" r="3.5" fill="currentColor" />}
+    {kind === 'fine-tuning' && (<><circle cx="4" cy="4" r="3.25" fill="none" stroke="currentColor" /><circle cx="4" cy="4" r="1.6" fill="currentColor" /></>)}
+    {kind === 'pretraining' && <rect x="0.75" y="0.75" width="6.5" height="6.5" fill="none" stroke="currentColor" />}
+    {kind === 'background' && <circle cx="4" cy="4" r="3.25" fill="none" stroke="currentColor" />}
+    {kind === 'same-task' && (<><circle cx="4" cy="4" r="3.25" fill="none" stroke="currentColor" /><path d="M4 0.75a3.25 3.25 0 0 1 0 6.5z" fill="currentColor" /></>)}
+  </svg>{RELATION_KIND[kind].short}
+</span>

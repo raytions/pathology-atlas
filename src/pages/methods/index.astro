@@ -3,31 +3,35 @@ import Base from '../../layouts/Base.astro';
 import FilterPanel from '../../components/FilterPanel.astro';
 import MethodCard from '../../components/MethodCard.astro';
 import { loadCatalog } from '../../lib/catalog';
-import { METHOD_CATEGORY, RELEVANCE, WEIGHTS_AVAILABILITY } from '../../lib/vocab';
+import { METHOD_CATEGORY, RELATION_KIND, WEIGHTS_AVAILABILITY } from '../../lib/vocab';
+import { USE_ORDER } from '../../lib/relations';
 
 const catalog = await loadCatalog();
 const { methods, tasks } = catalog;
 
-/** For each method: which tasks it relates to, and how (never implied as validated). */
+/**
+ * For each method and task: every recorded use, listed separately, plus the
+ * inferred "same task family" pointer when nothing evaluates it for that task.
+ */
 const relsFor = (m: (typeof methods)[number]) => {
-  const out: Record<string, { kind: string; text: string }> = {};
+  const out: Record<string, { kind: string; text: string; rank: number }> = {};
   for (const t of tasks) {
-    const r = catalog.methodRelevanceForTask(m, t.id);
-    if (!r) continue;
-    const label = RELEVANCE[r.relevance].label;
-    const detail =
-      r.relevance === 'benchmark'
-        ? `: ${[...new Set(r.relations.map((x) => catalog.title(x.dataset)))].join(', ')}`
-        : r.relevance === 'same-task'
-          ? `. No result on a ${t.data.title} dataset is recorded here.`
-          : '';
-    out[t.id] = { kind: r.relevance, text: `${label}${detail}` };
+    const link = catalog.methodLinkForTask(m, t.id);
+    if (!link) continue;
+    const parts = link.uses.map((u) => {
+      const ds = [...new Set(link.relations.filter((r) => r.use === u).map((r) => catalog.title(r.dataset)))];
+      return `${RELATION_KIND[u].label} ${ds.join(', ')}`;
+    });
+    if (link.sameTaskFamily) parts.push(`Same task family; no evaluation on a ${t.data.title} dataset is recorded`);
+    const kind = link.uses[0] ?? 'same-task';
+    const rank = link.uses.length ? USE_ORDER.indexOf(link.uses[0]) - USE_ORDER.length : 0;
+    out[t.id] = { kind, text: `${parts.join('. ')}.`, rank };
   }
   return out;
 };
 
 const taskOptions = tasks
-  .filter((t) => methods.some((m) => catalog.methodRelevanceForTask(m, t.id)))
+  .filter((t) => methods.some((m) => catalog.methodLinkForTask(m, t.id)))
   .sort((a, b) => (a.data.scope === b.data.scope ? 0 : a.data.scope === 'specific' ? -1 : 1))
   .map((t) => ({ value: t.id, label: t.data.scope === 'general' ? `${t.data.title} (family)` : t.data.title }));
 
@@ -39,10 +43,10 @@ const facets = [
     options: [...new Set(methods.map((m) => m.data.category))].map((v) => ({ value: v, label: METHOD_CATEGORY[v] })),
   },
   {
-    name: 'dataset',
-    label: 'Reported on',
+    name: 'evaluated',
+    label: 'Evaluated on',
     options: catalog.datasets
-      .filter((d) => methods.some((m) => catalog.relations(m).some((r) => r.dataset === d.id && r.use !== 'background')))
+      .filter((d) => methods.some((m) => catalog.relations(m).some((r) => r.dataset === d.id && r.use === 'evaluation')))
       .map((d) => ({ value: d.id, label: d.data.title })),
   },
   {
@@ -64,7 +68,7 @@ const attrsFor = (m: (typeof methods)[number]) => {
       .toLowerCase(),
     'data-task': Object.keys(rels).join(' '),
     'data-category': m.data.category,
-    'data-dataset': [...new Set(catalog.relations(m).filter((r) => r.use !== 'background').map((r) => r.dataset))].join(' '),
+    'data-evaluated': [...new Set(catalog.relations(m).filter((r) => r.use === 'evaluation').map((r) => r.dataset))].join(' '),
     'data-weights': m.data.weights?.availability ?? '',
     'data-rel': JSON.stringify(rels),
   };
@@ -76,8 +80,9 @@ const attrsFor = (m: (typeof methods)[number]) => {
     <p class="eyebrow">Catalogue</p>
     <h1 class="mt-2 text-4xl md:text-5xl">Methods &amp; Models</h1>
     <p class="mt-4 max-w-2xl text-ink-2">
-      Filtering by task includes methods built for the same task family. Each card then says whether a source reports it on a
-      benchmark for that task, or whether it is only applicable. Applicable is not validated.
+      Filtering by task includes methods built for the same task family. Each card then lists every recorded relation for that
+      task by use (evaluation, fine-tuning, pretraining, background), or says that only the task family matches. A task-family
+      match is not an evaluation.
     </p>
     <div class="mt-8">
       <FilterPanel facets={facets} noun="methods" total={methods.length} />
