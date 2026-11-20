@@ -1,0 +1,26 @@
+{
+  "lookbackDays": 30,
+  "maxPerQuery": 15,
+  "arxiv": [
+    "abs:\"computational pathology\" AND abs:\"foundation model\"",
+    "abs:histopathology AND abs:\"foundation model\"",
+    "abs:pathology AND abs:\"vision-language\" AND abs:\"whole slide\""
+  ],
+  "githubTopics": ["computational-pathology", "digital-pathology"],
+  "hfAuthors": ["MahmoodLab", "paige-ai", "bioptimus", "owkin", "prov-gigapath", "kaiko-ai", "histai"],
+  "hfModels": [
+    "MahmoodLab/UNI",
+    "MahmoodLab/UNI2-h",
+    "MahmoodLab/CONCH",
+    "MahmoodLab/TITAN",
+    "paige-ai/Virchow",
+    "paige-ai/Virchow2",
+    "prov-gigapath/prov-gigapath",
+    "bioptimus/H-optimus-0",
+    "bioptimus/H-optimus-1",
+    "owkin/phikon",
+    "owkin/phikon-v2",
+    "xiangjx/musk",
+    "google/path-foundation"
+  ]
+}
