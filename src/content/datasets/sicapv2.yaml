@@ -1,20 +1,77 @@
 # Pending entry: kept in the repo, excluded from public pages and search.
 id: sicapv2
 title: SICAPv2
+aliases: [SICAP v2, SICAP]
 summary: >-
-  Candidate prostate dataset with Gleason-pattern annotations, discovered through a code
-  repository README. Scale, licence and access have not been checked against the original paper.
+  Prostate core-needle biopsy WSIs from a single Spanish hospital with two levels of Gleason
+  labels: a combined Gleason score per biopsy and pathologist-drawn pixel-level Gleason grade
+  annotations, which the authors tile into 512 x 512 patches at 10x for patch-level grading.
 organs: [prostate]
 diseases: [prostate-adenocarcinoma]
-tasks: [gleason-grading]
+tasks: [gleason-grading, gleason-pattern-classification]
+specimen: H&E prostate core-needle biopsies graded by urogenital pathologists at Hospital Clínico of Valencia, Spain; scanned with a Ventana iScan Coreo at 40x.
 stains: [he]
 data_units: [wsi, patch]
-annotation_granularity: [slide-label]
+annotation_granularity: [slide-label, region-mask]
+scale:
+  patients:
+    value: 95
+    source: sicap-preprint
+    note: Preprint Section 2 (Materials). Slide and patch totals are left empty because the sources disagree (see reviewer notes).
+version:
+  value: Mendeley Data version 2 (published 2020-10-22, DOI 10.17632/9xxm58dvs3.2). Version 1 was published 2020-07-20 (DOI 10.17632/9xxm58dvs3.1).
+  source: sicap-mendeley
+  note: The record does not describe what changed between versions.
+splits:
+  value: Patient-level partition into four cross-validation folds and one test subset (preprint Section 4.1, Table 3). The test subset holds 2,122 patches; the four folds together hold 9,959.
+  source: sicap-preprint
+  note: CONCH describes this as the official split (9,959 train / 2,122 test from 124 / 31 WSIs). Whether split files ship in the Mendeley archive was not checked.
+evaluation_protocol:
+  value: Patch-level Gleason grade (non-cancerous, 3, 4, 5) and biopsy-level Gleason score, both reported with quadratic Cohen's kappa in the source paper.
+  source: sicap-preprint
+access:
+  method: open-download
+  details: Single ZIP archive (about 2 GB) on Mendeley Data; the record page offers "Download All" without signing in.
+  source: sicap-mendeley
+terms:
+  license: CC BY 4.0
+  redistribution: CC BY 4.0 allows sharing and adaptation with attribution.
+  source: sicap-mendeley
+official_url: https://data.mendeley.com/datasets/9xxm58dvs3/2
+primary_paper: sicap-paper
+limitations:
+  - value: Single institution and a single scanner model, so site and scanner shift are not represented.
+    source: sicap-preprint
+  - value: Patch labels are derived, not drawn. Each patch takes the majority annotated grade; patches with under 20 % tissue, and unannotated patches from cancerous biopsies, were discarded.
+    source: sicap-preprint
+  - value: Cribriform-pattern annotations exist only for a subset of Gleason 4 patches.
+    source: sicap-preprint
 review_status: draft
 reviewer_notes: >-
-  Found via the TransMIL README, whose abstract text describes SICAPv2 experiments. Locate the
-  original SICAPv2 publication and data portal before filling scale, access and terms.
+  Conflicts kept out of scale fields. (1) Slides: the preprint abstract says 182 annotated WSIs,
+  Section 2 says 155 biopsies from 95 patients; CONCH also reports 155 WSIs. (2) Patches: the
+  preprint text gives 4,417 NC / 1,635 GG3 / 3,622 GG4 / 665 GG5 (10,339), while Table 3 sums to
+  4,417 / 2,222 / 4,494 / 948 (12,081), which matches CONCH's 9,959 + 2,122. The 18,783 figure on the
+  OpenMedLab list is unexplained. Not checked: the contents of the Mendeley ZIP (pixel masks and
+  split files), and the published CMPB version against the arXiv preprint.
 sources:
+  - key: sicap-mendeley
+    title: "Silva-Rodríguez J. SICAPv2 - Prostate Whole Slide Images with Gleason Grades Annotations. Mendeley Data, v2 (2020)"
+    url: https://data.mendeley.com/datasets/9xxm58dvs3/2
+    kind: data-portal
+    accessed: 2026-11-20
+    note: Version 1 record also opened (https://data.mendeley.com/datasets/9xxm58dvs3/1); same description and licence.
+  - key: sicap-paper
+    title: "Silva-Rodríguez J. et al. Going deeper through the Gleason scoring scale: an automatic end-to-end system for histology prostate grading and cribriform pattern detection. Comput Methods Programs Biomed 195, 105637 (2020)"
+    url: https://doi.org/10.1016/j.cmpb.2020.105637
+    kind: paper
+    accessed: 2026-11-20
+    note: Journal page not opened; metadata confirmed via Crossref. Facts are taken from the arXiv preprint below.
+  - key: sicap-preprint
+    title: "Silva-Rodríguez J. et al. Going Deeper through the Gleason Scoring Scale (arXiv 2105.10490 v1)"
+    url: https://arxiv.org/abs/2105.10490
+    kind: preprint
+    accessed: 2026-11-20
   - key: transmil-readme
     title: TransMIL README (discovery only)
     url: https://github.com/szc19990412/TransMIL
