@@ -1,0 +1,63 @@
+id: uni2-h
+title: UNI 2 (UNI2-h)
+short_name: UNI2-h
+summary: >-
+  The second-generation UNI encoder: a ViT-H/14 trained with DINOv2 on more than 200 million tiles
+  from H&E and IHC slides at Mass General Brigham. It is a separate model from UNI, with its own
+  weights and model card, and produces patch embeddings for downstream heads.
+category: foundation-model
+tasks: [representation-learning, roi-classification, wsi-classification]
+organs: []
+input_granularity: [patch]
+output_granularity: [patch-embedding]
+year: 2025
+primary_paper: uni2-model-card
+code:
+  url: https://github.com/mahmoodlab/UNI
+  license: CC-BY-NC-ND 4.0
+  conditions: The model card states that the model and associated code are released under CC-BY-NC-ND 4.0 for non-commercial academic research; the UNI repository README documents loading UNI2-h.
+  source: uni2-model-card
+weights:
+  availability: gated
+  url: https://huggingface.co/MahmoodLab/UNI2-h
+  license: CC-BY-NC-ND 4.0
+  conditions: Request access on Hugging Face and accept the terms; the account's primary email must be an institutional address (personal addresses are denied).
+  source: uni2-model-card
+datasets:
+  - dataset: panda
+    use: evaluation
+    task: gleason-grading
+    evidence: uni-readme
+    note: >-
+      "Slide Benchmarks" table in the UNI repository README, column "PANDA (5 classes, Public)". The
+      README does not name the metric or the PANDA split; it states that three learning rates were
+      swept and the test score of the best validation model is reported.
+  - dataset: camelyon17
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: uni-readme
+    note: >-
+      "ROI Benchmarks" table, column "C17-WILDS (2 classes, Public)": the CAMELYON17-WILDS patch
+      derivative, not the original slide / pN-stage benchmark.
+limitations:
+  - value: No peer-reviewed paper describes UNI2-h; training details and benchmark protocol come from the model card and repository README only.
+    source: uni2-model-card
+  - value: Pretraining slides are not public (Mass General Brigham collections).
+    source: uni2-model-card
+review_status: verified
+last_verified: 2026-11-20
+reviewer_notes: >-
+  The model card gives two different slide counts for the pretraining data ("over 350k" and "over
+  300k" slides); neither is recorded as a fact. primary_paper points to the model card because the
+  schema requires one and no paper exists.
+sources:
+  - key: uni2-model-card
+    title: MahmoodLab/UNI2-h model card (Hugging Face)
+    url: https://huggingface.co/MahmoodLab/UNI2-h
+    kind: model-card
+    accessed: 2026-11-20
+  - key: uni-readme
+    title: mahmoodlab/UNI README, "Benchmarking UNI 2" section (GitHub)
+    url: https://github.com/mahmoodlab/UNI#benchmarking-uni-2
+    kind: repository
+    accessed: 2026-11-20
