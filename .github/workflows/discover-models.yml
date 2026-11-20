@@ -1,0 +1,84 @@
+name: Discover models (inbox)
+
+# Weekly, Monday 06:00 UTC, plus manual runs.
+# Why weekly: the arXiv / Hugging Face / GitHub sources move on a scale of days, while every
+# candidate needs a human or agent to open primary sources before anything is drafted. A weekly
+# inbox matches that review capacity and keeps the noise (and API usage) low. Use "Run workflow"
+# for an extra pass before a review session.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write # push the content-inbox branch
+  pull-requests: write # open or reuse a Draft PR from content-inbox
+
+concurrency:
+  group: discover-models
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      # The catalogue (src/content) is read from main so duplicate detection is current.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Prepare the content-inbox branch in a separate worktree
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin content-inbox >/dev/null; then
+            git fetch origin content-inbox
+            git worktree add ../inbox origin/content-inbox
+            cd ../inbox && git checkout -B content-inbox
+            # Keep the inbox branch current with main; it only touches docs/inbox/.
+            git merge --no-edit origin/main
+          else
+            git worktree add -b content-inbox ../inbox origin/main
+          fi
+
+      - name: Run discovery (writes docs/inbox/<date>.md only)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/discover-models.ts --date "$(date -u +%F)" --out ../inbox/docs/inbox
+
+      - name: Commit and push to content-inbox
+        working-directory: ../inbox
+        run: |
+          git add docs/inbox
+          # Guard: the inbox branch must never carry catalogue changes.
+          if git diff --cached --name-only | grep -v '^docs/inbox/'; then
+            echo "Refusing to commit files outside docs/inbox/"; exit 1
+          fi
+          if git diff --cached --quiet; then
+            echo "No inbox changes."
+          else
+            git commit -m "inbox: model discovery $(date -u +%F)"
+          fi
+          git push origin content-inbox
+
+      - name: Open a Draft PR if none is open (never merged automatically)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          open=$(gh pr list --head content-inbox --state open --json number --jq 'length')
+          if [ "$open" = "0" ]; then
+            gh pr create --draft --base main --head content-inbox \
+              --title "inbox: model discovery candidates" \
+              --body "Automatic candidate pool (docs/inbox/ only). Not verified, not published. Review per docs/inbox/README.md." \
+              || echo "Could not open a PR (repository setting may block Actions from creating PRs); the content-inbox branch is pushed."
+          else
+            echo "Draft PR already open; branch updated."
+          fi
