@@ -50,7 +50,8 @@ limitations:
     source: zenodo-crc
   - value: Patches come from hand-delineated single-tissue regions, so each image shows essentially one tissue type; this is easier than classifying arbitrary tiles from a whole slide.
     source: kather-paper
-review_status: draft
+review_status: verified
+last_verified: 2026-11-20
 reviewer_notes: >-
   Discovery lists misreport this set (one says 86 patients and a release date of 2008). The record
   and the paper say 86 slides and give no patient count.

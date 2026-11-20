@@ -9,7 +9,8 @@ summary: >-
   Assigning a tissue type to each small H&E patch from colorectal cancer specimens. It is a
   region-level task often used as a quick probe of image encoders, and as a building block for
   measuring tissue composition across a slide.
-review_status: draft
+review_status: verified
+last_verified: 2026-11-20
 sources:
   - key: zenodo-crc
     title: "Kather J. N., Halama N., Marx A. 100,000 histological images of human colorectal cancer and healthy tissue. Zenodo, v0.1 (2018)"

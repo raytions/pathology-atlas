@@ -42,7 +42,8 @@ primary_paper: kather-paper
 limitations:
   - value: Single institution (NCT tissue bank), so it tests a change of patients more than a change of site or scanner.
     source: zenodo-crc
-review_status: draft
+review_status: verified
+last_verified: 2026-11-20
 reviewer_notes: >-
   Patient and slide counts are left empty because sources disagree. The Zenodo record says 50
   patients. Kather et al. 2019 say the set was built from 25 H&E slides of the DACHS study and the
