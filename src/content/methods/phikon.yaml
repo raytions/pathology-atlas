@@ -26,7 +26,8 @@ datasets: []
 limitations:
   - value: Trained on TCGA tiles, so evaluations on TCGA cohorts can overlap with pretraining data.
     source: phikon-model-card
-review_status: needs-review
+review_status: verified
+last_verified: 2026-11-20
 reviewer_notes: >-
   Version relation: phikon-v2 is the later model in the same family (different architecture,
   method and data); kept as a separate entry. The model card spells the data source "TGCA". No dataset relation is recorded: the medRxiv full text was blocked from our

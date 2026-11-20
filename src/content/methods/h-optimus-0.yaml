@@ -42,12 +42,16 @@ datasets:
 limitations:
   - value: No peer-reviewed paper; the GitHub release README is the main technical description, and the training data is proprietary.
     source: hoptimus0-readme
-review_status: needs-review
+review_status: verified
+last_verified: 2026-11-20
 reviewer_notes: >-
   Same publisher and naming family as H-optimus-1 and H0-mini (H0-mini is distilled from it); the
   cards do not state an order between H-optimus-0 and H-optimus-1, so no supersedes relation is
   recorded. primary_paper points to the release README because no paper exists. The README calls the
-  architecture "g/14 with 4 registers" (40 blocks, 1536-d); the card says 1.1B parameters.
+  architecture "g/14 with 4 registers" (40 blocks, 1536-d); the card says 1.1B parameters. No relation
+  to the colorectal datasets is recorded: the README's CRC_NORM / CRC_NO_NORM rows describe the
+  7,180-image test set as coming from TCGA-COAD / READ and as existing in normalised and
+  unnormalised variants, which conflicts with the Zenodo record and Kather et al. 2019.
 sources:
   - key: hoptimus0-readme
     title: "bioptimus/releases: H-optimus-0 release README (GitHub)"

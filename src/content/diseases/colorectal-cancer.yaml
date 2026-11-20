@@ -1,0 +1,16 @@
+id: colorectal-cancer
+title: Colorectal cancer
+organs: [colorectum]
+synonyms: [Colorectal adenocarcinoma, CRC]
+summary: >-
+  Cancer of the colon or rectum, almost always adenocarcinoma. In computational pathology it is
+  studied at patch level (tissue composition) as well as at slide level (biomarkers such as
+  microsatellite instability, and outcome).
+review_status: verified
+last_verified: 2026-11-20
+sources:
+  - key: kather-paper
+    title: "Kather J. N. et al. Predicting survival from colorectal cancer histology slides using deep learning. PLoS Med 16, e1002730 (2019)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6345440/
+    kind: paper
+    accessed: 2026-11-20
