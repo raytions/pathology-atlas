@@ -109,14 +109,14 @@ const { facets, noun, total, placeholder = 'Search titles, aliases, summaries' }
         const note = el.querySelector<HTMLElement>('[data-rel-note]');
         if (note) {
           const task = active.find(([k]) => k === 'task')?.[1];
-          const rels = JSON.parse(el.dataset.rel ?? '{}') as Record<string, { kind: string; text: string }>;
+          const rels = JSON.parse(el.dataset.rel ?? '{}') as Record<string, { kind: string; text: string; rank: number }>;
           const r = task ? rels[task] : undefined;
           note.hidden = !r;
           note.classList.toggle('hidden', !r);
           note.textContent = r ? r.text : '';
           note.dataset.kind = r?.kind ?? '';
-          // Put benchmark results before "same task family" pointers.
-          el.style.order = r?.kind === 'benchmark' ? '-1' : '';
+          // Methods evaluated for the selected task first; inferred "same task family" last.
+          el.style.order = r ? String(r.rank) : '';
         }
       }
       // Live option counts given the other active filters.
@@ -166,7 +166,7 @@ const { facets, noun, total, placeholder = 'Search titles, aliases, summaries' }
     border-left: 2px solid var(--color-rule-strong);
     padding-left: 0.6rem;
   }
-  :global([data-rel-note][data-kind='benchmark']) {
+  :global([data-rel-note][data-kind='evaluation']) {
     color: var(--color-hema);
     border-left-color: var(--color-hema);
     font-weight: 600;

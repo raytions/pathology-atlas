@@ -2,14 +2,18 @@
 import { withBase } from '../lib/paths';
 import Base from '../layouts/Base.astro';
 import TissueMark from '../components/TissueMark.astro';
-import Relevance from '../components/Relevance.astro';
-import { loadCatalog, url, fmt } from '../lib/catalog';
+import RelationBadge from '../components/RelationBadge.astro';
+import RelationLegend from '../components/RelationLegend.astro';
+import { loadCatalog, url, scaleParts } from '../lib/catalog';
+import { relAnchor } from '../lib/relations';
+import { FEATURED_PATH } from '../data/featured';
+import { ACCESS_METHOD, DATA_UNITS, RELATION_KIND } from '../lib/vocab';
 
 const catalog = await loadCatalog();
-const featured = catalog.organs.find((o) => o.data.featured) ?? catalog.organs[0];
-const featuredTask = catalog.tasksForOrgan(featured.id)[0];
-const featuredDataset = featuredTask ? catalog.datasetsForTask(featuredTask.id)[0] : undefined;
-const featuredMethods = featuredTask ? catalog.methodsForTask(featuredTask.id) : undefined;
+// Explicit organ / task / dataset; throws (and fails the build) if not published and linked.
+const path = catalog.featuredPath(FEATURED_PATH);
+const { organ, task, dataset, methods } = path;
+const dsScale = scaleParts(dataset);
 
 const entries = [
   {
@@ -69,76 +73,97 @@ const entries = [
     </ul>
   </section>
 
-  {
-    featured && (
-      <section aria-labelledby="feat-h" class="wrap mt-16">
-        <div class="border border-rule bg-card">
-          <div class="grid gap-8 p-6 md:grid-cols-[1fr_1.2fr] md:p-10">
-            <div>
-              <p class="eyebrow">Featured topic</p>
-              <h2 id="feat-h" class="mt-2 text-4xl md:text-5xl">
-                <a href={url.organ(featured.id)} class="text-ink">{featured.data.title}</a>
-              </h2>
-              <p class="mt-4 text-ink-2">{featured.data.summary}</p>
-              <a href={url.organ(featured.id)} class="btn mt-6">Open the {featured.data.title.toLowerCase()} topic</a>
-            </div>
+  <section aria-labelledby="feat-h" class="wrap mt-16" data-featured-path data-organ={organ.id} data-task={task.id} data-dataset={dataset.id}>
+    <div class="border border-rule bg-card">
+      <div class="grid gap-8 p-6 md:grid-cols-[1fr_1.2fr] md:p-10">
+        <div>
+          <p class="eyebrow">Featured topic</p>
+          <h2 id="feat-h" class="mt-2 text-4xl md:text-5xl">
+            <a href={url.organ(organ.id)} class="text-ink">{organ.data.title}</a>
+          </h2>
+          <p class="mt-4 text-ink-2">{organ.data.summary}</p>
+          <a href={url.organ(organ.id)} class="btn mt-6">Open the {organ.data.title.toLowerCase()} topic</a>
+        </div>
 
-            {featuredTask && featuredDataset && featuredMethods && (
-              <div>
-                <p class="field-label">A worked path</p>
-                <ol class="mt-3 border-l border-rule-strong">
-                  <li class="relative pb-5 pl-6">
-                    <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-ink" aria-hidden="true" />
-                    <span class="eyebrow">Organ</span>
-                    <a href={url.organ(featured.id)} class="block font-serif text-xl">{featured.data.title}</a>
-                  </li>
-                  <li class="relative pb-5 pl-6">
-                    <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-eosin" aria-hidden="true" />
-                    <span class="eyebrow">Task</span>
-                    <a href={url.task(featuredTask.id)} class="block font-serif text-xl">{featuredTask.data.title}</a>
-                    <span class="text-sm text-ink-2">{featuredTask.data.prediction_target}</span>
-                  </li>
-                  <li class="relative pb-5 pl-6">
-                    <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-hema" aria-hidden="true" />
-                    <span class="eyebrow">Dataset</span>
-                    <a href={url.dataset(featuredDataset.id)} class="block font-serif text-xl">{featuredDataset.data.title}</a>
-                    <span class="text-sm text-ink-2">
-                      {featuredDataset.data.scale.slides && `${fmt(featuredDataset.data.scale.slides.value)} biopsy WSIs`}
-                      {featuredDataset.data.access && ` · ${featuredDataset.data.access.details.split(' after')[0]}`}
-                    </span>
-                  </li>
-                  <li class="relative pl-6">
-                    <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full border border-hema bg-card" aria-hidden="true" />
-                    <span class="eyebrow">Methods</span>
+        <div>
+          <p class="field-label">A worked path</p>
+          <ol class="mt-3 border-l border-rule-strong">
+            <li class="relative pb-5 pl-6">
+              <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-ink" aria-hidden="true"></span>
+              <span class="eyebrow">Organ</span>
+              <a href={url.organ(organ.id)} class="block font-serif text-xl">{organ.data.title}</a>
+            </li>
+            <li class="relative pb-5 pl-6">
+              <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-eosin" aria-hidden="true"></span>
+              <span class="eyebrow">Task</span>
+              <a href={url.task(task.id)} class="block font-serif text-xl">{task.data.title}</a>
+              {task.data.prediction_target && <span class="text-sm text-ink-2">{task.data.prediction_target}</span>}
+            </li>
+            <li class="relative pb-5 pl-6">
+              <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-hema" aria-hidden="true"></span>
+              <span class="eyebrow">Dataset</span>
+              <a href={url.dataset(dataset.id)} class="block font-serif text-xl">{dataset.data.title}</a>
+              <dl class="mt-1 grid gap-x-4 gap-y-0.5 text-sm text-ink-2 sm:grid-cols-[auto_1fr]">
+                <dt class="field-label pt-0.5">Scale</dt>
+                <dd>{dsScale.length ? dsScale.join(' · ') : <span class="not-verified">Not verified</span>}</dd>
+                <dt class="field-label pt-0.5">Data unit</dt>
+                <dd>{dataset.data.data_units.map((u) => DATA_UNITS[u]).join(', ')}</dd>
+                <dt class="field-label pt-0.5">Access</dt>
+                <dd>{dataset.data.access ? ACCESS_METHOD[dataset.data.access.method] : <span class="not-verified">Not verified</span>}</dd>
+              </dl>
+            </li>
+            <li class="relative pl-6">
+              <span class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full border border-hema bg-card" aria-hidden="true"></span>
+              <span class="eyebrow">Methods on {dataset.data.title} for {task.data.title}</span>
+              {
+                !methods.hasEvaluation && (
+                  <p class="mt-1 text-sm not-verified" data-no-evaluation>
+                    No evaluation on {dataset.data.title} for {task.data.title} is recorded in the atlas yet.
+                  </p>
+                )
+              }
+              {
+                methods.direct.length > 0 && (
+                  <ul class="mt-1 space-y-1.5" aria-label={`Recorded relations to ${dataset.data.title}`}>
+                    {methods.direct.map(({ method, link }) => (
+                      <li class="flex flex-wrap items-center gap-2" data-method={method.id} data-uses={link.uses.join(' ')}>
+                        <a href={url.method(method.id)} class="font-serif text-lg">{method.data.short_name ?? method.data.title}</a>
+                        {link.relations.map((r) => (
+                          <a href={`${url.method(method.id)}#${relAnchor(r)}`} class="no-underline" aria-label={`${RELATION_KIND[r.use].label} ${dataset.data.title}: relation record`}>
+                            <RelationBadge kind={r.use} />
+                          </a>
+                        ))}
+                      </li>
+                    ))}
+                  </ul>
+                )
+              }
+              {
+                methods.familyOnly.length > 0 && (
+                  <>
+                    <p class="mt-3 text-xs text-ink-3">Same task family, no recorded relation to {dataset.data.title}:</p>
                     <ul class="mt-1 space-y-1.5">
-                      {featuredMethods.benchmark.map(({ method }) => (
-                        <li class="flex flex-wrap items-center gap-2">
+                      {methods.familyOnly.map(({ method }) => (
+                        <li class="flex flex-wrap items-center gap-2" data-method={method.id} data-uses="">
                           <a href={url.method(method.id)} class="font-serif text-lg">{method.data.short_name ?? method.data.title}</a>
-                          <Relevance kind="benchmark" />
-                        </li>
-                      ))}
-                      {featuredMethods['same-task'].map(({ method }) => (
-                        <li class="flex flex-wrap items-center gap-2">
-                          <a href={url.method(method.id)} class="font-serif text-lg">{method.data.short_name ?? method.data.title}</a>
-                          <Relevance kind="same-task" />
+                          <RelationBadge kind="same-task" />
                         </li>
                       ))}
                     </ul>
-                  </li>
-                </ol>
-              </div>
-            )}
-          </div>
+                  </>
+                )
+              }
+            </li>
+          </ol>
         </div>
-      </section>
-    )
-  }
+      </div>
+    </div>
+  </section>
 
-  <section class="wrap mt-16">
-    <div class="grid gap-6 border-t border-rule pt-6 text-sm text-ink-2 md:grid-cols-3">
-      <p><Relevance kind="benchmark" /> <span class="ml-1">A cited source reports the method on that dataset and task.</span></p>
-      <p><Relevance kind="same-task" /> <span class="ml-1">Built for the same task family. Not a result.</span></p>
-      <p><Relevance kind="background" /> <span class="ml-1">Context only, such as grading definitions.</span></p>
+  <section class="wrap mt-16" aria-labelledby="legend-h">
+    <h2 id="legend-h" class="eyebrow">How to read relation labels</h2>
+    <div class="mt-4 border-t border-rule pt-5">
+      <RelationLegend />
     </div>
   </section>
 </Base>

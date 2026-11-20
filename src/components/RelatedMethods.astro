@@ -1,88 +1,107 @@
 ---
 /**
- * Methods grouped by what the link actually means. Benchmark rows always show the
- * recorded use (evaluation / fine-tuning / pretraining), the task and the evidence.
+ * Methods for a task / dataset / organ context, split into
+ *  - recorded relations: every cited relation is listed with its own use label,
+ *    task and a link to the relation record + evidence source;
+ *  - same task family only: no recorded relation here, explicitly not a result.
  */
-import Relevance from './Relevance.astro';
-import { RELEVANCE, DATASET_USE, METHOD_CATEGORY } from '../lib/vocab';
-import { url, type Catalog, type Method, type DatasetRelation, type Relevance as R } from '../lib/catalog';
+import RelationBadge from './RelationBadge.astro';
+import { RELATION_KIND, METHOD_CATEGORY } from '../lib/vocab';
+import { url, type Catalog, type Method, type Grouped } from '../lib/catalog';
+import { relAnchor } from '../lib/relations';
 
 interface Props {
-  groups: Record<R, { method: Method; relations: DatasetRelation[] }[]>;
+  groups: Grouped<Method>;
   catalog: Catalog;
   /** e.g. "Gleason grading" or "PANDA"; used in the explanatory copy. */
   contextTitle: string;
   headingId?: string;
-  showEmpty?: boolean;
 }
-const { groups, catalog, contextTitle, headingId = 'methods-h', showEmpty = true } = Astro.props;
-const order: R[] = ['benchmark', 'same-task', 'background'];
-const sourceUrl = (m: Method, key: string) => m.data.sources.find((s) => s.key === key);
-const anyMethods = order.some((k) => groups[k].length);
+const { groups, catalog, contextTitle, headingId = 'methods-h' } = Astro.props;
+const source = (m: Method, key: string) => m.data.sources.find((s) => s.key === key);
 ---
 
 <section aria-labelledby={headingId} class="rule-t mt-12 pt-6">
   <h2 id={headingId} class="text-2xl md:text-3xl">Related methods &amp; models</h2>
   <p class="mt-2 max-w-3xl text-sm text-ink-2">
-    Grouped by the kind of link. Only <strong class="font-semibold text-hema">Benchmark</strong> means a cited source reports the method on
-    data for {contextTitle}; the other groups are not results.
+    Each recorded relation keeps its own use: evaluation, fine-tuning, pretraining or background. Only
+    <strong class="font-semibold text-hema">Evaluation</strong> means a cited source reports evaluating the method on that dataset.
+    Methods in the same task family without a recorded relation to {contextTitle} are listed separately.
   </p>
 
-  {!anyMethods && <p class="mt-6 not-verified">No related methods are catalogued yet.</p>}
+  <div class="mt-8">
+    <h3 class="font-sans text-base font-semibold">Recorded relations</h3>
+    {
+      groups.direct.length === 0 ? (
+        <p class="mt-3 text-sm not-verified" data-empty-direct>No relation to {contextTitle} is recorded in the atlas yet.</p>
+      ) : (
+        <ul class="mt-3 divide-y divide-rule border-y border-rule">
+          {groups.direct.map(({ method: m, link }) => (
+            <li class="grid gap-2 py-4 md:grid-cols-[14rem_1fr] md:gap-6" data-method={m.id} data-uses={link.uses.join(' ')}>
+              <div>
+                <a href={url.method(m.id)} class="font-serif text-xl">
+                  {m.data.short_name ?? m.data.title}
+                </a>
+                <p class="text-xs text-ink-3">{METHOD_CATEGORY[m.data.category]}</p>
+                <p class="mt-2 flex flex-wrap gap-1.5">
+                  {link.uses.map((u) => <RelationBadge kind={u} />)}
+                  {link.sameTaskFamily && <RelationBadge kind="same-task" />}
+                </p>
+              </div>
+              <ul class="space-y-3 text-sm">
+                {link.relations.map((r) => {
+                  const s = source(m, r.evidence);
+                  return (
+                    <li>
+                      <RelationBadge kind={r.use} />
+                      <span class="ml-1">
+                        {RELATION_KIND[r.use].label} <a href={url.dataset(r.dataset)}>{catalog.title(r.dataset)}</a>
+                        {r.task && <span class="text-ink-2"> · for {catalog.title(r.task)}</span>}
+                      </span>
+                      {r.note && <span class="mt-1 block text-ink-2">{r.note}</span>}
+                      <span class="mt-0.5 block text-xs text-ink-3">
+                        <a href={`${url.method(m.id)}#${relAnchor(r)}`}>Relation record</a>
+                        {s && (
+                          <>
+                            {' · '}Evidence: <a href={s.url} rel="noopener">{s.title}</a>
+                          </>
+                        )}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
 
   {
-    order.map((kind) =>
-      groups[kind].length || (showEmpty && kind !== 'background') ? (
-        <div class="mt-8">
-          <div class="flex flex-wrap items-center gap-3">
-            <Relevance kind={kind} size="md" />
-            <h3 class="font-sans text-base font-semibold">{RELEVANCE[kind].label}</h3>
-          </div>
-          <p class="mt-1 max-w-3xl text-sm text-ink-3">{RELEVANCE[kind].help}</p>
-          {groups[kind].length === 0 ? (
-            <p class="mt-3 text-sm not-verified">None recorded.</p>
-          ) : (
-            <ul class="mt-3 divide-y divide-rule border-y border-rule">
-              {groups[kind].map(({ method: m, relations }) => (
-                <li class="grid gap-2 py-4 md:grid-cols-[14rem_1fr] md:gap-6">
-                  <div>
-                    <a href={url.method(m.id)} class="font-serif text-xl">
-                      {m.data.short_name ?? m.data.title}
-                    </a>
-                    <p class="text-xs text-ink-3">{METHOD_CATEGORY[m.data.category]}</p>
-                  </div>
-                  <div class="text-sm">
-                    {relations.length > 0 ? (
-                      <ul class="space-y-2">
-                        {relations.map((r) => {
-                          const s = sourceUrl(m, r.evidence);
-                          return (
-                            <li>
-                              <span class="tag mr-1">{DATASET_USE[r.use]}</span>
-                              <a href={url.dataset(r.dataset)}>{catalog.title(r.dataset)}</a>
-                              {r.task && <span class="text-ink-2"> · {catalog.title(r.task)}</span>}
-                              {r.note && <span class="mt-1 block text-ink-2">{r.note}</span>}
-                              {s && (
-                                <span class="mt-0.5 block text-xs text-ink-3">
-                                  Evidence: <a href={s.url} rel="noopener">{s.title}</a>
-                                </span>
-                              )}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    ) : (
-                      <p class="text-ink-2">
-                        Built for {m.data.tasks.map((t) => catalog.title(t).toLowerCase()).join(', ')}. {m.data.summary.split('. ')[0]}.
-                      </p>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
+    groups.familyOnly.length > 0 && (
+      <div class="mt-8">
+        <div class="flex flex-wrap items-center gap-3">
+          <RelationBadge kind="same-task" size="md" />
+          <h3 class="font-sans text-base font-semibold">{RELATION_KIND['same-task'].label}</h3>
         </div>
-      ) : null,
+        <p class="mt-1 max-w-3xl text-sm text-ink-3">{RELATION_KIND['same-task'].help}</p>
+        <ul class="mt-3 divide-y divide-rule border-y border-rule">
+          {groups.familyOnly.map(({ method: m }) => (
+            <li class="grid gap-2 py-4 md:grid-cols-[14rem_1fr] md:gap-6" data-method={m.id} data-uses="">
+              <div>
+                <a href={url.method(m.id)} class="font-serif text-xl">
+                  {m.data.short_name ?? m.data.title}
+                </a>
+                <p class="text-xs text-ink-3">{METHOD_CATEGORY[m.data.category]}</p>
+              </div>
+              <p class="text-sm text-ink-2">
+                Built for {m.data.tasks.map((t) => catalog.title(t).toLowerCase()).join(', ')}. No relation to {contextTitle} is recorded.
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
     )
   }
 </section>

@@ -5,7 +5,7 @@ import Field from '../../components/Field.astro';
 import Sources from '../../components/Sources.astro';
 import DatasetCard from '../../components/DatasetCard.astro';
 import RelatedMethods from '../../components/RelatedMethods.astro';
-import Relevance from '../../components/Relevance.astro';
+import RelationBadge from '../../components/RelationBadge.astro';
 import Cite from '../../components/Cite.astro';
 import { loadCatalog, url, type Task } from '../../lib/catalog';
 import { TASK_SCOPE } from '../../lib/vocab';
@@ -74,7 +74,7 @@ const organ = d.organs[0];
       d.background_reading.length > 0 && (
         <section aria-labelledby="bg-h" class="rule-t mt-12 pt-6">
           <div class="flex flex-wrap items-center gap-3">
-            <Relevance kind="background" size="md" />
+            <RelationBadge kind="background" size="md" />
             <h2 id="bg-h" class="text-2xl">Background reading</h2>
           </div>
           <ul class="mt-4 space-y-4">

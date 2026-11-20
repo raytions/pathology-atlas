@@ -21,8 +21,8 @@ const diseases = catalog.diseasesForOrgan(organ.id);
 const tasks = catalog.tasksForOrgan(organ.id);
 const datasets = catalog.datasetsForOrgan(organ.id);
 const methods = catalog.methodsForOrgan(organ.id);
-const benchmarkCount = (taskId: string) => catalog.methodsForTask(taskId).benchmark.length;
-const familyCount = (taskId: string) => catalog.methodsForTask(taskId)['same-task'].length;
+const evaluatedCount = (taskId: string) => catalog.evaluatedForTask(taskId).length;
+const familyCount = (taskId: string) => catalog.methodsForTask(taskId).familyOnly.length;
 ---
 
 <Base title={d.title} description={d.summary}>
@@ -54,7 +54,7 @@ const familyCount = (taskId: string) => catalog.methodsForTask(taskId)['same-tas
           <div><dt class="field-label">Diseases</dt><dd class="font-serif text-2xl">{diseases.length}</dd></div>
           <div><dt class="field-label">Clinical tasks</dt><dd class="font-serif text-2xl">{tasks.length}</dd></div>
           <div><dt class="field-label">Datasets</dt><dd class="font-serif text-2xl">{datasets.length}</dd></div>
-          <div><dt class="field-label">Methods with a benchmark link</dt><dd class="font-serif text-2xl">{methods.benchmark.length}</dd></div>
+          <div><dt class="field-label">Methods with recorded relations</dt><dd class="font-serif text-2xl">{methods.direct.length}</dd></div>
         </dl>
         <p class="mt-4 text-xs text-ink-3">The introduction is written by editors. Everything below is assembled from structured entries.</p>
       </aside>
@@ -74,7 +74,7 @@ const familyCount = (taskId: string) => catalog.methodsForTask(taskId)['same-tas
                   <li class="flex flex-wrap items-baseline justify-between gap-2 py-3">
                     <a href={url.task(t.id)} class="font-serif text-lg">{t.data.title} →</a>
                     <span class="text-xs text-ink-3">
-                      {catalog.datasetsForTask(t.id).length} datasets · {benchmarkCount(t.id)} benchmark · {familyCount(t.id)} same family
+                      {catalog.datasetsForTask(t.id).length} datasets · {evaluatedCount(t.id)} methods evaluated · {familyCount(t.id)} same family only
                     </span>
                   </li>
                 ))}

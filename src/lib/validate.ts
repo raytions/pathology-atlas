@@ -28,6 +28,8 @@ import {
   TASK_SCOPE,
   WEIGHTS_AVAILABILITY,
 } from './vocab.ts';
+import { featuredPathProblems } from './relations.ts';
+import { FEATURED_PATH } from '../data/featured.ts';
 
 type Entry = {
   collection: string;
@@ -228,6 +230,19 @@ export function validateContent(root: string, today = new Date()): ValidationRes
         }
       }
     }
+  }
+
+  // ---- home-page worked path: explicit IDs, published, linked ------------
+  const pub = (id: string, collection: string) => {
+    const e = byId.get(id);
+    return e && e.collection === collection && isPublic(e) ? (e.data as any) : undefined;
+  };
+  for (const problem of featuredPathProblems(FEATURED_PATH, {
+    organs: entries.filter((e) => e.collection === 'organs' && isPublic(e)).map((e) => e.data.id),
+    task: (id) => (pub(id, 'tasks') ? { id, data: { broader: [], organs: [], scope: '', ...pub(id, 'tasks') } } : undefined),
+    dataset: (id) => (pub(id, 'datasets') ? { id, data: { tasks: [], organs: [], ...pub(id, 'datasets') } } : undefined),
+  })) {
+    errors.push(`src/data/featured.ts: ${problem}`);
   }
 
   const stats: ValidationResult['stats'] = {};

@@ -1,0 +1,25 @@
+---
+/** Legend for every relation label, used on the home page and the editorial policy. */
+import RelationBadge from './RelationBadge.astro';
+import { RELATION_KIND, type RelationKind } from '../lib/vocab';
+
+interface Props {
+  layout?: 'grid' | 'list';
+  size?: 'sm' | 'md';
+}
+const { layout = 'grid', size = 'sm' } = Astro.props;
+const kinds: RelationKind[] = ['evaluation', 'fine-tuning', 'pretraining', 'background', 'same-task'];
+---
+
+<dl class:list={['text-sm', layout === 'grid' ? 'grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-5' : 'space-y-4']}>
+  {
+    kinds.map((k) => (
+      <div>
+        <dt>
+          <RelationBadge kind={k} size={size} />
+        </dt>
+        <dd class="mt-1 text-ink-2">{RELATION_KIND[k].help}</dd>
+      </div>
+    ))
+  }
+</dl>

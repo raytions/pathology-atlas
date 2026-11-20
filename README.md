@@ -16,6 +16,7 @@ npm run dev        # http://localhost:4321  (content errors are logged as warnin
 npm run validate   # editorial integrity checks only
 npm run check      # astro check: TypeScript + templates
 npm run build      # validate + static build into dist/  (fails on any content error)
+npm test           # relation regression tests (+ a check of dist/index.html when built)
 npm run preview    # serve dist/
 ```
 
@@ -65,13 +66,33 @@ categories, uses, ...) live in `src/lib/vocab.ts` and feed both the Zod schema a
 
 ### What the relation labels mean
 
-Computed in `src/lib/catalog.ts`, never typed by hand:
+Each method-dataset relation is one row in the method's `datasets[]` with a `use` and an
+`evidence` source. The display never merges uses: a method with evaluation and pretraining
+relations shows both labels, and every relation row on the method page has a stable anchor
+(`#rel-<dataset>-<use>[-<task>]`) next to its evidence source. Task, dataset and organ pages
+link each relation back to that row.
 
-| Label | Rule |
-| --- | --- |
-| **Benchmark** | The method has an `evaluation` / `fine-tuning` / `pretraining` relation to a dataset for this exact task, with evidence. |
-| **Same task family** | The method's `tasks` include this task or one of its `broader` families, but no result is recorded. Not validated. |
-| **Background** | Context only (`background` relations, or a task's `background_reading`). |
+| Label | Comes from | Meaning |
+| --- | --- | --- |
+| **Evaluation** | `use: evaluation` + `task` + evidence | A cited source reports evaluating the method on that dataset for that task. |
+| **Fine-tuning** | `use: fine-tuning` + `task` + evidence | Trained / fine-tuned on the dataset. Not by itself a result. |
+| **Pretraining** | `use: pretraining` + evidence | Part of the pretraining data. Says nothing about performance on it. |
+| **Background** | `use: background`, or a task's `background_reading` | Context only. |
+| **Same task family** | inferred: the method's `tasks` include the task or one of its `broader` families | No relation to this dataset is recorded. Shown only when nothing evaluates or fine-tunes the method in that context; never phrased as "evaluated". |
+
+The logic lives in `src/lib/relations.ts` (pure, unit tested) and is wrapped by
+`src/lib/catalog.ts` for pages. A relation matches a task only when `task` equals it;
+pretraining / background relations without `task` match the tasks their dataset lists.
+
+### Home-page worked path
+
+`src/data/featured.ts` names the organ, task and dataset explicitly. The validator (and the home
+page at build time) fail if any of them is unpublished, if the task or dataset is not linked to
+the organ, or if the dataset does not list the task. Methods on the path show only relations
+that match **both** the task and the dataset (with an explicit `task`). If none is an
+evaluation, the page says that no evaluation is recorded yet; results on other datasets of the
+same task are never used to fill the gap. Scale and access come from the structured `scale.*`
+and `access.method` fields.
 
 ## Build-time checks
 
@@ -86,6 +107,7 @@ every build (`npm run build`, and as an Astro integration in `astro:build:start`
 * a verified source citation without an `accessed` date
 * a verified entry linking to a draft / needs-review entry
 * an evaluation relation whose task is not one of the dataset's tasks
+* a home-page featured path (`src/data/featured.ts`) that is unpublished or not linked
 
 ## Add an entry
 

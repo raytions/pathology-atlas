@@ -43,7 +43,7 @@ const families = catalog.tasks.filter((t) => t.data.scope === 'general');
               </div>
             </dl>
             <p class="mt-auto pt-5 text-xs text-ink-3">
-              {catalog.datasetsForOrgan(o.id).length} datasets · {catalog.methodsForOrgan(o.id).benchmark.length} methods with a benchmark link
+              {catalog.datasetsForOrgan(o.id).length} datasets · {catalog.methodsForOrgan(o.id).direct.length} methods with recorded relations
             </p>
           </li>
         ))
