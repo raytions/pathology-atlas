@@ -38,6 +38,16 @@ datasets:
       512 tiles from 155 WSIs at 10x, with 9,959 training tiles from 124 WSIs and 2,122 test tiles from
       31 WSIs; these counts match the Test-fold partition files in the SICAPv2 release exactly. The paper
       does not name a Mendeley version.
+  - dataset: crc-val-he-7k
+    use: evaluation
+    task: colorectal-tissue-classification
+    evidence: conch-preprint
+    note: >-
+      "CRC100k" in the paper. Zero-shot on the official 7,180-tile test set: arXiv v2 Table 6 (prompt
+      ensembling) and Table 13 (without). Supervised linear probe trained on the official 100,000-tile
+      training split and tested on the 7,180 tiles: Table 19. The paper does not say whether the
+      normalised or unnormalised training images were used, and describes the tiles as coming from
+      50 patients.
 limitations:
   - value: The publicly released weights omit the multimodal (captioning) decoder; the README states that the image and text encoders are intact.
     source: conch-repo
@@ -47,7 +57,7 @@ reviewer_notes: >-
   Table numbers refer to arXiv v2 (the latest version on 2026-11-20) and were not mapped to the
   Nature Medicine Extended Data numbering. Not recorded because the schema cannot express them: text
   embeddings and zero-shot outputs, and zero-shot tumour segmentation on 31 SICAP test slides (Table
-  26). Evaluations on CRC100k, WSSS4LUAD, TCGA BRCA / NSCLC / RCC and DHMC LUAD are not recorded
+  26). Evaluations on WSSS4LUAD, TCGA BRCA / NSCLC / RCC and DHMC LUAD are not recorded
   because those datasets are not catalogued.
 sources:
   - key: conch-paper
