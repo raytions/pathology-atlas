@@ -47,6 +47,15 @@ datasets:
     task: lymph-node-metastasis-detection
     evidence: uni-paper
     note: Evaluated on CAMELYON17-WILDS, a patch-level derivative of CAMELYON17, not on the original slide / pN-stage benchmark.
+  - dataset: crc-val-he-7k
+    use: evaluation
+    task: colorectal-tissue-classification
+    evidence: uni-preprint
+    note: >-
+      "CRC-100K" ROI task: linear probe, KNN and SimpleShot trained on the unnormalised
+      NCT-CRC-HE-100K-NONORM images and tested on the 7,180 CRC-VAL-HE-7K tiles (official folds).
+      Task definition in the supplementary methods; linear-probe results in Extended Data Table 27 of
+      arXiv v1.
 limitations:
   - value: Pretraining data (Mass-100K) comes mostly from private BWH / MGH collections plus public GTEx slides and is not released, so pretraining cannot be reproduced end to end.
     source: uni-model-card
@@ -71,3 +80,9 @@ sources:
     url: https://github.com/mahmoodlab/UNI
     kind: repository
     accessed: 2026-11-20
+  - key: uni-preprint
+    title: "Chen R. J. et al. Towards a general-purpose foundation model for computational pathology (arXiv 2308.15474 v1)"
+    url: https://arxiv.org/abs/2308.15474
+    kind: preprint
+    accessed: 2026-11-20
+    note: Preprint of the Nature Medicine paper; used for the CRC-100K protocol, which the journal page text does not include.

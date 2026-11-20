@@ -1,0 +1,62 @@
+id: crc-val-he-7k
+title: CRC-VAL-HE-7K
+aliases: [CRC-100K (test set)]
+summary: >-
+  7,180 H&E patches with the same nine tissue classes, size and resolution as NCT-CRC-HE-100K, from
+  colorectal adenocarcinoma patients who do not appear in that set. Released as its external test
+  set, and it is the test split behind most reported colorectal tissue-classification results
+  catalogued here.
+organs: [colorectum]
+diseases: [colorectal-cancer]
+tasks: [colorectal-tissue-classification]
+specimen: H&E colorectal adenocarcinoma slides from the NCT tissue bank, Heidelberg (the DACHS study, per Kather et al. 2019); no patient overlap with NCT-CRC-HE-100K.
+stains: [he]
+data_units: [patch]
+annotation_granularity: [patch-label]
+scale:
+  patches:
+    value: 7180
+    source: zenodo-crc
+  storage:
+    value: About 0.8 GB (CRC-VAL-HE-7K.zip)
+    source: zenodo-crc
+version:
+  value: Zenodo v0.1 (2018-04-07, DOI 10.5281/zenodo.1214456), a single file in the same record as NCT-CRC-HE-100K.
+  source: zenodo-crc
+splits:
+  value: Intended as the validation / external test set for models trained on NCT-CRC-HE-100K.
+  source: zenodo-crc
+evaluation_protocol:
+  value: Nine-class patch classification on all 7,180 patches. Kather et al. 2019 report overall nine-class accuracy for a VGG19 trained on NCT-CRC-HE-100K.
+  source: kather-paper
+access:
+  method: open-download
+  details: ZIP archive on Zenodo, no account needed.
+  source: zenodo-crc
+terms:
+  license: CC BY 4.0
+  redistribution: CC BY 4.0 allows sharing and adaptation with attribution.
+  source: zenodo-crc
+official_url: https://doi.org/10.5281/zenodo.1214456
+primary_paper: kather-paper
+limitations:
+  - value: Single institution (NCT tissue bank), so it tests a change of patients more than a change of site or scanner.
+    source: zenodo-crc
+review_status: draft
+reviewer_notes: >-
+  Patient and slide counts are left empty because sources disagree. The Zenodo record says 50
+  patients. Kather et al. 2019 say the set was built from 25 H&E slides of the DACHS study and the
+  abstract says 25 patients. The UNI preprint says 50 WSIs. Whether colour normalisation was applied
+  is not stated in the record; one model README describes normalised and unnormalised variants of
+  this test set, which the record does not list.
+sources:
+  - key: zenodo-crc
+    title: "Kather J. N., Halama N., Marx A. 100,000 histological images of human colorectal cancer and healthy tissue. Zenodo, v0.1 (2018)"
+    url: https://doi.org/10.5281/zenodo.1214456
+    kind: data-portal
+    accessed: 2026-11-20
+  - key: kather-paper
+    title: "Kather J. N. et al. Predicting survival from colorectal cancer histology slides using deep learning: a retrospective multicenter study. PLoS Med 16, e1002730 (2019)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6345440/
+    kind: paper
+    accessed: 2026-11-20

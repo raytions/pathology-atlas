@@ -118,8 +118,25 @@ being forced into nearby fields.
 | --- | --- | --- | --- | --- |
 | A. Prostate Gleason, ROI level (**published in #3**) | Complete `sicapv2`, add task `gleason-pattern-classification`, complete `conch` with its SICAP evaluation | Gives the existing prostate topic a patch-level Gleason route: prostate → Gleason pattern classification → SICAPv2 → CONCH (evaluation, located in tables) | Sufficient for draft entries: Mendeley record, CMPB preprint, CONCH paper tables, CONCH model card. Two numeric conflicts are kept out of scale fields. | None |
 | B. Colorectal tissue + polyp classification | NCT-CRC-HE-100K, CRC-VAL-HE-7K (separate), MHIST, Kather 2019; CONCH and UNI relations to them | Most-used colorectal benchmarks; enables a colorectal topic | Zenodo and MHIST pages checked; Kather 2019 and MHIST paper not yet opened | Vocabulary done in #4; still needs organ / disease entries for colorectum |
-| C. Cross-organ foundation models (**first four published in #5**; Prov-GigaPath, H-optimus-0, Phikon still open) | UNI2-h, Virchow, Virchow2, Prov-GigaPath, Phikon(-v2), H-optimus-0, each with relations only to catalogued datasets | Lets researchers compare encoders by access terms and by where they were actually evaluated | Model cards listed, papers not opened; relations need table-level checks | Benefits from B (more catalogued datasets to relate to); gap 5 means relations to draft datasets wait for promotion |
+| C. Cross-organ foundation models (**first four published in #5**; H-optimus-0, H0-mini, Prov-GigaPath and Phikon published after #8; colorectal relations added) | UNI2-h, Virchow, Virchow2, Prov-GigaPath, Phikon(-v2), H-optimus-0, each with relations only to catalogued datasets | Lets researchers compare encoders by access terms and by where they were actually evaluated | Model cards listed, papers not opened; relations need table-level checks | Benefits from B (more catalogued datasets to relate to); gap 5 means relations to draft datasets wait for promotion |
 
 Model discovery continues in [`docs/inbox/`](./inbox/README.md).
 
 Further out: a nucleus-level batch (Lizard / CoNIC, PanNuke, HoVer-Net) needs gap 2 resolved first.
+
+## Colorectum (second organ topic, published 2026-11-20)
+
+Published together with the four models from #8: organ `colorectum`, disease `colorectal-cancer`,
+task `colorectal-tissue-classification`, datasets `nct-crc-he-100k` and `crc-val-he-7k`, and
+`evaluation` relations from CONCH (arXiv v2 Tables 6, 13, 19), UNI (arXiv v1 Extended Data
+Table 27) and H0-mini (Table 1, eva protocol) to CRC-VAL-HE-7K.
+
+Open items, not filled in on purpose:
+
+- CRC-VAL-HE-7K patient and slide counts: Zenodo says 50 patients, Kather et al. 2019 say 25
+  slides / 25 patients, the UNI preprint says 50 WSIs.
+- H-optimus-0 has no colorectal relation: its README describes the 7,180-image test set as coming
+  from TCGA-COAD / READ, in normalised and unnormalised variants, which conflicts with the release.
+- CONCH does not say which NCT-CRC-HE-100K variant its linear probe used.
+- Kather et al. 2019 is cited as the datasets' primary paper; its VGG19 classifier is not catalogued
+  as a method.
