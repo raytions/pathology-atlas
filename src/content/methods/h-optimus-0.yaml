@@ -1,0 +1,61 @@
+id: h-optimus-0
+title: H-optimus-0
+short_name: H-optimus-0
+summary: >-
+  A 1.1-billion-parameter ViT-g/14 tile encoder from Bioptimus, trained with self-supervised
+  learning on a proprietary collection of more than 500,000 H&E whole-slide images. It outputs
+  1536-dimensional tile embeddings; the release README benchmarks them with linear probes and with
+  attention MIL heads for slide-level tasks.
+category: foundation-model
+tasks: [representation-learning, roi-classification, wsi-classification]
+organs: []
+input_granularity: [patch]
+output_granularity: [patch-embedding]
+year: 2024
+primary_paper: hoptimus0-readme
+code:
+  license: Apache 2.0
+  conditions: The model card states that the model and associated code are released under Apache 2.0.
+  source: hoptimus0-model-card
+weights:
+  availability: gated
+  url: https://huggingface.co/bioptimus/H-optimus-0
+  license: Apache 2.0
+  conditions: Hugging Face asks users to share contact information and accept the conditions before download.
+  source: hoptimus0-model-card
+datasets:
+  - dataset: camelyon16
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: hoptimus0-readme
+    note: >-
+      Slide-level table, row "Breast cancer detection in lymph nodes: Camelyon16". ABMIL head trained on
+      the 270 CAMELYON16 training slides and tested on the 129 challenge test slides; AUC averaged over
+      50 trainings.
+  - dataset: camelyon17
+    use: evaluation
+    task: lymph-node-metastasis-detection
+    evidence: hoptimus0-readme
+    note: >-
+      Tile-level table, row CAM17_WILDS: linear probe on the Camelyon17-WILDS patch derivative (official
+      WILDS train / test split), not the original slide / pN-stage benchmark.
+limitations:
+  - value: No peer-reviewed paper; the GitHub release README is the main technical description, and the training data is proprietary.
+    source: hoptimus0-readme
+review_status: needs-review
+reviewer_notes: >-
+  Same publisher and naming family as H-optimus-1 and H0-mini (H0-mini is distilled from it); the
+  cards do not state an order between H-optimus-0 and H-optimus-1, so no supersedes relation is
+  recorded. primary_paper points to the release README because no paper exists. The README calls the
+  architecture "g/14 with 4 registers" (40 blocks, 1536-d); the card says 1.1B parameters.
+sources:
+  - key: hoptimus0-readme
+    title: "bioptimus/releases: H-optimus-0 release README (GitHub)"
+    url: https://github.com/bioptimus/releases/tree/main/models/h-optimus/v0
+    kind: repository
+    accessed: 2026-11-20
+  - key: hoptimus0-model-card
+    title: bioptimus/H-optimus-0 model card (Hugging Face)
+    url: https://huggingface.co/bioptimus/H-optimus-0
+    kind: model-card
+    accessed: 2026-11-20
