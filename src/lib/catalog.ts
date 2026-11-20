@@ -5,6 +5,7 @@
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { RELEVANCE } from './vocab';
+import { withBase } from './paths';
 
 export type Organ = CollectionEntry<'organs'>;
 export type Disease = CollectionEntry<'diseases'>;
@@ -169,11 +170,11 @@ export class Catalog {
 }
 
 export const url = {
-  organ: (id: string) => `/organs/${id}/`,
-  disease: (id: string) => `/diseases/${id}/`,
-  task: (id: string) => `/tasks/${id}/`,
-  dataset: (id: string) => `/datasets/${id}/`,
-  method: (id: string) => `/methods/${id}/`,
+  organ: (id: string) => withBase(`/organs/${id}/`),
+  disease: (id: string) => withBase(`/diseases/${id}/`),
+  task: (id: string) => withBase(`/tasks/${id}/`),
+  dataset: (id: string) => withBase(`/datasets/${id}/`),
+  method: (id: string) => withBase(`/methods/${id}/`),
 };
 
 /** Format "10616" as "10,616". */

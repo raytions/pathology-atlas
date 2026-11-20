@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/paths';
 import Base from '../../layouts/Base.astro';
 import Field from '../../components/Field.astro';
 import Sources from '../../components/Sources.astro';
@@ -21,7 +22,7 @@ const datasets = catalog.datasetsForDisease(disease.id);
   <article class="wrap pt-10">
     <nav aria-label="Breadcrumb" class="text-sm text-ink-2">
       <ol class="flex flex-wrap items-center gap-x-2">
-        <li><a href="/organs/">Organs &amp; Diseases</a></li>
+        <li><a href={withBase('/organs/')}>Organs &amp; Diseases</a></li>
         <li aria-hidden="true">/</li>
         <li><a href={url.organ(d.organs[0])}>{catalog.title(d.organs[0])}</a></li>
         <li aria-hidden="true">/</li>
