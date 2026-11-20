@@ -11,7 +11,7 @@ tasks: [gleason-grading, gleason-pattern-classification]
 specimen: H&E prostate core-needle biopsies graded by urogenital pathologists at Hospital Clínico of Valencia, Spain; scanned with a Ventana iScan Coreo at 40x and released as 10x patches.
 stains: [he]
 data_units: [patch]
-annotation_granularity: [slide-label, region-mask]
+annotation_granularity: [slide-label, patch-label, region-mask]
 scale:
   slides:
     value: 155
@@ -60,8 +60,8 @@ limitations:
 review_status: verified
 last_verified: 2026-11-20
 reviewer_notes: >-
-  The partition spreadsheets also give one class label per patch (one-hot NC / G3 / G4 / G5). Add a
-  patch-level label once that value exists in ANNOTATION_GRANULARITY.
+  patch-label reflects the partition spreadsheets, which give one class per patch (one-hot NC / G3 /
+  G4 / G5); region-mask reflects the per-patch PNG masks; slide-label reflects wsi_labels.xlsx.
 sources:
   - key: sicap-mendeley
     title: "Silva-Rodríguez J. SICAPv2 - Prostate Whole Slide Images with Gleason Grades Annotations. Mendeley Data, v2 (2020)"
