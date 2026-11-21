@@ -40,8 +40,11 @@ datasets:
     evidence: h0mini-preprint
     note: >-
       Table 1 (arXiv v3), "Crc" column under patch-level classification in the eva benchmark; balanced
-      accuracy. The paper does not name the data; the eva documentation defines this task as training
-      on NCT-CRC-HE-100K and testing on CRC-VAL-HE-7K.
+      accuracy. The paper does not name the data or an eva version (footnote 3 links the unversioned
+      eva docs). Mapped using the current eva documentation; experimental version not confirmed. In
+      that mapping eva trains on NCT-CRC-HE-100K and reports on CRC-VAL-HE-7K, which it calls the
+      validation split. The last eva release before every arXiv version of the paper was 0.1.0
+      (2024-09-24); the eva 0.1 docs give the same mapping, but the paper does not say it used 0.1.
 limitations:
   - value: Pretraining tiles come from TCGA, so downstream TCGA-based evaluations can overlap with pretraining; the paper flags possibly over-estimated results for such cases.
     source: h0mini-preprint
@@ -68,3 +71,9 @@ sources:
     kind: official-site
     accessed: 2026-11-20
     note: Used only to identify which data the eva "CRC" task uses; it is not evidence of any result.
+  - key: eva-crc-0-1
+    title: "kaiko-ai eva 0.1 documentation: CRC dataset page"
+    url: https://kaiko-ai.github.io/eva/0.1/datasets/crc/
+    kind: official-site
+    accessed: 2026-11-21
+    note: Docs for the last eva release (0.1.0, 2024-09-24) before the paper; same CRC mapping as main. Not evidence that the paper used this version.
