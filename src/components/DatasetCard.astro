@@ -12,11 +12,17 @@ interface Props {
 const { dataset: ds, catalog, headingLevel = 'h3', attrs = {} } = Astro.props;
 const d = ds.data;
 const H = headingLevel;
+// Slides are only downloadable when the release ships WSIs. For patch-only releases the slide
+// count describes where the patches were cut from, so it is shown as "from N source slides".
+const shipsSlides = d.data_units.includes('wsi');
+const slides = d.scale.slides && fmt(d.scale.slides.value);
+const patches = d.scale.patches && fmt(d.scale.patches.value);
 const scale = [
-  d.scale.slides && `${fmt(d.scale.slides.value)} slides`,
+  shipsSlides && slides && `${slides} slides`,
+  patches && (!shipsSlides && slides ? `${patches} patches from ${slides} source slides` : `${patches} patches`),
+  !patches && !shipsSlides && slides && `${slides} source slides`,
   d.scale.patients && `${fmt(d.scale.patients.value)} patients`,
   d.scale.rois && `${fmt(d.scale.rois.value)} ROIs`,
-  d.scale.patches && `${fmt(d.scale.patches.value)} patches`,
 ].filter(Boolean);
 ---
 
