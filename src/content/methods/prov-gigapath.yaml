@@ -33,7 +33,8 @@ limitations:
     source: gigapath-paper
   - value: The model card scopes the models to research; clinical and other deployed uses are out of scope.
     source: gigapath-model-card
-review_status: needs-review
+review_status: verified
+last_verified: 2026-11-20
 reviewer_notes: >-
   No evaluation on a catalogued dataset is recorded. PANDA appears in the repository only as a
   fine-tuning example with pre-extracted embeddings, which is not a reported result; the article

@@ -1,0 +1,68 @@
+id: nct-crc-he-100k
+title: NCT-CRC-HE-100K
+aliases: [CRC-100K (training set), NCT-CRC-HE-100K-NONORM]
+summary: >-
+  100,000 non-overlapping 224 x 224 H&E patches at 0.5 microns per pixel, each labelled with one of
+  nine tissue classes, cut from hand-delineated regions of 86 slides. Released in a colour-normalised
+  version and an unnormalised version; it is the usual training set for colorectal tissue
+  classification.
+organs: [colorectum]
+diseases: [colorectal-cancer]
+tasks: [colorectal-tissue-classification]
+specimen: FFPE H&E slides from the NCT Biobank (Heidelberg) and the UMM pathology archive (Mannheim), Germany. Primary colorectal tumours and colorectal liver metastases; normal-tissue classes were supplemented with non-tumorous regions from gastrectomy specimens.
+stains: [he]
+data_units: [patch]
+annotation_granularity: [patch-label]
+scale:
+  patches:
+    value: 100000
+    source: zenodo-crc
+  slides:
+    value: 86
+    source: zenodo-crc
+    note: Same figure in Kather et al. 2019. The number of patients is not stated.
+  storage:
+    value: About 11.7 GB per variant (NCT-CRC-HE-100K.zip and NCT-CRC-HE-100K-NONORM.zip)
+    source: zenodo-crc
+version:
+  value: Zenodo v0.1 (2018-04-07, DOI 10.5281/zenodo.1214456). Two variants, Macenko colour-normalised (NCT-CRC-HE-100K) and unnormalised (NCT-CRC-HE-100K-NONORM).
+  source: zenodo-crc
+  note: The variants come from the same raw data, but tiles were selected stochastically, so their image regions are not identical.
+splits:
+  value: No internal split is defined. The record suggests CRC-VAL-HE-7K as the validation set for models trained on this set.
+  source: zenodo-crc
+  note: Kather et al. 2019 split it 70 / 15 / 15 internally for model selection only.
+evaluation_protocol:
+  value: Nine-class patch classification. The record warns that classes are only roughly balanced and that accuracy on the full set alone should not be used.
+  source: zenodo-crc
+access:
+  method: open-download
+  details: ZIP archives on Zenodo, no account needed.
+  source: zenodo-crc
+terms:
+  license: CC BY 4.0
+  redistribution: CC BY 4.0 allows sharing and adaptation with attribution.
+  source: zenodo-crc
+official_url: https://doi.org/10.5281/zenodo.1214456
+primary_paper: kather-paper
+limitations:
+  - value: Not purely colorectal tissue. Liver-metastasis slides and gastrectomy normal tissue were included to add variability.
+    source: zenodo-crc
+  - value: Patches come from hand-delineated single-tissue regions, so each image shows essentially one tissue type; this is easier than classifying arbitrary tiles from a whole slide.
+    source: kather-paper
+review_status: verified
+last_verified: 2026-11-20
+reviewer_notes: >-
+  Discovery lists misreport this set (one says 86 patients and a release date of 2008). The record
+  and the paper say 86 slides and give no patient count.
+sources:
+  - key: zenodo-crc
+    title: "Kather J. N., Halama N., Marx A. 100,000 histological images of human colorectal cancer and healthy tissue. Zenodo, v0.1 (2018)"
+    url: https://doi.org/10.5281/zenodo.1214456
+    kind: data-portal
+    accessed: 2026-11-20
+  - key: kather-paper
+    title: "Kather J. N. et al. Predicting survival from colorectal cancer histology slides using deep learning: a retrospective multicenter study. PLoS Med 16, e1002730 (2019)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6345440/
+    kind: paper
+    accessed: 2026-11-20
