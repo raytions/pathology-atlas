@@ -24,7 +24,8 @@ const firstOrgan = d.organs[0];
 const firstTask = d.tasks[0];
 const scaleRows = [
   ['Patients', d.scale.patients],
-  ['Slides (WSIs)', d.scale.slides],
+  // Patch-only releases do not ship their slides; label the count as a source count.
+  [d.data_units.includes('wsi') ? 'Slides (WSIs)' : 'Source slides (not released)', d.scale.slides],
   ['ROIs', d.scale.rois],
   ['Patches', d.scale.patches],
   ['Centres', d.scale.centers],

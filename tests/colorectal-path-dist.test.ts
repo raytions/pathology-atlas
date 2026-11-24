@@ -40,11 +40,21 @@ test('colorectum topic -> task -> CRC-VAL-HE-7K -> model evidence rows', { skip:
 test('dataset cards show verified patch counts', { skip: !existsSync(join(dist, 'organs')) && 'dist/ not built' }, () => {
   const organ = page('organs/colorectum');
   assert.ok(organ.includes('7,180 patches'), 'CRC-VAL-HE-7K card shows its patch count');
-  assert.ok(organ.includes('86 slides · 100,000 patches'), 'NCT-CRC-HE-100K card shows slides and patches');
+  assert.ok(organ.includes('100,000 patches from 86 source slides'), 'NCT-CRC-HE-100K card names 86 as source slides');
+  // The scale tag must not read as 86 downloadable slides (the summary text may still say "cut from ... 86 slides").
+  assert.ok(!/86 slides(?: ·|<\/span>)/.test(organ), 'NCT-CRC-HE-100K scale tag does not suggest 86 downloadable slides');
+  const ds = page('datasets/nct-crc-he-100k');
+  assert.ok(ds.includes('Source slides (not released)'), 'dataset page labels the slide count as a source count');
 });
 
 test('the four models from #8 are public', { skip: !existsSync(join(dist, 'methods')) && 'dist/ not built' }, () => {
   for (const m of ['h-optimus-0', 'h0-mini', 'prov-gigapath', 'phikon']) {
     assert.ok(existsSync(join(dist, 'methods', m, 'index.html')), `${m} page is built`);
+  }
+});
+
+test('draft colorectal polyp path stays off the public build', { skip: !existsSync(join(dist, 'organs')) && 'dist/ not built' }, () => {
+  for (const p of ['datasets/mhist', 'tasks/colorectal-polyp-classification', 'diseases/colorectal-polyps', 'methods/kather2019-vgg19']) {
+    assert.ok(!existsSync(join(dist, p, 'index.html')), `${p} is draft and not built`);
   }
 });

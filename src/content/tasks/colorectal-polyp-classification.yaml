@@ -1,0 +1,19 @@
+id: colorectal-polyp-classification
+title: Colorectal polyp classification
+scope: specific
+organs: [colorectum]
+diseases: [colorectal-polyps]
+broader: [roi-classification]
+prediction_target: The predominant histological pattern of a patch from a colorectal polyp, hyperplastic polyp (HP) versus sessile serrated adenoma (SSA).
+summary: >-
+  A binary patch-level task on polyp tissue, separate from nine-class tissue typing of cancer
+  resections: the labels describe a polyp type, not a tissue component, and reference labels are
+  themselves uncertain because pathologists disagree on many images.
+review_status: draft
+sources:
+  - key: mhist-paper
+    title: "Wei J. et al. A Petri Dish for Histopathology Image Analysis. AIME 2021 (arXiv 2101.12355 v2)"
+    url: https://arxiv.org/abs/2101.12355v2
+    kind: preprint
+    accessed: 2026-11-21
+    note: Defines the HP vs SSA task (Section 3.1). The "predominant histological pattern" wording is from the MHIST project page.
