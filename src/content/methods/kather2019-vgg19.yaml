@@ -9,7 +9,7 @@ category: end-to-end-cnn
 tasks: [colorectal-tissue-classification]
 organs: [colorectum]
 input_granularity: [patch]
-output_granularity: [roi-label]
+output_granularity: [patch-label]
 year: 2019
 venue:
   value: PLOS Medicine 16, e1002730 (2019)
@@ -18,7 +18,7 @@ primary_paper: kather-paper
 code:
   url: https://github.com/jnkather/deep-stroma-histology
   license: MIT
-  conditions: MATLAB code (the paper used MATLAB R2018a) and R scripts for the survival statistics. Colour normalisation relies on a separately installed third-party toolbox. Release v0.2 is archived on Zenodo (doi 10.5281/zenodo.1471616).
+  conditions: MATLAB code and R scripts for the survival statistics. Colour normalisation relies on a separately installed third-party toolbox. Release v0.2 is archived on Zenodo (doi 10.5281/zenodo.1471616).
   source: kather-code
 weights:
   availability: public
@@ -42,18 +42,16 @@ datasets:
     evidence: kather-paper
     note: >-
       Results, "CNNs can learn morphological features in histological images": 94.3% overall
-      nine-class accuracy on the 7,180 patches; per-class confusion matrix in Fig 2B. Only overall
-      accuracy is reported, not balanced accuracy, so it is not directly comparable with the
-      foundation-model results on this dataset.
+      nine-class accuracy on the 7,180 patches; per-class confusion matrix in Fig 2B. S6 Fig and S8
+      Table add per-class ROC curves and AUC, sensitivity and specificity over 25 random splits of
+      this set. No balanced accuracy is reported, so the headline accuracy is not directly comparable
+      with the foundation-model results on this dataset.
 limitations:
   - value: Most errors fall between muscle and stroma and between lymphocytes and debris.
     source: kather-paper
   - value: The released network is a MATLAB file, so using it outside MATLAB needs conversion.
     source: kather-weights
 review_status: draft
-reviewer_notes: >-
-  output_granularity uses roi-label because the vocabulary has no patch-level prediction value;
-  the method actually predicts one class per 224 x 224 patch.
 sources:
   - key: kather-paper
     title: "Kather J. N. et al. Predicting survival from colorectal cancer histology slides using deep learning: a retrospective multicenter study. PLoS Med 16, e1002730 (2019)"
