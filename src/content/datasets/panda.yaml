@@ -2,13 +2,13 @@ id: panda
 title: PANDA
 aliases: [Prostate cANcer graDe Assessment, PANDA challenge]
 summary: >-
-  The largest public set of prostate biopsy WSIs with grade labels, released for a 2020 Kaggle
-  competition. Each biopsy has an ISUP grade group and Gleason score; many training slides also
+  A large public set of prostate biopsy WSIs with grade labels, released for a 2020 Kaggle
+  competition that the paper describes as the largest histopathology competition to date. Each biopsy has an ISUP grade group and Gleason score; many training slides also
   carry partial masks whose label scheme differs by contributing centre.
 organs: [prostate]
 diseases: [prostate-adenocarcinoma]
 tasks: [gleason-grading]
-specimen: Prostate needle biopsies from Radboud University Medical Center (NL) and Karolinska Institutet (SE).
+specimen: Prostate biopsies from Radboud University Medical Center (NL) and Karolinska Institutet (SE).
 stains: [he]
 data_units: [wsi]
 annotation_granularity: [slide-label, region-mask]
@@ -28,6 +28,7 @@ scale:
   storage:
     value: 411.9 GB, 21,135 files (multi-level TIFF + CSV)
     source: kaggle-data
+    note: Not re-verified on 2026-11-24; the kaiko-ai eva documentation gives about 347 GB for the download, possibly measured differently.
 version:
   value: Kaggle competition release (2020). Only the development set is public.
   source: panda-paper
@@ -44,9 +45,9 @@ access:
   source: kaggle-data
 terms:
   license: CC BY-SA-NC 4.0 (as stated by the organisers)
-  redistribution: Non-commercial research use with attribution (cite the PANDA paper); share-alike. The Kaggle page itself lists the data as "Subject to Competition Rules".
+  redistribution: Non-commercial research use with attribution (cite the PANDA paper); share-alike. The Kaggle page lists the data as "Subject to Competition Rules", and those rules grant CC BY-SA-NC 4.0 for competition, academic and non-commercial use.
   source: panda-paper
-  note: Read the Kaggle competition rules as well; the two statements are recorded separately.
+  note: The paper and the Kaggle competition rules state the same licence.
 official_url: https://panda.grand-challenge.org/data/
 primary_paper: panda-paper
 limitations:
@@ -54,8 +55,9 @@ limitations:
     source: kaggle-data
   - value: Some training slides contain pen marks; test slides do not.
     source: kaggle-data
-  - value: Training labels came from a single read; multiple pathologists graded only the test sets.
+  - value: Training labels were typically set by a single pathologist. All private test images and most public test images were graded by multiple pathologists.
     source: kaggle-data
+    note: The single-reader wording is from the PANDA paper; the test-set wording is from Kaggle.
   - value: Focuses on acinar adenocarcinoma at the biopsy level, not patient-level diagnosis across multiple cores.
     source: panda-paper
 review_status: verified
