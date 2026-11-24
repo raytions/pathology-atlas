@@ -10,7 +10,7 @@ category: foundation-model
 tasks: [representation-learning, wsi-classification]
 organs: []
 input_granularity: [patch, patch-features]
-output_granularity: [patch-embedding]
+output_granularity: [patch-embedding, slide-embedding]
 year: 2024
 venue:
   value: Nature
@@ -38,8 +38,9 @@ last_verified: 2026-11-20
 reviewer_notes: >-
   No evaluation on a catalogued dataset is recorded. PANDA appears in the repository only as a
   fine-tuning example with pre-extracted embeddings, which is not a reported result; the article
-  text checked does not mention a catalogued dataset. The slide encoder outputs slide embeddings,
-  which OUTPUT_GRANULARITY cannot express, so only the tile encoder's patch embedding is listed.
+  text checked does not mention a catalogued dataset. Outputs: the tile encoder gives patch embeddings and the
+  LongNet slide encoder turns tile embeddings plus coordinates into a slide embedding; the README
+  loads both from the gated Hugging Face repository ("Inference with the slide encoder").
   The repository also lists a GigaPath-Flash variant (arXiv 2026) that is not covered here.
 sources:
   - key: gigapath-paper
