@@ -46,11 +46,11 @@ const applicable = catalog.tasks.filter(
       </div>
       <aside class="self-start border border-rule bg-card p-5 text-sm" aria-label="Official links and status">
         <p class="field-label">Paper</p>
-        {paper ? <a href={paper.url} rel="noopener" class="mt-1 block">{paper.title}</a> : <p class="not-verified">Not verified</p>}
+        {paper ? <a href={paper.url} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-note" class="mt-1 block">{paper.title}</a> : <p class="not-verified">Not verified</p>}
         <p class="field-label mt-4">Code</p>
-        {d.code?.url ? <a href={d.code.url} rel="noopener" class="mt-1 block break-words">{d.code.url.replace(/^https?:\/\//, '')}</a> : <p class="not-verified">Not verified</p>}
+        {d.code?.url ? <a href={d.code.url} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-note" class="mt-1 block break-words">{d.code.url.replace(/^https?:\/\//, '')}</a> : <p class="not-verified">Not verified</p>}
         <p class="field-label mt-4">Weights</p>
-        {d.weights?.url ? <a href={d.weights.url} rel="noopener" class="mt-1 block break-words">{d.weights.url.replace(/^https?:\/\//, '')}</a> : <p class={d.weights ? '' : 'not-verified'}>{d.weights ? WEIGHTS_AVAILABILITY[d.weights.availability] : 'Not verified'}</p>}
+        {d.weights?.url ? <a href={d.weights.url} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-note" class="mt-1 block break-words">{d.weights.url.replace(/^https?:\/\//, '')}</a> : <p class={d.weights ? '' : 'not-verified'}>{d.weights ? WEIGHTS_AVAILABILITY[d.weights.availability] : 'Not verified'}</p>}
         <p class="field-label mt-4">Review status</p>
         <p class="mt-1">{REVIEW_STATUS[d.review_status]} · {d.last_verified ? `last verified ${d.last_verified}` : 'not verified'}</p>
       </aside>
