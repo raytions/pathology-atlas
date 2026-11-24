@@ -16,7 +16,7 @@ scale:
   slides:
     value: 155
     source: sicap-archive
-    note: Rows in wsi_labels.xlsx inside the release. The preprint abstract says 182 annotated WSIs; its Section 2 and the release both give 155.
+    note: Rows in wsi_labels.xlsx inside the release. The preprint is inconsistent; its abstract and the Section 2 Table 1 total give 182 WSIs, while the Section 2 text says 155 biopsies, matching the release.
   patients:
     value: 95
     source: sicap-archive
@@ -32,7 +32,7 @@ version:
 splits:
   value: Patient-based partition shipped as spreadsheets. Test fold, 9,959 train patches from 124 slides and 2,122 test patches from 31 slides; plus four validation folds (Val1 to Val4) for cross-validation.
   source: sicap-archive
-  note: Matches preprint Section 4.1 / Table 3. Non-cancerous patches in the partition come only from non-cancerous slides; cancerous patch labels are the majority grade of the mask.
+  note: Per-class patch counts match preprint Table 3, which gives no slide counts; the 124 / 31 slide counts come from the release files (the CONCH paper gives the same). Non-cancerous patches in the partition come only from non-cancerous slides; cancerous patch labels are the majority grade of the mask.
 evaluation_protocol:
   value: Patch-level Gleason grade (non-cancerous, 3, 4, 5) and biopsy-level Gleason score, both reported with quadratic Cohen's kappa in the source paper.
   source: sicap-preprint

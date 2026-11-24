@@ -31,8 +31,10 @@ last_verified: 2026-11-20
 reviewer_notes: >-
   Version relation: phikon-v2 is the later model in the same family (different architecture,
   method and data); kept as a separate entry. The model card spells the data source "TGCA". No dataset relation is recorded: the medRxiv full text was blocked from our
-  fetcher, and the repository only provides a CAMELYON16 notebook and released CAMELYON16 features,
-  which are not reported results. Discovery lists cite Phikon as arXiv 2309.16864; that ID is an
+  fetcher, and the repository is not used as evidence of results. Its README releases features for 11 TCGA
+  cohorts, Camelyon16, NCT-CRC and Camelyon17-WILDS, and a script to reproduce the paper's tile
+  results (NCT-CRC-HE-100K-NONORM train / CRC-VAL-HE-7K test, Camelyon17-WILDS); relations wait on
+  reading the paper itself. Discovery lists cite Phikon as arXiv 2309.16864; that ID is an
   unrelated mathematics paper. The medRxiv record was confirmed through Crossref metadata only.
 sources:
   - key: phikon-preprint

@@ -40,7 +40,7 @@ datasets:
       "ROI Benchmarks" table, column "C17-WILDS (2 classes, Public)": the CAMELYON17-WILDS patch
       derivative, not the original slide / pN-stage benchmark.
 limitations:
-  - value: No peer-reviewed paper describes UNI2-h; training details and benchmark protocol come from the model card and repository README only.
+  - value: No peer-reviewed paper describes UNI2-h (the model card links the original UNI paper); training details and benchmark protocol come from the model card and repository README only.
     source: uni2-model-card
   - value: Pretraining slides are not public (Mass General Brigham collections).
     source: uni2-model-card

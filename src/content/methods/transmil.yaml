@@ -17,7 +17,8 @@ venue:
 primary_paper: transmil-preprint
 code:
   url: https://github.com/szc19990412/TransMIL
-  conditions: No licence file in the repository (GitHub reports none), so reuse terms are unclear.
+  license: GPL-3.0
+  conditions: There is no LICENSE file (GitHub's detector reports none), but the README states the code is available under GPLv3 for non-commercial academic purposes.
   source: transmil-repo
 weights:
   availability: none-found
