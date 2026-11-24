@@ -63,7 +63,7 @@ const source = (m: Method, key: string) => m.data.sources.find((s) => s.key === 
                         <a href={`${url.method(m.id)}#${relAnchor(r)}`}>Relation record</a>
                         {s && (
                           <>
-                            {' · '}Evidence: <a href={s.url} rel="noopener">{s.title}</a>
+                            {' · '}Evidence: <a href={s.url} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-note">{s.title}</a>
                           </>
                         )}
                       </span>

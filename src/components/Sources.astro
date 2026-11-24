@@ -21,7 +21,7 @@ const { sources, lastVerified } = Astro.props;
         <li id={`src-${s.key}`} class="grid gap-1 border-l-2 border-rule pl-4 target:border-eosin target:bg-eosin-soft/40 sm:grid-cols-[9rem_1fr]">
           <span class="font-mono text-xs text-ink-3">[{s.key}]</span>
           <span>
-            <a href={s.url} rel="noopener" class="break-words">{s.title}</a>
+            <a href={s.url} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-note" class="break-words">{s.title}</a>
             <span class="block text-xs text-ink-3">
               {SOURCE_KIND[s.kind]}
               {s.accessed && <> · accessed {s.accessed}</>}
