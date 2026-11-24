@@ -80,7 +80,7 @@ const organ = d.organs[0];
           <ul class="mt-4 space-y-4">
             {d.background_reading.map((r) => (
               <li class="max-w-3xl border-l-2 border-rule pl-4">
-                <a href={r.url} rel="noopener" class="font-serif text-lg">{r.title}</a>
+                <a href={r.url} target="_blank" rel="noopener noreferrer" aria-describedby="new-tab-note" class="font-serif text-lg">{r.title}</a>
                 <p class="text-sm text-ink-2">{r.why}<Cite source={r.source} /></p>
               </li>
             ))}
