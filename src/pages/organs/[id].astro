@@ -41,7 +41,7 @@ const familyCount = (taskId: string) => catalog.methodsForTask(taskId).familyOnl
         <h1 class="mt-2 text-5xl md:text-7xl">{d.title}</h1>
         {d.tagline && <p class="mt-4 max-w-2xl font-serif text-xl leading-relaxed text-ink-2">{d.tagline}</p>}
       </div>
-      <TissueMark variant={organ.id === 'prostate' ? 'glands' : 'node'} class="hidden w-full text-ink md:block" />
+      <TissueMark organ={organ.id} class="hidden w-full text-ink md:block" />
     </header>
 
     <div class="mt-10 grid gap-10 lg:grid-cols-[1fr_20rem]">

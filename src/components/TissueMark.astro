@@ -1,22 +1,28 @@
 ---
 /**
  * Original abstract illustration (no patient tissue). "glands" suggests glandular
- * lumens ringed by nuclei; "node" suggests a lymph node with scattered deposits.
+ * lumens ringed by nuclei; "crypts" suggests colonic crypts cut lengthwise; "node"
+ * suggests a lymph node with scattered deposits. Pass `organ` to pick the organ's variant.
  * Deterministic pseudo-random layout so builds are reproducible.
  */
+type Variant = 'glands' | 'crypts' | 'node' | 'field';
 interface Props {
-  variant?: 'glands' | 'node' | 'field';
+  variant?: Variant;
+  organ?: string;
   class?: string;
 }
-const { variant = 'field', class: cls } = Astro.props;
+// Breast maps to a lymph node because its catalogued tasks are nodal metastasis detection.
+const ORGAN_VARIANT: Record<string, Variant> = { prostate: 'glands', colorectum: 'crypts', breast: 'node' };
+const { organ, class: cls } = Astro.props;
+const variant: Variant = (organ ? ORGAN_VARIANT[organ] : undefined) ?? Astro.props.variant ?? 'field';
 
-let seed = variant === 'glands' ? 7 : variant === 'node' ? 19 : 3;
+let seed = variant === 'glands' ? 7 : variant === 'node' ? 19 : variant === 'crypts' ? 11 : 3;
 const rand = () => {
   seed = (seed * 16807) % 2147483647;
   return (seed - 1) / 2147483646;
 };
 
-type Gland = { cx: number; cy: number; r: number };
+type Gland = { cx: number; cy: number; r: number; ry?: number };
 const glands: Gland[] =
   variant === 'glands'
     ? [
@@ -26,8 +32,10 @@ const glands: Gland[] =
         { cx: 56, cy: 160, r: 20 },
         { cx: 196, cy: 128, r: 16 },
       ]
-    : variant === 'node'
-      ? [{ cx: 120, cy: 112, r: 86 }]
+    : variant === 'crypts'
+      ? [40, 82, 124, 166, 206].map((cx, i) => ({ cx, cy: 104 + (i % 2) * 8, r: 12, ry: 58 }))
+      : variant === 'node'
+        ? [{ cx: 120, cy: 112, r: 86 }]
       : [
           { cx: 80, cy: 90, r: 26 },
           { cx: 160, cy: 130, r: 30 },
@@ -35,18 +43,18 @@ const glands: Gland[] =
 
 const nuclei: { x: number; y: number; r: number; tone: 'h' | 'e' }[] = [];
 for (const g of glands) {
-  const n = Math.round(g.r * (variant === 'node' ? 0.5 : 0.9));
+  const n = Math.round((g.r + (g.ry ?? g.r)) / 2 * (variant === 'node' ? 0.5 : variant === 'crypts' ? 1.3 : 0.9));
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI * 2 + rand() * 0.2;
-    const rr = g.r + 5 + rand() * 3;
-    nuclei.push({ x: g.cx + Math.cos(a) * rr, y: g.cy + Math.sin(a) * rr, r: 2 + rand() * 1.4, tone: 'h' });
+    const rr = 5 + rand() * 3;
+    nuclei.push({ x: g.cx + Math.cos(a) * (g.r + rr), y: g.cy + Math.sin(a) * ((g.ry ?? g.r) + rr), r: 2 + rand() * 1.4, tone: 'h' });
   }
 }
 // stromal scatter
 for (let i = 0; i < (variant === 'node' ? 120 : 46); i++) {
   const x = 10 + rand() * 220;
   const y = 10 + rand() * 178;
-  if (variant !== 'node' && glands.some((g) => Math.hypot(x - g.cx, y - g.cy) < g.r + 10)) continue;
+  if (variant !== 'node' && glands.some((g) => Math.hypot((x - g.cx) / (g.r + 10), (y - g.cy) / ((g.ry ?? g.r) + 10)) < 1)) continue;
   if (variant === 'node' && Math.hypot(x - 120, y - 112) > 84) continue;
   nuclei.push({ x, y, r: 1 + rand() * 1.6, tone: rand() > 0.82 ? 'e' : 'h' });
 }
@@ -58,7 +66,7 @@ const deposits = variant === 'node' ? [{ x: 150, y: 86, r: 16 }, { x: 92, y: 140
   {variant !== 'node' && <rect x="0.5" y="0.5" width="239" height="219" fill="var(--color-eosin-soft)" opacity="0.35" />}
   {
     glands.map((g) => (
-      <circle cx={g.cx} cy={g.cy} r={g.r} fill={variant === 'node' ? 'var(--color-hema-soft)' : 'var(--color-card)'} stroke="var(--color-eosin)" stroke-width="0.8" opacity="0.9" />
+      <ellipse cx={g.cx} cy={g.cy} rx={g.r} ry={g.ry ?? g.r} fill={variant === 'node' ? 'var(--color-hema-soft)' : 'var(--color-card)'} stroke="var(--color-eosin)" stroke-width="0.8" opacity="0.9" />
     ))
   }
   {deposits.map((p) => <circle cx={p.x} cy={p.y} r={p.r} fill="var(--color-eosin-soft)" stroke="var(--color-eosin)" stroke-width="0.8" stroke-dasharray="2 2" />)}
