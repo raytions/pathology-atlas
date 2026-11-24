@@ -60,6 +60,8 @@ being forced into nearby fields.
    `region-mask` implies released masks.
 2. **No segmentation / detection outputs in `OUTPUT_GRANULARITY`.** Nucleus and tissue segmentation
    methods (HoVer-Net, CellViT) and dense-prediction evaluations cannot be expressed.
+   *Update 2026-11-24:* `slide-embedding` added to `OUTPUT_GRANULARITY` for slide encoders
+   (Prov-GigaPath slide encoder, TITAN, THREADS); segmentation / detection outputs are still missing.
 3. **Vision-language models.** `OUTPUT_GRANULARITY` has `patch-embedding` but no text embedding or
    zero-shot output, so CONCH-style capabilities can only be described in prose.
 4. **Benchmarks / evaluation frameworks** (kaiko-ai eva, Patho-Bench, THUNDER) are neither datasets
