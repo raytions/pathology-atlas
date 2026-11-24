@@ -10,7 +10,7 @@ const { title, description = 'A curated atlas of computational pathology dataset
 const fullTitle = title === 'Pathology Atlas' ? title : `${title} · Pathology Atlas`;
 const path = Astro.url.pathname;
 const nav = [
-  { href: withBase('/organs/'), label: 'Organs & Diseases' },
+  { href: withBase('/organs/'), label: 'Organs & Tasks' },
   { href: withBase('/datasets/'), label: 'Datasets' },
   { href: withBase('/methods/'), label: 'Methods & Models' },
   { href: withBase('/about/'), label: 'About' },

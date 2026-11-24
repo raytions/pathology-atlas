@@ -7,10 +7,10 @@ const catalog = await loadCatalog();
 const families = catalog.tasks.filter((t) => t.data.scope === 'general');
 ---
 
-<Base title="Organs & Diseases" description="Browse computational pathology resources by organ, disease and task.">
+<Base title="Organs & Tasks" description="Browse computational pathology resources by organ, disease and task.">
   <div class="wrap pt-12">
     <p class="eyebrow">Index</p>
-    <h1 class="mt-2 text-4xl md:text-5xl">Organs &amp; Diseases</h1>
+    <h1 class="mt-2 text-4xl md:text-5xl">Organs &amp; Tasks</h1>
     <p class="mt-4 max-w-2xl text-ink-2">
       The atlas is organised as organ → disease → task. Datasets and methods hang off tasks, so a topic page always reflects the
       current entries.
