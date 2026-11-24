@@ -51,8 +51,8 @@ const familyCount = (taskId: string) => catalog.methodsForTask(taskId).familyOnl
       <aside class="self-start border-l border-rule pl-6 text-sm" aria-labelledby="index-h">
         <h2 id="index-h" class="eyebrow">On this page</h2>
         <dl class="mt-3 space-y-3">
-          <div><dt class="field-label">Diseases</dt><dd class="font-serif text-2xl">{diseases.length}</dd></div>
           <div><dt class="field-label">Clinical tasks</dt><dd class="font-serif text-2xl">{tasks.length}</dd></div>
+          <div><dt class="field-label">Diseases</dt><dd class="font-serif text-2xl">{diseases.length}</dd></div>
           <div><dt class="field-label">Datasets</dt><dd class="font-serif text-2xl">{datasets.length}</dd></div>
           <div><dt class="field-label">Methods with recorded relations</dt><dd class="font-serif text-2xl">{methods.direct.length}</dd></div>
         </dl>
@@ -61,28 +61,43 @@ const familyCount = (taskId: string) => catalog.methodsForTask(taskId).familyOnl
     </div>
 
     <section aria-labelledby="tasks-h" class="rule-t mt-12 pt-6">
-      <h2 id="tasks-h" class="text-2xl md:text-3xl">Diseases &amp; tasks</h2>
-      <div class="mt-5 grid gap-6 md:grid-cols-2">
+      <h2 id="tasks-h" class="text-2xl md:text-3xl">Clinical tasks</h2>
+      <ul class="mt-5 divide-y divide-rule border-y border-rule">
         {
-          diseases.map((x) => (
-            <div class="border border-rule bg-card p-5">
-              <p class="eyebrow">Disease</p>
-              <h3 class="mt-1 text-2xl"><a href={url.disease(x.id)} class="text-ink">{x.data.title}</a></h3>
-              <p class="mt-2 text-sm text-ink-2">{x.data.summary}</p>
-              <ul class="mt-4 divide-y divide-rule border-t border-rule">
-                {catalog.tasksForDisease(x.id).map((t) => (
-                  <li class="flex flex-wrap items-baseline justify-between gap-2 py-3">
-                    <a href={url.task(t.id)} class="font-serif text-lg">{t.data.title} →</a>
-                    <span class="text-xs text-ink-3">
-                      {countOf(catalog.datasetsForTask(t.id).length, 'dataset')} · {countOf(evaluatedCount(t.id), 'method')} evaluated · {familyCount(t.id)} same family only
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          tasks.map((t) => (
+            <li class="grid gap-1 py-4 md:grid-cols-[1fr_auto] md:items-baseline md:gap-6">
+              <div>
+                <a href={url.task(t.id)} class="font-serif text-xl">{t.data.title}</a>
+                {t.data.prediction_target && <p class="mt-1 max-w-2xl text-sm text-ink-2">{t.data.prediction_target}</p>}
+                {t.data.diseases.length > 0 && (
+                  <p class="mt-1 text-xs text-ink-3">
+                    {t.data.diseases.map((x, i) => (
+                      <>{i > 0 && ' · '}<a href={url.disease(x)} class="text-ink-3">{catalog.title(x)}</a></>
+                    ))}
+                  </p>
+                )}
+              </div>
+              <p class="font-mono text-xs text-ink-3 md:text-right">
+                {countOf(catalog.datasetsForTask(t.id).length, 'dataset')} · {countOf(evaluatedCount(t.id), 'method')} evaluated · {familyCount(t.id)} same family only
+              </p>
+            </li>
           ))
         }
-      </div>
+      </ul>
+    </section>
+
+    <section aria-labelledby="dis-h" class="rule-t mt-12 pt-6">
+      <h2 id="dis-h" class="text-2xl md:text-3xl">Diseases</h2>
+      <ul class="mt-5 grid gap-4 md:grid-cols-2">
+        {
+          diseases.map((x) => (
+            <li class="border border-rule bg-card p-5">
+              <h3 class="text-xl"><a href={url.disease(x.id)} class="text-ink">{x.data.title}</a></h3>
+              <p class="mt-2 text-sm text-ink-2">{x.data.summary}</p>
+            </li>
+          ))
+        }
+      </ul>
     </section>
 
     <section aria-labelledby="ds-h" class="rule-t mt-12 pt-6">
