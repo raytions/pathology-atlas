@@ -19,7 +19,7 @@ primary_paper: titan-paper
 code:
   url: https://github.com/mahmoodlab/TITAN
   license: CC-BY-NC-ND 4.0
-  conditions: The README states that the model and associated code are released under CC-BY-NC-ND 4.0 for non-commercial academic research with attribution; commercial use is prohibited without prior approval. There is no LICENSE file and GitHub's licence detector reports none.
+  conditions: The README states that the model and associated code are released under CC-BY-NC-ND 4.0 for non-commercial academic research with attribution; commercial use of the model or its derivatives (including models trained on its outputs) is prohibited without prior approval. There is no LICENSE file and GitHub's licence detector reports none.
   source: titan-repo
 weights:
   availability: gated
@@ -50,7 +50,8 @@ limitations:
     source: titan-paper
   - value: Reports no results on the patch-level datasets catalogued here or on CAMELYON16 / 17; BRACS and PANDA are evaluated by linear probing only, not few-shot or zero-shot.
     source: titan-supplement
-review_status: needs-review
+review_status: verified
+last_verified: 2026-11-24
 reviewer_notes: >-
   related-to conch (TITAN uses CONCH v1.5 patch features and its text encoder; CONCH v1.5 is not a
   separate entry). Not recordable with the current schema: zero-shot classification, retrieval and

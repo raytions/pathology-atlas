@@ -41,13 +41,14 @@ datasets:
       (9,555 remain) and the train / test split is the one used by Prov-GigaPath (7,647 / 954 WSIs),
       not a PANDA challenge split, so numbers are not comparable with the leaderboard.
 limitations:
-  - value: Described in a preprint only (arXiv v1, January 2025), and the weights have not been released, so results cannot be reproduced yet.
+  - value: Described in a preprint only (arXiv v1, January 2025), and the weights have not been released, so its reported results cannot yet be reproduced with a released model.
     source: threads-preprint
   - value: Evaluated only on slide- and patient-level tasks; it reports no results on the patch-level datasets catalogued here (NCT-CRC-HE-100K, CRC-VAL-HE-7K, MHIST, SICAPv2) or on CAMELYON16 / 17.
     source: threads-preprint
   - value: Pretraining includes TCGA and GTEx slides, so downstream evaluations on those cohorts can overlap with pretraining data.
     source: threads-preprint
-review_status: needs-review
+review_status: verified
+last_verified: 2026-11-24
 reviewer_notes: >-
   related-to conch (THREADS uses CONCH v1.5 patch features; CONCH v1.5 is not catalogued as its own
   entry). Slide encoder details from Online Methods: gated-attention ABMIL with several heads, 768-dim
