@@ -82,6 +82,7 @@ export const OUTPUT_GRANULARITY = {
   'attention-map': 'Patch attention scores / heatmap',
   'roi-label': 'ROI-level prediction',
   'patch-label': 'Patch-level prediction',
+  'slide-embedding': 'Slide embedding',
 } as const;
 
 /** How a method used a dataset. Only record what a cited source states. */
