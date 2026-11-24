@@ -76,18 +76,13 @@ const isCurrent = (href: string) => path.startsWith(href);
     </main>
 
     <footer class="mt-20 border-t border-rule">
-      <div class="wrap grid gap-6 py-8 text-sm text-ink-2 md:grid-cols-3">
+      <div class="wrap grid gap-6 py-8 text-sm text-ink-2 md:grid-cols-2">
         <p class="max-w-sm">
           <span class="font-serif text-base text-ink">Pathology Atlas</span><br />
           A small, source-checked index for computational pathology research. Summaries are original; facts link to their sources.
         </p>
-        <p>
-          Unconfirmed fields read <span class="not-verified">Not verified</span>. Pending entries stay out of the public
-          site until reviewed.
-        </p>
         <p class="md:text-right">
-          <a href={withBase('/about/#editorial-policy')}>Editorial policy</a><br />
-          No images of patient tissue are reproduced on this site.
+          <a href={withBase('/about/#editorial-policy')}>Editorial policy</a>
         </p>
       </div>
     </footer>
