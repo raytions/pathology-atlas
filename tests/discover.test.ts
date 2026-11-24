@@ -15,6 +15,7 @@ import {
   START,
   END,
   type CatalogueEntry,
+  sameUrl,
   type RawHit,
 } from '../scripts/lib/discover-core.ts';
 
@@ -36,6 +37,10 @@ test('family keys group versions and size variants', () => {
 
 test('catalogue matching: same resource, family member, unrelated', () => {
   assert.equal(relationToCatalogue(hf('MahmoodLab/UNI'), catalogue).kind, 'same');
+  // A new version must not be hidden as an already-catalogued resource.
+  assert.notEqual(relationToCatalogue(hf('owkin/phikon-v3'), catalogue).kind, 'same');
+  assert.ok(sameUrl('https://arxiv.org/abs/2501.16652v1', 'https://arxiv.org/abs/2501.16652'));
+  assert.ok(!sameUrl('https://github.com/bioptimus/releases/tree/main/models/h-optimus/v0', 'https://github.com/bioptimus/releases/tree/main/models/h-optimus/v1'));
   const fam = relationToCatalogue(hf('MahmoodLab/UNI2-h'), catalogue);
   assert.equal(fam.kind, 'family');
   assert.equal(fam.match?.id, 'uni');

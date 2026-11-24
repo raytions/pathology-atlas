@@ -100,7 +100,9 @@ export function familyKey(name: string): string {
 }
 
 export function sameUrl(a: string, b: string): boolean {
-  const n = (u: string) => u.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/(\.git)?\/?(#.*)?$/, '').replace(/v\d+$/, '');
+  const n = (u: string) => u.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/(\.git)?\/?(#.*)?$/, '')
+      // Strip only an arXiv version suffix (2501.16652v1); "phikon-v2" and ".../v0" are distinct resources.
+      .replace(/(\d{4}\.\d{4,5})v\d+$/, '$1');
   return n(a) === n(b);
 }
 

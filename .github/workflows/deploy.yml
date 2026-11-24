@@ -32,7 +32,7 @@ jobs:
       - run: npm run validate
       - run: npm run check
 
-      - run: npm run build
+      # pretest runs the build, so dist/ is always fresh for the dist checks.
       - run: npm test
 
       - name: Publish dist/ to the gh-pages branch
