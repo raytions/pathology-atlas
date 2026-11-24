@@ -7,8 +7,8 @@ broader: [wsi-classification]
 prediction_target: pN stage per patient, aggregated from slide-level metastasis categories.
 summary: >-
   Combining slide-level findings (none, isolated tumour cells, micro- or macro-metastasis) across
-  several lymph nodes into a patient-level pathological N stage. CAMELYON17 introduced it as a
-  benchmark task.
+  several lymph nodes into a patient-level pathological N stage. CAMELYON17 included it to assess
+  automated pN staging.
 review_status: verified
 last_verified: 2026-11-20
 sources:

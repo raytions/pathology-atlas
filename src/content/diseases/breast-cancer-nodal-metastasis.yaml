@@ -3,8 +3,9 @@ title: Breast cancer lymph-node metastasis
 organs: [breast]
 synonyms: [Sentinel lymph node metastasis, SLN metastasis]
 summary: >-
-  Spread of breast cancer to the sentinel lymph nodes, categorised by the size of the largest
-  deposit (macro-metastasis, micro-metastasis, isolated tumour cells). It drives the pN stage.
+  Spread of breast cancer to the axillary lymph nodes, assessed first in the sentinel nodes and
+  categorised by the size of the largest deposit (macro-metastasis, micro-metastasis, isolated
+  tumour cells). Together with the number and location of involved nodes, it determines the pN stage.
 review_status: verified
 last_verified: 2026-11-20
 sources:

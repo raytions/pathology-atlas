@@ -28,7 +28,7 @@ in many pipelines, for example to measure how much of a tumour is stroma before 
 outcome.
 
 The two datasets below are tile collections, not slide collections. Each released image is a
-224 x 224 patch with one tissue label, cut from regions that pathologists outlined by hand. Treat
+224 x 224 patch with one tissue label, cut from regions that a blinded observer outlined by hand. Treat
 the larger set as training data and the smaller one as the external test set: they come from
 different patients, and the release itself suggests that use.
 
