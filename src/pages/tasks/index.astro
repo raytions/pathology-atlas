@@ -1,0 +1,76 @@
+---
+import { withBase } from '../../lib/paths';
+import Base from '../../layouts/Base.astro';
+import { countOf, loadCatalog, url } from '../../lib/catalog';
+
+const catalog = await loadCatalog();
+const families = catalog.tasks.filter((t) => t.data.scope === 'general');
+const byOrgan = catalog.organs
+  .map((o) => ({ organ: o, tasks: catalog.tasksForOrgan(o.id) }))
+  .filter((g) => g.tasks.length > 0);
+const evaluated = (taskId: string) => catalog.evaluatedForTask(taskId).length;
+const builtFor = (familyId: string) => catalog.methods.filter((m) => m.data.tasks.includes(familyId)).length;
+const clinicalIn = (familyId: string) => catalog.tasks.filter((t) => t.data.broader.includes(familyId)).length;
+---
+
+<Base title="Tasks" description="Clinical tasks by organ, with dataset and evaluated-method counts, plus organ-independent task families.">
+  <div class="wrap pt-12">
+    <p class="eyebrow">Index</p>
+    <h1 class="mt-2 text-4xl md:text-5xl">Tasks</h1>
+    <p class="mt-4 max-w-2xl text-ink-2">
+      Datasets and methods are linked through tasks. Clinical tasks belong to an organ; task families are organ-independent
+      types such as slide classification. A method counts as evaluated only when a source reports a result for that task.
+    </p>
+
+    <section aria-labelledby="clinical-h" class="mt-10">
+      <h2 id="clinical-h" class="text-2xl md:text-3xl">Clinical tasks</h2>
+      {
+        byOrgan.map(({ organ, tasks }) => (
+          <div class="rule-t mt-6 pt-4">
+            <h3 class="eyebrow">
+              <a href={url.organ(organ.id)}>{organ.data.title}</a>
+            </h3>
+            <ul class="mt-2 divide-y divide-rule">
+              {tasks.map((t) => (
+                <li class="grid gap-1 py-4 md:grid-cols-[1fr_auto] md:items-baseline md:gap-6">
+                  <div>
+                    <a href={url.task(t.id)} class="font-serif text-xl">{t.data.title}</a>
+                    {t.data.diseases.length > 0 && (
+                      <span class="ml-2 text-xs text-ink-3">{t.data.diseases.map((x) => catalog.title(x)).join(' · ')}</span>
+                    )}
+                    {t.data.prediction_target && <p class="mt-1 max-w-2xl text-sm text-ink-2">{t.data.prediction_target}</p>}
+                  </div>
+                  <p class="font-mono text-xs text-ink-3 md:text-right">
+                    {countOf(catalog.datasetsForTask(t.id).length, 'dataset')} · {countOf(evaluated(t.id), 'method')} evaluated
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </section>
+
+    <section id="families" aria-labelledby="fam-h" class="rule-t mt-14 pt-6">
+      <h2 id="fam-h" class="text-2xl md:text-3xl">Task families</h2>
+      <p class="mt-2 max-w-2xl text-sm text-ink-2">
+        A method built for a family applies to its clinical tasks, which is different from having been evaluated on them.
+      </p>
+      <ul class="mt-4 divide-y divide-rule border-y border-rule">
+        {
+          families.map((t) => (
+            <li class="grid gap-1 py-4 md:grid-cols-[18rem_1fr_auto] md:items-baseline md:gap-6">
+              <a href={url.task(t.id)} class="font-serif text-xl">{t.data.title}</a>
+              <p class="text-sm text-ink-2">{t.data.summary}</p>
+              <p class="font-mono text-xs text-ink-3 md:text-right">
+                {countOf(clinicalIn(t.id), 'clinical task')} · {countOf(builtFor(t.id), 'method')}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <p class="mt-10 text-sm"><a href={withBase('/methods/')}>Filter methods by task →</a></p>
+  </div>
+</Base>

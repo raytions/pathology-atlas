@@ -1,16 +1,16 @@
 ---
+import { withBase } from '../../lib/paths';
 import Base from '../../layouts/Base.astro';
 import TissueMark from '../../components/TissueMark.astro';
-import { loadCatalog, url } from '../../lib/catalog';
+import { countOf, loadCatalog, url } from '../../lib/catalog';
 
 const catalog = await loadCatalog();
-const families = catalog.tasks.filter((t) => t.data.scope === 'general');
 ---
 
-<Base title="Organs & Tasks" description="Browse computational pathology resources by organ, disease and task.">
+<Base title="Organs" description="Browse computational pathology resources by organ, then disease and task.">
   <div class="wrap pt-12">
     <p class="eyebrow">Index</p>
-    <h1 class="mt-2 text-4xl md:text-5xl">Organs &amp; Tasks</h1>
+    <h1 class="mt-2 text-4xl md:text-5xl">Organs</h1>
     <p class="mt-4 max-w-2xl text-ink-2">
       The atlas is organised as organ → disease → task. Datasets and methods hang off tasks, so a topic page always reflects the
       current entries.
@@ -43,29 +43,16 @@ const families = catalog.tasks.filter((t) => t.data.scope === 'general');
               </div>
             </dl>
             <p class="mt-auto pt-5 text-xs text-ink-3">
-              {catalog.datasetsForOrgan(o.id).length} datasets · {catalog.methodsForOrgan(o.id).direct.length} methods with recorded relations
+              {countOf(catalog.datasetsForOrgan(o.id).length, 'dataset')} · {countOf(catalog.methodsForOrgan(o.id).direct.length, 'method')} with recorded relations
             </p>
           </li>
         ))
       }
     </ul>
 
-    <section aria-labelledby="fam-h" class="rule-t mt-14 pt-6">
-      <h2 id="fam-h" class="text-2xl">Task families</h2>
-      <p class="mt-2 max-w-2xl text-sm text-ink-2">
-        Organ-independent task types. A method built for a family is "applicable" to its clinical tasks, which is different from
-        having been evaluated on them.
-      </p>
-      <ul class="mt-4 divide-y divide-rule border-y border-rule">
-        {
-          families.map((t) => (
-            <li class="grid gap-1 py-4 md:grid-cols-[18rem_1fr] md:gap-6">
-              <a href={url.task(t.id)} class="font-serif text-xl">{t.data.title}</a>
-              <p class="text-sm text-ink-2">{t.data.summary}</p>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
+    <p class="rule-t mt-14 pt-6 text-sm text-ink-2">
+      Organ-independent task families (slide classification, ROI classification, representation learning) are listed on the
+      <a href={withBase('/tasks/#families')}>Tasks</a> page.
+    </p>
   </div>
 </Base>

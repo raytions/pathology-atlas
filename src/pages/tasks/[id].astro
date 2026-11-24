@@ -21,15 +21,13 @@ const d = task.data;
 const datasets = catalog.datasetsForTask(task.id);
 const methods = catalog.methodsForTask(task.id);
 const narrower = catalog.tasks.filter((t) => t.data.broader.includes(task.id));
-const organ = d.organs[0];
 ---
 
 <Base title={d.title} description={d.summary}>
   <article class="wrap pt-10">
     <nav aria-label="Breadcrumb" class="text-sm text-ink-2">
       <ol class="flex flex-wrap items-center gap-x-2">
-        <li><a href={withBase('/organs/')}>Organs</a></li>
-        {organ && (<><li aria-hidden="true">/</li><li><a href={url.organ(organ)}>{catalog.title(organ)}</a></li></>)}
+        <li><a href={withBase('/tasks/')}>Tasks</a></li>
         <li aria-hidden="true">/</li>
         <li aria-current="page" class="text-ink">{d.title}</li>
       </ol>

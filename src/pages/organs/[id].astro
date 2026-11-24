@@ -6,7 +6,7 @@ import Sources from '../../components/Sources.astro';
 import DatasetCard from '../../components/DatasetCard.astro';
 import RelatedMethods from '../../components/RelatedMethods.astro';
 import TissueMark from '../../components/TissueMark.astro';
-import { loadCatalog, url, type Organ } from '../../lib/catalog';
+import { loadCatalog, url, type Organ, countOf } from '../../lib/catalog';
 
 export async function getStaticPaths() {
   const catalog = await loadCatalog();
@@ -29,7 +29,7 @@ const familyCount = (taskId: string) => catalog.methodsForTask(taskId).familyOnl
   <article class="wrap pt-10">
     <nav aria-label="Breadcrumb" class="text-sm text-ink-2">
       <ol class="flex flex-wrap items-center gap-x-2">
-        <li><a href={withBase('/organs/')}>Organs &amp; Tasks</a></li>
+        <li><a href={withBase('/organs/')}>Organs</a></li>
         <li aria-hidden="true">/</li>
         <li aria-current="page" class="text-ink">{d.title}</li>
       </ol>
@@ -74,7 +74,7 @@ const familyCount = (taskId: string) => catalog.methodsForTask(taskId).familyOnl
                   <li class="flex flex-wrap items-baseline justify-between gap-2 py-3">
                     <a href={url.task(t.id)} class="font-serif text-lg">{t.data.title} →</a>
                     <span class="text-xs text-ink-3">
-                      {catalog.datasetsForTask(t.id).length} datasets · {evaluatedCount(t.id)} methods evaluated · {familyCount(t.id)} same family only
+                      {countOf(catalog.datasetsForTask(t.id).length, 'dataset')} · {countOf(evaluatedCount(t.id), 'method')} evaluated · {familyCount(t.id)} same family only
                     </span>
                   </li>
                 ))}

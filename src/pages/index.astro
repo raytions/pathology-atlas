@@ -17,11 +17,11 @@ const dsScale = scaleParts(dataset);
 
 const entries = [
   {
-    href: withBase('/organs/'),
+    href: withBase('/tasks/'),
     n: '01',
-    title: 'Organs & Tasks',
-    body: 'Start from anatomy. Topic pages pull together diseases, tasks, datasets and methods.',
-    count: `${catalog.organs.length} organs · ${catalog.tasks.filter((t) => t.data.scope === 'specific').length} clinical tasks`,
+    title: 'Tasks',
+    body: 'Clinical tasks by organ and organ-independent task families, each with dataset and evaluated-method counts.',
+    count: `${catalog.tasks.filter((t) => t.data.scope === 'specific').length} clinical tasks · ${catalog.tasks.filter((t) => t.data.scope === 'general').length} families`,
   },
   {
     href: withBase('/datasets/'),
@@ -37,8 +37,7 @@ const entries = [
     body: 'Code and weight access listed separately; dataset links labelled by how they were used.',
     count: `${catalog.methods.length} verified methods`,
   },
-];
----
+];---
 
 <Base title="Pathology Atlas">
   <section class="wrap pt-14 pb-12 md:pt-20">
@@ -48,7 +47,11 @@ const entries = [
       A small, source-checked catalogue. Every number points to where it came from, and every link between a method and a
       dataset says what kind of link it is.
     </p>
-    <ul class="mt-10 grid grid-cols-3 gap-3 md:gap-6" aria-label="Organ topics">
+    <div class="mt-12 flex items-baseline justify-between gap-4">
+      <h2 class="eyebrow">Browse by organ</h2>
+      <a href={withBase('/organs/')} class="text-sm">All organs →</a>
+    </div>
+    <ul class="mt-4 grid grid-cols-3 gap-3 md:gap-6" aria-label="Organ topics">
       {
         catalog.organs.map((o) => (
           <li>

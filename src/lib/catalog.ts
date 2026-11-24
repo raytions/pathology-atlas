@@ -152,6 +152,9 @@ export const url = {
   method: (id: string) => withBase(`/methods/${id}/`),
 };
 
+/** "1 dataset", "2 datasets": a count with its noun, pluralised with a plain "s". */
+export const countOf = (n: number, noun: string) => `${n} ${n === 1 ? noun : `${noun}s`}`;
+
 /** Format "10616" as "10,616". */
 export function fmt(n: number) {
   return n.toLocaleString('en-US');
