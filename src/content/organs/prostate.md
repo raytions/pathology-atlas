@@ -5,8 +5,8 @@ tagline: Biopsy grading under the Gleason / ISUP system, with one large public b
 featured: true
 summary: >-
   Computational work on the prostate centres on needle biopsies and the Gleason grading
-  system. The largest public benchmark is PANDA; most methods treat grading as weakly
-  supervised slide-level classification.
+  system. PANDA is a large public benchmark whose labels are slide-level
+  grades, so grading on it is a weakly supervised slide-level task.
 review_status: verified
 last_verified: 2026-11-20
 sources:

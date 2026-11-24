@@ -30,12 +30,12 @@ datasets:
     use: evaluation
     task: lymph-node-metastasis-detection
     evidence: clam-paper
-    note: Lymph-node metastasis detection is one of the paper's three applications; its data-availability statement names CAMELYON16 and CAMELYON17. Models were trained and tested on this data.
+    note: Lymph-node metastasis detection is one of the paper's three applications; its data-availability statement names CAMELYON16 and CAMELYON17. The headline lymph-node result (test AUC 0.953 ± 0.029) is 10-fold Monte Carlo cross-validation on CAMELYON16 and the CAMELYON17 training slides pooled (899 slides), not the official CAMELYON16 test split; a separate run on the official CAMELYON16 split is reported in the supplement.
   - dataset: camelyon17
     use: evaluation
     task: lymph-node-metastasis-detection
     evidence: clam-paper
-    note: Same lymph-node application; CAMELYON17 is named alongside CAMELYON16. Not a pN-staging result.
+    note: Only the 500 training slides of CAMELYON17 were used, pooled with CAMELYON16 for cross-validation, because the official test labels were not public. Not an official-test-set or pN-staging result.
 limitations:
   - value: The other two applications in the paper (renal cell carcinoma and lung cancer subtyping) use TCGA and CPTAC data, which are not catalogued here yet.
     source: clam-paper
