@@ -40,15 +40,16 @@ terms:
 official_url: https://doi.org/10.5281/zenodo.1214456
 primary_paper: kather-paper
 limitations:
-  - value: Single institution (NCT tissue bank), so it tests a change of patients more than a change of site or scanner.
-    source: zenodo-crc
+  - value: All tissue came through the NCT tissue bank, from the multicentre DACHS study per Kather et al. 2019; the scanner is not stated, so how much site or scanner shift it tests is unclear.
+    source: kather-paper
 review_status: verified
 last_verified: 2026-11-20
 reviewer_notes: >-
   Patient and slide counts are left empty because sources disagree. The Zenodo record says 50
   patients. Kather et al. 2019 say the set was built from 25 H&E slides of the DACHS study and the
-  abstract says 25 patients. The UNI preprint says 50 WSIs. Whether colour normalisation was applied
-  is not stated in the record; one model README describes normalised and unnormalised variants of
+  abstract says 25 patients. The UNI preprint says 50 WSIs. The record does not say whether colour
+  normalisation was applied, but Kather et al. 2019 (Methods) say all images in their cohorts were
+  Macenko-normalised; one model README describes normalised and unnormalised variants of
   this test set, which the record does not list.
 sources:
   - key: zenodo-crc

@@ -27,7 +27,8 @@ weights:
 datasets: []
 limitations:
   - value: The paper's histopathology experiments use small breast and colon image collections, not WSI benchmarks catalogued here, so no benchmark relation is recorded.
-    source: abmil-repo
+    source: abmil-preprint
+    note: Section 4.3 of the paper; 58 breast images of 896 x 768 px and 100 colon images.
   - value: Reference code targets PyTorch 0.3.1 and Python 2.7.
     source: abmil-repo
 review_status: verified

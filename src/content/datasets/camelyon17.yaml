@@ -19,7 +19,7 @@ scale:
   patients:
     value: 200
     source: camelyon-gigascience
-    note: Artificial patients assembled by the organisers (5 slides each, all from one centre), not real patient groupings.
+    note: Artificial patients assembled by the organisers (each patient's slides come from a single centre), not real patient groupings.
   centers:
     value: 5
     source: camelyon-gigascience
@@ -48,7 +48,7 @@ primary_paper: camelyon-gigascience
 limitations:
   - value: Detailed metastasis contours exist for only 50 of the 1,000 slides (10 per centre); the rest have slide-level labels.
     source: camelyon-gigascience
-  - value: Test-set labels were withheld for challenge evaluation, so local test numbers are not comparable to leaderboard results.
+  - value: The 500 test slides were released without a reference standard, so results on them come only through challenge submission; papers that evaluate locally use the 500 training slides.
     source: camelyon-gigascience
 review_status: verified
 last_verified: 2026-11-20
