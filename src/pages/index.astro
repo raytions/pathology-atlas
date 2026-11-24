@@ -41,16 +41,25 @@ const entries = [
 ---
 
 <Base title="Pathology Atlas">
-  <section class="wrap grid items-end gap-10 pt-14 pb-12 md:grid-cols-[1fr_15rem] md:pt-20">
-    <div>
-      <p class="eyebrow">Computational pathology · resource atlas</p>
-      <h1 class="mt-4 max-w-3xl text-5xl leading-[1.05] md:text-7xl">Find data, methods and papers by organ, disease and task.</h1>
-      <p class="mt-6 max-w-2xl text-lg text-ink-2">
-        A small, source-checked catalogue. Every number points to where it came from, and every link between a method and a
-        dataset says what kind of link it is.
-      </p>
-    </div>
-    <TissueMark variant="field" class="hidden w-full md:block" />
+  <section class="wrap pt-14 pb-12 md:pt-20">
+    <p class="eyebrow">Computational pathology · resource atlas</p>
+    <h1 class="mt-4 max-w-3xl text-5xl leading-[1.05] md:text-7xl">Find data, methods and papers by organ, disease and task.</h1>
+    <p class="mt-6 max-w-2xl text-lg text-ink-2">
+      A small, source-checked catalogue. Every number points to where it came from, and every link between a method and a
+      dataset says what kind of link it is.
+    </p>
+    <ul class="mt-10 grid grid-cols-3 gap-3 md:gap-6" aria-label="Organ topics">
+      {
+        catalog.organs.map((o) => (
+          <li>
+            <a href={url.organ(o.id)} class="group block no-underline">
+              <TissueMark organ={o.id} class="w-full transition-opacity group-hover:opacity-80" />
+              <span class="mt-2 block font-serif text-lg text-ink group-hover:text-hema md:text-2xl">{o.data.title}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
   <section aria-labelledby="entry-h" class="wrap">
