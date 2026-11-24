@@ -4,8 +4,8 @@ organs: [breast]
 synonyms: [Breast carcinoma subtypes, Breast lesion spectrum]
 summary: >-
   The diagnostic spectrum of breast tissue lesions, from normal and benign changes through
-  atypical (pre-cancerous) lesions to in-situ and invasive carcinoma. Subtyping across this
-  spectrum is harder than a benign-versus-malignant split.
+  atypical (pre-cancerous) lesions to in-situ and invasive carcinoma. Some of these categories,
+  notably the atypical lesions, are hard to tell apart on H&E.
 review_status: verified
 last_verified: 2026-11-20
 sources:

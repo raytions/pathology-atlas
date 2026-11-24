@@ -3,7 +3,7 @@ title: Virchow2
 short_name: Virchow2
 summary: >-
   A successor to Virchow trained on about 3.1 million MSKCC whole-slide images with tiles sampled
-  at several magnifications (5x to 40x). Same ViT-H/14 size as Virchow but a separate model with
+  at several magnifications (5x to 40x). Same ViT-H/14 size as Virchow (plus 4 register tokens) but a separate model with
   different data, weights and licence.
 category: foundation-model
 tasks: [representation-learning, roi-classification]
@@ -29,7 +29,7 @@ datasets:
     evidence: virchow2-preprint
     note: >-
       Tile-level benchmark on Camelyon17-WILDS (96 x 96 tiles at 10x upsampled to 224, derived from
-      CAMELYON17), weighted F1 in Table 1 of arXiv v3. Not the original slide / pN-stage benchmark.
+      CAMELYON17), weighted F1 in Table 2 (out-of-distribution tile-level tasks) of arXiv v3; Table 3 in v1 and v2. Not the original slide / pN-stage benchmark.
 limitations:
   - value: Described in a preprint only; pretraining data is an internal MSKCC collection.
     source: virchow2-model-card
@@ -38,7 +38,7 @@ last_verified: 2026-11-20
 sources:
   - key: virchow2-preprint
     title: "Zimmermann E. et al. Virchow2: Scaling Self-Supervised Mixed Magnification Models in Pathology (arXiv 2408.00738 v3)"
-    url: https://arxiv.org/abs/2408.00738
+    url: https://arxiv.org/abs/2408.00738v3
     kind: preprint
     accessed: 2026-11-20
   - key: virchow2-model-card

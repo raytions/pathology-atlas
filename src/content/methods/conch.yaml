@@ -6,7 +6,7 @@ summary: >-
   image-caption pairs. Its ViT-B/16 image encoder gives patch embeddings for supervised heads, and
   the paired text encoder allows zero-shot classification and retrieval from text prompts.
 category: foundation-model
-tasks: [representation-learning, roi-classification, wsi-classification]
+tasks: [roi-classification, wsi-classification]
 organs: []
 input_granularity: [patch]
 output_granularity: [patch-embedding]
@@ -32,12 +32,13 @@ datasets:
     task: gleason-pattern-classification
     evidence: conch-preprint
     note: >-
-      ROI-level Gleason pattern classification on SICAP (paper reference 92). Zero-shot on the test
+      ROI-level Gleason pattern classification on SICAP (paper reference 92, Silva-Rodríguez et al. IEEE JBHI 2021, not the CMPB 2020 paper listed as SICAPv2's primary paper). Zero-shot on the test
       split (n = 2,122 tiles, quadratic kappa): arXiv v2 Table 5 with prompt ensembling, Table 12
       without. Supervised linear probe on the 9,959 / 2,122 split: Table 18. The paper describes 512 x
       512 tiles from 155 WSIs at 10x, with 9,959 training tiles from 124 WSIs and 2,122 test tiles from
-      31 WSIs; these counts match the Test-fold partition files in the SICAPv2 release exactly. The paper
-      does not name a Mendeley version.
+      31 WSIs; these counts match the Test-fold partition files in the SICAPv2 release exactly. The data-availability
+      statement links Mendeley version 1 (data.mendeley.com/datasets/9xxm58dvs3/1); this entry
+      describes version 2.
   - dataset: crc-val-he-7k
     use: evaluation
     task: colorectal-tissue-classification
