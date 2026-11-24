@@ -36,7 +36,7 @@ datasets:
       (9,553 train / 1,062 test slides), not a challenge split, so numbers are not comparable with
       PANDA leaderboard results.
 limitations:
-  - value: Some TCGA downstream training cohorts overlap the pretraining data; the authors report metrics only on external validation cohorts to limit leakage.
+  - value: Some TCGA downstream training cohorts overlap the pretraining data; the authors say they report AUC only on external validation sets to limit leakage, although the PANDA and CAMELYON16 test sets come from the same sources as their training data.
     source: phikon2-preprint
 review_status: verified
 last_verified: 2026-11-20

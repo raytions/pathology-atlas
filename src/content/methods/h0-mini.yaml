@@ -25,8 +25,8 @@ datasets:
     evidence: h0mini-preprint
     note: >-
       Table 1 (arXiv v3), "Cam16" column under slide-level classification in the eva benchmark;
-      balanced accuracy. Splits follow the eva framework's protocol, not necessarily the challenge
-      split.
+      balanced accuracy, eva protocol. For Camelyon16 eva keeps the challenge's 129 test slides and
+      splits the 270 training slides into train and validation.
   - dataset: panda
     use: evaluation
     task: gleason-grading
@@ -40,19 +40,22 @@ datasets:
     evidence: h0mini-preprint
     note: >-
       Table 1 (arXiv v3), "Crc" column under patch-level classification in the eva benchmark; balanced
-      accuracy. The paper does not name the data or an eva version (footnote 3 links the unversioned
-      eva docs). Mapped using the current eva documentation; experimental version not confirmed. In
-      that mapping eva trains on NCT-CRC-HE-100K and reports on CRC-VAL-HE-7K, which it calls the
-      validation split. The last eva release before every arXiv version of the paper was 0.1.0
-      (2024-09-24); the eva 0.1 docs give the same mapping, but the paper does not say it used 0.1.
+      accuracy. The paper does not name the data or an eva version (footnote 3 links eva's main-branch
+      docs, which change over time). In the eva mapping, eva trains on NCT-CRC-HE-100K (the
+      colour-normalised variant) and reports on CRC-VAL-HE-7K, which it calls the validation split. The
+      paper reports segmentation as "MonaiDiceScore", a name eva introduced on 2024-12-09 (PyPI 0.1.7),
+      so the runs used eva 0.1.7, 0.1.8 or main between 2024-12-09 and arXiv v1 (2025-01-27); the eva
+      0.1 docs give the same CRC mapping.
 limitations:
-  - value: Pretraining tiles come from TCGA, so downstream TCGA-based evaluations can overlap with pretraining; the paper flags possibly over-estimated results for such cases.
+  - value: Pretraining tiles come from TCGA, so downstream TCGA-based evaluations can overlap with pretraining.
     source: h0mini-preprint
 review_status: verified
 last_verified: 2026-11-20
 reviewer_notes: >-
   related-to h-optimus-0 (teacher; distillation). All three dataset relations come from the eva
-  benchmark in Table 1; eva fixes its own protocol and splits. The model card describes code and weights under
+  benchmark in Table 1; eva fixes its own protocol and splits. The baseline classification numbers in Table 1 match eva's
+  leaderboard columns camelyon16_small and panda_small (fewer patches per slide; PANDASmall uses 20% of
+  PANDA), so the Cam16 / Panda columns may be the small variants; the paper does not say. The model card describes code and weights under
   the same CC BY-NC-ND 4.0 terms; no separate code repository was checked, so code is not recorded.
 sources:
   - key: h0mini-preprint
@@ -76,4 +79,4 @@ sources:
     url: https://kaiko-ai.github.io/eva/0.1/datasets/crc/
     kind: official-site
     accessed: 2026-11-21
-    note: Docs for the last eva release (0.1.0, 2024-09-24) before the paper; same CRC mapping as main. Not evidence that the paper used this version.
+    note: Docs for the eva 0.1 release line (PyPI 0.1.0 to 0.1.8, 2024-09-24 to 2024-12-20); same CRC mapping as main. Not evidence of which version the paper used.

@@ -46,9 +46,9 @@ terms:
 official_url: https://doi.org/10.5281/zenodo.1214456
 primary_paper: kather-paper
 limitations:
-  - value: Not purely colorectal tissue. Liver-metastasis slides and gastrectomy normal tissue were included to add variability.
+  - value: Not purely colorectal tissue. Tumour tissue includes colorectal liver metastases, and normal-tissue classes were augmented with gastrectomy specimens to increase variability.
     source: zenodo-crc
-  - value: Patches come from hand-delineated single-tissue regions, so each image shows essentially one tissue type; this is easier than classifying arbitrary tiles from a whole slide.
+  - value: Patches come from hand-delineated single-tissue regions, so each image shows essentially one tissue type, unlike arbitrary tiles from a whole slide.
     source: kather-paper
 review_status: verified
 last_verified: 2026-11-20
