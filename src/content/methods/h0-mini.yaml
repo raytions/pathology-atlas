@@ -40,8 +40,12 @@ datasets:
     evidence: h0mini-preprint
     note: >-
       Table 1 (arXiv v3), "Crc" column under patch-level classification in the eva benchmark; balanced
-      accuracy. The paper does not name the data; the eva documentation defines this task as training
-      on NCT-CRC-HE-100K (the colour-normalised variant) and reporting on CRC-VAL-HE-7K.
+      accuracy. The paper does not name the data or an eva version (footnote 3 links eva's main-branch
+      docs, which change over time). In the eva mapping, eva trains on NCT-CRC-HE-100K (the
+      colour-normalised variant) and reports on CRC-VAL-HE-7K, which it calls the validation split. The
+      paper reports segmentation as "MonaiDiceScore", a name eva introduced on 2024-12-09 (PyPI 0.1.7),
+      so the runs used eva 0.1.7, 0.1.8 or main between 2024-12-09 and arXiv v1 (2025-01-27); the eva
+      0.1 docs give the same CRC mapping.
 limitations:
   - value: Pretraining tiles come from TCGA, so downstream TCGA-based evaluations can overlap with pretraining.
     source: h0mini-preprint
@@ -70,3 +74,9 @@ sources:
     kind: official-site
     accessed: 2026-11-20
     note: Used only to identify which data the eva "CRC" task uses; it is not evidence of any result.
+  - key: eva-crc-0-1
+    title: "kaiko-ai eva 0.1 documentation: CRC dataset page"
+    url: https://kaiko-ai.github.io/eva/0.1/datasets/crc/
+    kind: official-site
+    accessed: 2026-11-21
+    note: Docs for the eva 0.1 release line (PyPI 0.1.0 to 0.1.8, 2024-09-24 to 2024-12-20); same CRC mapping as main. Not evidence of which version the paper used.

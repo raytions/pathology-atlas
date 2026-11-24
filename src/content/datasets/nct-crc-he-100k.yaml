@@ -20,7 +20,7 @@ scale:
   slides:
     value: 86
     source: zenodo-crc
-    note: Same figure in Kather et al. 2019. The number of patients is not stated.
+    note: Source slides the patches were cut from; the slides themselves are not released. Same figure in Kather et al. 2019. The number of patients is not stated.
   storage:
     value: About 11.7 GB per variant (NCT-CRC-HE-100K.zip and NCT-CRC-HE-100K-NONORM.zip)
     source: zenodo-crc

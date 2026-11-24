@@ -1,0 +1,70 @@
+id: kather2019-vgg19
+title: Kather et al. 2019 VGG19 tissue classifier
+short_name: Kather 2019 VGG19
+summary: >-
+  An ImageNet-pretrained VGG19, fully retrained to sort colorectal H&E patches into nine tissue
+  classes. It was the tissue classifier behind the paper's deep stroma score for survival, and it is
+  the original reference result for the NCT-CRC-HE-100K / CRC-VAL-HE-7K pair.
+category: end-to-end-cnn
+tasks: [colorectal-tissue-classification]
+organs: [colorectum]
+input_granularity: [patch]
+output_granularity: [patch-label]
+year: 2019
+venue:
+  value: PLOS Medicine 16, e1002730 (2019)
+  source: kather-paper
+primary_paper: kather-paper
+code:
+  url: https://github.com/jnkather/deep-stroma-histology
+  license: MIT
+  conditions: MATLAB code and R scripts for the survival statistics. Colour normalisation relies on a separately installed third-party toolbox. Release v0.2 is archived on Zenodo (doi 10.5281/zenodo.1471616).
+  source: kather-code
+weights:
+  availability: public
+  url: https://doi.org/10.5281/zenodo.1420524
+  license: CC BY 4.0
+  conditions: One MATLAB network file (about 520 MB), open download. The record states that it was retrained from MATLAB's VGG19 on the colour-normalised NCT-CRC-HE-100K images.
+  source: kather-weights
+datasets:
+  - dataset: nct-crc-he-100k
+    use: fine-tuning
+    task: colorectal-tissue-classification
+    evidence: kather-paper
+    note: >-
+      Methods, "Training and testing of neural networks": the final VGG19 was trained on all
+      100,000 patches; the weights record says the normalised variant was used. An earlier
+      architecture comparison used a 70 / 15 / 15 split of this set (S2 Fig); that internal test
+      is not recorded as an evaluation here.
+  - dataset: crc-val-he-7k
+    use: evaluation
+    task: colorectal-tissue-classification
+    evidence: kather-paper
+    note: >-
+      Results, "CNNs can learn morphological features in histological images": 94.3% overall
+      nine-class accuracy on the 7,180 patches; per-class confusion matrix in Fig 2B. S6 Fig and S8
+      Table add per-class ROC curves and AUC, sensitivity and specificity over 25 random splits of
+      this set. No balanced accuracy is reported, so the headline accuracy is not directly comparable
+      with the foundation-model results on this dataset.
+limitations:
+  - value: Most errors fall between muscle and stroma and between lymphocytes and debris.
+    source: kather-paper
+  - value: The released network is a MATLAB file, so using it outside MATLAB needs conversion.
+    source: kather-weights
+review_status: draft
+sources:
+  - key: kather-paper
+    title: "Kather J. N. et al. Predicting survival from colorectal cancer histology slides using deep learning: a retrospective multicenter study. PLoS Med 16, e1002730 (2019)"
+    url: https://pmc.ncbi.nlm.nih.gov/articles/PMC6345440/
+    kind: paper
+    accessed: 2026-11-21
+  - key: kather-weights
+    title: "Kather J. N. Trained VGG19 model for multiclass histology image classification (Matlab). Zenodo, v0.1 (2018)"
+    url: https://doi.org/10.5281/zenodo.1420524
+    kind: data-portal
+    accessed: 2026-11-21
+  - key: kather-code
+    title: jnkather/deep-stroma-histology (GitHub)
+    url: https://github.com/jnkather/deep-stroma-histology
+    kind: repository
+    accessed: 2026-11-21

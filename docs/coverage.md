@@ -43,9 +43,11 @@ out of every page.
 
 Pending: `sicapv2` (draft), `conch` (needs-review).
 
-Visible gaps: no colorectal, lung, kidney, skin or other organ; no nucleus / cell-level task; no
-cross-organ datasets (TCGA, PanNuke, MoNuSeg); only one general-purpose foundation model (UNI) is
-public.
+Visible gaps at the time of this scan: no colorectal, lung, kidney, skin or other organ; no nucleus /
+cell-level task; no cross-organ datasets (TCGA, PanNuke, MoNuSeg); only one general-purpose
+foundation model (UNI) is public. *Update 2026-11-21:* colorectum is now published (see the
+Colorectum section at the end); lung, kidney, skin, cell-level tasks and cross-organ datasets are
+still missing.
 
 ### Structural gaps found during the scan (not fixed in this pass)
 
@@ -73,9 +75,9 @@ being forced into nearby fields.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | SICAPv2 (**published in #3**) | Dataset | Prostate / Gleason grading (biopsy) + Gleason pattern classification (patch) | OML, AI4DP | [Mendeley Data 10.17632/9xxm58dvs3](https://data.mendeley.com/datasets/9xxm58dvs3/2) (v1 2020-07-20, v2 2020-10-22, CC BY 4.0); paper [10.1016/j.cmpb.2020.105637](https://doi.org/10.1016/j.cmpb.2020.105637), preprint [arXiv 2105.10490](https://arxiv.org/abs/2105.10490) | extend (existing draft) | Slide count conflicts inside the paper (abstract 182 WSIs vs body 155 biopsies); per-class patch totals in the text differ from Table 3. Changes between Mendeley v1 and v2 undocumented. |
 | 2 | CONCH (**published in #3**) | Model (vision-language) | Cross-organ / representation learning, ROI + slide classification | AP, AI4DP | [Nat Med 10.1038/s41591-024-02856-4](https://www.nature.com/articles/s41591-024-02856-4); [arXiv 2307.12914](https://arxiv.org/abs/2307.12914); [HF model card](https://huggingface.co/MahmoodLab/CONCH) | extend (existing needs-review) | Exact SICAP / CRC100k versions used are not named by release DOI; Nat Med table numbering vs arXiv numbering not cross-checked. |
-| 3 | NCT-CRC-HE-100K (+ NONORM variant) | Dataset | Colorectal / tissue-type classification | AP, OML, AI4DP | [Zenodo 10.5281/zenodo.1214456](https://doi.org/10.5281/zenodo.1214456) (v0.1, 2018-04-07, CC BY 4.0) | add (vocabulary unblocked by #4) | Zenodo says 86 *slides*; OML page says 86 *patients* and lists DEB = 1,512 with 11.5 % share (inconsistent). Primary paper (Kather et al., PLoS Med 2019) not yet opened. |
-| 4 | CRC-VAL-HE-7K | Dataset (separate release in the same Zenodo record) | Colorectal / tissue-type classification | Zenodo record, eva docs | Same Zenodo record; 7,180 patches from 50 patients per Zenodo | add separately (unblocked by #4) | CONCH describes "CRC100k" as tiles from 50 patients, mixing the two releases. eva uses 100K as train and 7K as validation: a project protocol, not an official split. |
-| 5 | MHIST | Dataset | Colorectal polyps / HP vs SSA classification | AP, OML, AI4DP | [bmirds.github.io/MHIST](https://bmirds.github.io/MHIST/); [arXiv 2101.12355](https://arxiv.org/abs/2101.12355) | add (unblocked by #4) | Access requires a Dataset Research Use Agreement form; terms text not yet read. Official train/test split to be confirmed from the paper. |
+| 3 | NCT-CRC-HE-100K (+ NONORM variant) | Dataset | Colorectal / tissue-type classification | AP, OML, AI4DP | [Zenodo 10.5281/zenodo.1214456](https://doi.org/10.5281/zenodo.1214456) (v0.1, 2018-04-07, CC BY 4.0) | **published** (after #8) | Zenodo says 86 *slides*; OML page says 86 *patients* and lists DEB = 1,512 with 11.5 % share (inconsistent). Primary paper (Kather et al., PLoS Med 2019) not yet opened. |
+| 4 | CRC-VAL-HE-7K | Dataset (separate release in the same Zenodo record) | Colorectal / tissue-type classification | Zenodo record, eva docs | Same Zenodo record; 7,180 patches from 50 patients per Zenodo | **published** (after #8) | CONCH describes "CRC100k" as tiles from 50 patients, mixing the two releases. eva uses 100K as train and 7K as validation: a project protocol, not an official split. |
+| 5 | MHIST | Dataset | Colorectal polyps / HP vs SSA classification | AP, OML, AI4DP | [bmirds.github.io/MHIST](https://bmirds.github.io/MHIST/); [arXiv 2101.12355](https://arxiv.org/abs/2101.12355) | **draft** (2026-11-21) | Research Use Agreement read (non-commercial, no redistribution, no derivative works); paper Table 1 gives the fixed 2,175 / 977 split. Not public until reviewed. |
 | 6 | Lizard | Dataset | Colorectal / nucleus segmentation + classification | AI4DP | [ICCVW 2021 paper](https://openaccess.thecvf.com/content/ICCV2021W/CDPath/html/Graham_Lizard_A_Large-Scale_Dataset_for_Colonic_Nuclear_Instance_Segmentation_and_ICCVW_2021_paper.html) | verify | Download page, licence, region / nucleus counts. Needs a nucleus task; methods blocked by gap 2. |
 | 7 | CoNIC 2022 | Challenge / dataset release derived from Lizard | Colorectal / nucleus segmentation, classification, counting | AP, OML, AI4DP | [conic-challenge.grand-challenge.org](https://conic-challenge.grand-challenge.org/) (fetch returned 403) | verify | Relationship to Lizard (patch release vs original regions, hidden test data), challenge paper. Keep separate from tissue and polyp classification. AI4DP's linked "MedIA 2022" paper not checked. |
 | 8 | BACH (ICIAR 2018) | Dataset / challenge | Breast / 4-class microscopy classification (Part A) + WSI segmentation (Part B) | AP, OML (as two tasks), AI4DP | [MedIA paper S1361841518301789](https://www.sciencedirect.com/science/article/pii/S1361841518301789) (listed, not opened); [challenge site](https://iciar2018-challenge.grand-challenge.org/) | verify | Decide one entry with two parts vs two entries; licence; image counts. Part A fits `roi` + `roi-label` and existing `breast-lesion-subtyping`. |
@@ -99,7 +101,7 @@ being forced into nearby fields.
 | 26 | HIPT | Model (hierarchical slide encoder) | Cross-organ / slide classification | AP, AI4DP | [arXiv 2206.02647](https://arxiv.org/abs/2206.02647) (listed) | verify | Evaluated datasets (TCGA, gap with #17). |
 | 27 | TITAN | Model (slide foundation model) | Cross-organ | AP | [github.com/mahmoodlab/TITAN](https://github.com/mahmoodlab/TITAN/) (listed) | verify | Paper and weights terms. |
 | 28 | HoVer-Net | Method | Cross-organ / nucleus segmentation + classification | AP | [MedIA 58, 101563 (2019)](https://doi.org/10.1016/j.media.2019.101563) (cited in CONCH refs; not opened) | defer, **blocked by gap 2** | Output type not expressible. |
-| 29 | Kather et al. 2019 CRC CNN | Method / paper | Colorectal / tissue classification, survival | Zenodo record, CONCH refs | PLoS Med 16, e1002730 (2019) (cited, not opened) | verify | Paper that released NCT-CRC-HE-100K; would carry the training / evaluation relations for #3 and #4. |
+| 29 | Kather et al. 2019 CRC CNN | Method / paper | Colorectal / tissue classification, survival | Zenodo record, CONCH refs | PLoS Med 16, e1002730 (2019); weights Zenodo 10.5281/zenodo.1420524; code github.com/jnkather/deep-stroma-histology | **draft** as `kather2019-vgg19` (2026-11-21) | Fine-tuning on NCT-CRC-HE-100K and evaluation on CRC-VAL-HE-7K (94.3% accuracy, Results and Fig 2B). Not public until reviewed. |
 | 30 | kaiko-ai eva (CRC protocol) | Evaluation framework | Cross-organ benchmark protocols | AP, AI4DP | [eva CRC docs](https://kaiko-ai.github.io/eva/main/datasets/crc/) | defer, **gap 4** | A project protocol (100K train / 7K val), not an official split, and not evidence that any model reported a result. |
 
 ### Discovery-source issues noticed (do not copy into content)
@@ -117,7 +119,7 @@ being forced into nearby fields.
 | Batch | Scope | Value for researchers | Evidence status | Depends on |
 | --- | --- | --- | --- | --- |
 | A. Prostate Gleason, ROI level (**published in #3**) | Complete `sicapv2`, add task `gleason-pattern-classification`, complete `conch` with its SICAP evaluation | Gives the existing prostate topic a patch-level Gleason route: prostate → Gleason pattern classification → SICAPv2 → CONCH (evaluation, located in tables) | Sufficient for draft entries: Mendeley record, CMPB preprint, CONCH paper tables, CONCH model card. Two numeric conflicts are kept out of scale fields. | None |
-| B. Colorectal tissue + polyp classification | NCT-CRC-HE-100K, CRC-VAL-HE-7K (separate), MHIST, Kather 2019; CONCH and UNI relations to them | Most-used colorectal benchmarks; enables a colorectal topic | Zenodo and MHIST pages checked; Kather 2019 and MHIST paper not yet opened | Vocabulary done in #4; still needs organ / disease entries for colorectum |
+| B. Colorectal tissue + polyp classification (**tissue path published after #8; polyp path and Kather VGG19 in draft**) | NCT-CRC-HE-100K, CRC-VAL-HE-7K (separate), MHIST, Kather 2019; CONCH and UNI relations to them | Most-used colorectal benchmarks; enables a colorectal topic | Zenodo and MHIST pages checked; Kather 2019 and MHIST paper not yet opened | Vocabulary done in #4; still needs organ / disease entries for colorectum |
 | C. Cross-organ foundation models (**first four published in #5**; H-optimus-0, H0-mini, Prov-GigaPath and Phikon published after #8; colorectal relations added) | UNI2-h, Virchow, Virchow2, Prov-GigaPath, Phikon(-v2), H-optimus-0, each with relations only to catalogued datasets | Lets researchers compare encoders by access terms and by where they were actually evaluated | Model cards listed, papers not opened; relations need table-level checks | Benefits from B (more catalogued datasets to relate to); gap 5 means relations to draft datasets wait for promotion |
 
 Model discovery continues in [`docs/inbox/`](./inbox/README.md).
@@ -138,5 +140,28 @@ Open items, not filled in on purpose:
 - H-optimus-0 has no colorectal relation: its README describes the 7,180-image test set as coming
   from TCGA-COAD / READ, in normalised and unnormalised variants, which conflicts with the release.
 - CONCH does not say which NCT-CRC-HE-100K variant its linear probe used.
-- Kather et al. 2019 is cited as the datasets' primary paper; its VGG19 classifier is not catalogued
-  as a method.
+- Kather et al. 2019 VGG19 is now catalogued as the draft method `kather2019-vgg19` (see below).
+- Papers read "NCT-CRC-HE-100K-NONORM" differently: Zenodo and UNI treat it as an unnormalised
+  training set, while Virchow describes it as a normalised training set with an unnormalised test
+  set. Relations should name the variant only where the paper does.
+
+## Colorectum: still in draft (2026-11-21)
+
+Not public. These need a human review before they are moved to verified:
+
+- `colorectal-polyp-classification` (task), `colorectal-polyps` (disease) and `mhist` (dataset).
+  This is a second colorectal path, separate from nine-class tissue classification.
+- `kather2019-vgg19` (method): fine-tuning on NCT-CRC-HE-100K and evaluation on CRC-VAL-HE-7K.
+
+Still missing or open:
+
+- MHIST has no method relations yet. Results are reported by H-optimus-0 (README tile-level table),
+  H0-mini (Table 1, eva mapping), Virchow2 (arXiv v3 Table 2) and Virchow (exact table not yet
+  located). These models are verified, and a verified entry cannot link to a draft, so the
+  relations are added only when MHIST is verified. The list is kept in `mhist` reviewer notes.
+- MHIST: the paper does not say whether the train / test split keeps patients or slides apart.
+  The agreement bans derivative works, and someone should read that clause before publishing.
+- Other polyp datasets (UniToPatho, row 14) are not started.
+- H0-mini relations rely on the eva task mapping. The paper names no eva version; its "MonaiDiceScore"
+  metric name narrows it to eva 0.1.7, 0.1.8 or main between 2024-12-09 and 2025-01-27.
+- `OUTPUT_GRANULARITY` now has `patch-label` (patch-level prediction); `kather2019-vgg19` uses it.
