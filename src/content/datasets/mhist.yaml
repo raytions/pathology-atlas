@@ -9,7 +9,7 @@ summary: >-
 organs: [colorectum]
 diseases: [colorectal-polyps]
 tasks: [colorectal-polyp-classification]
-specimen: FFPE H&E colorectal polyp slides from the Department of Pathology and Laboratory Medicine, Dartmouth-Hitchcock Medical Center, diagnosed at slide level as HP or SSA. Scanned on an Aperio AT2 at 40x and downsampled 8x before tiling.
+specimen: FFPE H&E colorectal polyp slides from the Department of Pathology and Laboratory Medicine, Dartmouth-Hitchcock Medical Center, diagnosed at slide level as HP or SSA. Scanned on an Aperio AT2 at 40x; the paper says the slides were then compressed "with 8x magnification" to widen the field of view before tiling.
 stains: [he]
 data_units: [patch]
 annotation_granularity: [patch-label]
@@ -60,7 +60,7 @@ reviewer_notes: >-
   models are verified and a verified entry may not link to a draft. To add once MHIST is verified,
   each checked against its source: H-optimus-0 (README tile-level table, MHIST row; appendix says
   official train / test split, linear probe, mean over three runs), H0-mini (arXiv v3 Table 1,
-  "Mhist" column, via the eva mapping), Virchow2 (arXiv Table 1, in-distribution tile-level tasks;
+  "Mhist" column, via the eva mapping), Virchow2 (arXiv v3 Table 2, out-of-distribution tile-level tasks;
   10% of training held out for validation) and Virchow (Methods "MHIST" paragraph; 217 training
   images held out for validation; exact result table not yet located). The DUA's ban on derivative
   works needs a human reading before the access summary is published.

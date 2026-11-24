@@ -156,13 +156,12 @@ Not public. These need a human review before they are moved to verified:
 Still missing or open:
 
 - MHIST has no method relations yet. Results are reported by H-optimus-0 (README tile-level table),
-  H0-mini (Table 1, eva mapping), Virchow2 (arXiv Table 1) and Virchow (exact table not yet
+  H0-mini (Table 1, eva mapping), Virchow2 (arXiv v3 Table 2) and Virchow (exact table not yet
   located). These models are verified, and a verified entry cannot link to a draft, so the
   relations are added only when MHIST is verified. The list is kept in `mhist` reviewer notes.
 - MHIST: the paper does not say whether the train / test split keeps patients or slides apart.
   The agreement bans derivative works, and someone should read that clause before publishing.
 - Other polyp datasets (UniToPatho, row 14) are not started.
-- H0-mini relations rely on the eva task mapping. The paper names no eva version, and it is still
-  unconfirmed which one was used.
-- Vocabulary gap: `OUTPUT_GRANULARITY` has no patch-level prediction value, so patch classifiers
-  use `roi-label`.
+- H0-mini relations rely on the eva task mapping. The paper names no eva version; its "MonaiDiceScore"
+  metric name narrows it to eva 0.1.7, 0.1.8 or main between 2024-12-09 and 2025-01-27.
+- `OUTPUT_GRANULARITY` now has `patch-label` (patch-level prediction); `kather2019-vgg19` uses it.
