@@ -24,7 +24,7 @@ weights:
   availability: gated
   url: https://huggingface.co/MahmoodLab/UNI
   license: CC-BY-NC-ND 4.0
-  conditions: Request access on Hugging Face and accept the terms; the account's primary email must be an institutional address. No redistribution of the weights; commercial use requires approval.
+  conditions: Request access on Hugging Face and accept the terms; the account's primary email must be an institutional address. No redistribution of the weights; commercial use is prohibited without prior approval.
   source: uni-model-card
 datasets:
   - dataset: panda
@@ -54,7 +54,7 @@ datasets:
     note: >-
       "CRC-100K" ROI task: linear probe, KNN and SimpleShot trained on the unnormalised
       NCT-CRC-HE-100K-NONORM images and tested on the 7,180 CRC-VAL-HE-7K tiles (official folds).
-      Task definition in the supplementary methods; linear-probe results in Extended Data Table 27 of
+      Task definition in Online Methods ("Tasks and datasets"); linear-probe results in Extended Data Table 27 of
       arXiv v1.
 limitations:
   - value: Pretraining data (Mass-100K) comes mostly from private BWH / MGH collections plus public GTEx slides and is not released, so pretraining cannot be reproduced end to end.
@@ -85,4 +85,4 @@ sources:
     url: https://arxiv.org/abs/2308.15474v1
     kind: preprint
     accessed: 2026-11-20
-    note: Preprint of the Nature Medicine paper; used for the CRC-100K protocol, which the journal page text does not include.
+    note: Preprint of the Nature Medicine paper; used for the CRC-100K table numbers. The Nature Methods (open copy PMC11403354) describe the same protocol.

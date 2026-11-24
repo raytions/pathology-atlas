@@ -25,8 +25,8 @@ datasets:
     evidence: h0mini-preprint
     note: >-
       Table 1 (arXiv v3), "Cam16" column under slide-level classification in the eva benchmark;
-      balanced accuracy. Splits follow the eva framework's protocol, not necessarily the challenge
-      split.
+      balanced accuracy, eva protocol. For Camelyon16 eva keeps the challenge's 129 test slides and
+      splits the 270 training slides into train and validation.
   - dataset: panda
     use: evaluation
     task: gleason-grading
@@ -41,15 +41,17 @@ datasets:
     note: >-
       Table 1 (arXiv v3), "Crc" column under patch-level classification in the eva benchmark; balanced
       accuracy. The paper does not name the data; the eva documentation defines this task as training
-      on NCT-CRC-HE-100K and testing on CRC-VAL-HE-7K.
+      on NCT-CRC-HE-100K (the colour-normalised variant) and reporting on CRC-VAL-HE-7K.
 limitations:
-  - value: Pretraining tiles come from TCGA, so downstream TCGA-based evaluations can overlap with pretraining; the paper flags possibly over-estimated results for such cases.
+  - value: Pretraining tiles come from TCGA, so downstream TCGA-based evaluations can overlap with pretraining.
     source: h0mini-preprint
 review_status: verified
 last_verified: 2026-11-20
 reviewer_notes: >-
   related-to h-optimus-0 (teacher; distillation). All three dataset relations come from the eva
-  benchmark in Table 1; eva fixes its own protocol and splits. The model card describes code and weights under
+  benchmark in Table 1; eva fixes its own protocol and splits. The baseline classification numbers in Table 1 match eva's
+  leaderboard columns camelyon16_small and panda_small (fewer patches per slide; PANDASmall uses 20% of
+  PANDA), so the Cam16 / Panda columns may be the small variants; the paper does not say. The model card describes code and weights under
   the same CC BY-NC-ND 4.0 terms; no separate code repository was checked, so code is not recorded.
 sources:
   - key: h0mini-preprint
