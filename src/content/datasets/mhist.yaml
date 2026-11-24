@@ -1,0 +1,83 @@
+id: mhist
+title: MHIST
+aliases: [Minimalist Histopathology Image Analysis Dataset]
+summary: >-
+  3,152 small H&E patches of colorectal polyps, each labelled hyperplastic polyp or sessile
+  serrated adenoma by majority vote of seven pathologists, with the vote count released alongside
+  the label. Deliberately small, with a fixed train / test split, so that a baseline trains in
+  minutes.
+organs: [colorectum]
+diseases: [colorectal-polyps]
+tasks: [colorectal-polyp-classification]
+specimen: FFPE H&E colorectal polyp slides from the Department of Pathology and Laboratory Medicine, Dartmouth-Hitchcock Medical Center, diagnosed at slide level as HP or SSA. Scanned on an Aperio AT2 at 40x; the paper says the slides were then compressed "with 8x magnification" to widen the field of view before tiling.
+stains: [he]
+data_units: [patch]
+annotation_granularity: [patch-label]
+scale:
+  patches:
+    value: 3152
+    source: mhist-site
+    note: 224 x 224 pixels each. The paper gives the same count.
+  slides:
+    value: 328
+    source: mhist-paper
+    note: Source slides the patches were cut from (Section 3.2); the slides are not released and patch-to-slide links are not provided.
+  storage:
+    value: images.zip, 333 MB
+    source: mhist-site
+version:
+  value: A single release without a version number, distributed as images.zip, annotations.csv and MD5SUMs.txt.
+  source: mhist-site
+splits:
+  value: Fixed train / test split of 2,175 / 977 images (HP 1,545 / 617, SSA 630 / 360). No validation split is defined.
+  source: mhist-paper
+  note: Table 1 of the paper. Whether the split keeps patients or slides apart is not stated.
+evaluation_protocol:
+  value: Binary HP vs SSA on the fixed test set, reported as AUC. The paper's ResNet baselines report the mean and standard deviation, over 10 seeds, of the five highest test-set AUCs across epochs.
+  source: mhist-paper
+  note: Section 4.1 and Table 2.
+access:
+  method: registration
+  details: Agree to the Dataset Research Use Agreement and submit a form on the project page; download links arrive by email and expire after 4 hours.
+  source: mhist-site
+terms:
+  license: Dataset Research Use Agreement (custom terms from the data publisher), non-commercial research only
+  redistribution: Not allowed without prior written permission. Each user registers individually, download links may not be shared, and derivative works are prohibited.
+  source: mhist-dua
+  note: The agreement also bars clinical use and re-identification attempts.
+official_url: https://bmirds.github.io/MHIST/
+primary_paper: mhist-paper
+limitations:
+  - value: Labels are noisy by design. About 16.7% of images have only 4 of 7 pathologists agreeing, and the mean per-pathologist Cohen's kappa is 0.450.
+    source: mhist-paper
+  - value: Single institution and a single scanner model.
+    source: mhist-paper
+  - value: Images were shuffled and stripped of metadata, so patient- or slide-level analyses are not possible.
+    source: mhist-paper
+review_status: draft
+reviewer_notes: >-
+  Results on MHIST are reported by catalogued models, but they are not linked yet because those
+  models are verified and a verified entry may not link to a draft. To add once MHIST is verified,
+  each checked against its source: H-optimus-0 (README tile-level table, MHIST row; appendix says
+  official train / test split, linear probe, mean over three runs), H0-mini (arXiv v3 Table 1,
+  "Mhist" column, via the eva mapping), Virchow2 (arXiv v3 Table 2, out-of-distribution tile-level tasks;
+  10% of training held out for validation) and Virchow (Methods "MHIST" paragraph; 217 training
+  images held out for validation; exact result table not yet located). The DUA's ban on derivative
+  works needs a human reading before the access summary is published.
+sources:
+  - key: mhist-site
+    title: "MHIST: A Minimalist Histopathology Image Analysis Dataset (BMIRDS project page)"
+    url: https://bmirds.github.io/MHIST/
+    kind: official-site
+    accessed: 2026-11-21
+  - key: mhist-paper
+    title: "Wei J. et al. A Petri Dish for Histopathology Image Analysis. AIME 2021 (arXiv 2101.12355 v2)"
+    url: https://arxiv.org/abs/2101.12355v2
+    kind: preprint
+    accessed: 2026-11-21
+    note: "Published version: Springer LNCS, doi 10.1007/978-3-030-77211-6_2 (not opened)."
+  - key: mhist-dua
+    title: MHIST Dataset Research Use Agreement (PDF linked from the project page)
+    url: https://bmirds.github.io/MHIST/Dataset%20Research%20Use%20Agreement.pdf
+    kind: official-site
+    accessed: 2026-11-21

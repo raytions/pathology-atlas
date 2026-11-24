@@ -1,0 +1,17 @@
+id: colorectal-polyps
+title: Colorectal polyps
+organs: [colorectum]
+synonyms: []
+summary: >-
+  Growths in the lining of the colon or rectum, removed in large numbers at colonoscopy. Some are
+  harmless, while others are precursors of cancer. Telling a benign hyperplastic polyp from a
+  sessile serrated adenoma matters because the latter calls for earlier follow-up, and pathologists
+  often disagree on it.
+review_status: draft
+sources:
+  - key: mhist-paper
+    title: "Wei J. et al. A Petri Dish for Histopathology Image Analysis. AIME 2021 (arXiv 2101.12355 v2)"
+    url: https://arxiv.org/abs/2101.12355v2
+    kind: preprint
+    accessed: 2026-11-21
+    note: Section 3.1 describes the HP vs SSA distinction and its follow-up consequences.
